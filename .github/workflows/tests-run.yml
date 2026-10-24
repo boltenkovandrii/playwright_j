@@ -30,7 +30,7 @@ on:
       - "feature/**"
 
   schedule:
-    - cron: '0 1 * * 5' # Weekly (Friday 01:00 UTC)
+    - cron: '3 4 1 * 5' # run on the first of every month at 04:03 UTC
 #    - cron: '0 15 * * *' # test
 
 
@@ -40,10 +40,6 @@ jobs:
     name: Bring up grid, run Gradle tests, collect reports
 
     runs-on: ubuntu-latest
-    # need permission to upload report
-    permissions:
-      contents: write
-      packages: read
 
     env:
       BROWSER: ${{ github.event.inputs.browser || 'firefox' }}
@@ -69,7 +65,7 @@ jobs:
         uses: actions/setup-java@v6
         with:
           distribution: temurin
-          java-version: '17'
+          java-version: '25'
 
       - name: Install Docker Compose
         run: |
@@ -81,23 +77,12 @@ jobs:
           mkdir -p Downloads
           chmod a+w Downloads
 
-      - name: Start Selenium Grid
+      - name: Start app
         env:
           REPO_OWNER: ${{ github.repository_owner }}
           REPO_NAME: ${{ github.event.repository.name }}
         run: |
-          docker network create selenium-grid-network || true
-          # set per-browser tags: only selected browser uses BROWSER_IMAGE_TAG, others use 'latest'
-          if [ "${BROWSER}" = "chrome" ]; then CHROME_IMAGE_TAG="${BROWSER_IMAGE_TAG}"; else CHROME_IMAGE_TAG="latest"; fi
-          if [ "${BROWSER}" = "firefox" ]; then FIREFOX_IMAGE_TAG="${BROWSER_IMAGE_TAG}"; else FIREFOX_IMAGE_TAG="latest"; fi
-          if [ "${BROWSER}" = "edge" ]; then EDGE_IMAGE_TAG="${BROWSER_IMAGE_TAG}"; else EDGE_IMAGE_TAG="latest"; fi
-          export HUB_IMAGE_TAG="${HUB_IMAGE_TAG}"
-          export CHROME_IMAGE_TAG FIREFOX_IMAGE_TAG EDGE_IMAGE_TAG
-          docker compose -f docker-compose-gh.yml up --scale selenium-${BROWSER}=${THREADS} -d
-
-      - name: Show running containers
-        run: |
-          docker ps --format "{{.Names}} {{.Image}}"
+          docker compose -f docker/docker-compose-prestashop.yml up -d      
 
       - name: Set up Gradle wrapper permissions
         run: |
@@ -110,13 +95,6 @@ jobs:
       - name: Run Gradle tests
         run: |
           ./gradlew -DuseGrid=true -Dbrowser=$BROWSER -Dthreads=$THREADS -DincludeTags=$TAGS -Ddownloads=Downloads clean test
-
-
-      - name: Collect container logs
-        if: always()
-        run: |
-          mkdir -p logs
-          docker ps -a --format "{{.Names}}" | while read c; do docker logs "$c" > "logs/$c.log" || true; done || true
 
       - name: Tear down
         if: always()
@@ -133,25 +111,6 @@ jobs:
           REPORT_DIR="${DATE}_${SANITIZED_BRANCH}"
           echo "report_dir=${REPORT_DIR}" >> $GITHUB_OUTPUT
 
-
-      # Uses old Node.js 20. Could be possible to rewrite using actions/upload-pages-artifact and actions/deploy-pages, but supporting multiple reports as pages looks tricky in this case.
-      # Sticking to peaceiris/actions-gh-pages@v4 so far
-      - name: Deploy Allure report to GitHub Pages
-        if: always()
-        uses: peaceiris/actions-gh-pages@v4
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: build/reports/allure-report/allureReport
-          destination_dir: reports/${{ steps.set_report_dir.outputs.report_dir }}
-
-      - name: Publish report link
-        if: always()
-        run: |
-          REPORT_URL="https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/reports/${{ steps.set_report_dir.outputs.report_dir }}/"
-          echo "## 🧪 Allure Report" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "[Open Allure Report]($REPORT_URL)" >> $GITHUB_STEP_SUMMARY
-
       - name: Prepare public artifacts
         if: always()
         run: |
@@ -166,13 +125,5 @@ jobs:
         uses: actions/upload-artifact@v7
         with:
           name: public-artifacts
-          path: public-archives-${{ steps.set_report_dir.outputs.report_dir }}.tar.gz
-          retention-days: 3
-
-      - name: Upload logs
-        if: always()
-        uses: actions/upload-artifact@v7
-        with:
-          name: container-logs
-          path: logs
+          path: reports/
           retention-days: 3
