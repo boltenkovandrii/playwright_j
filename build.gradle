@@ -26,6 +26,9 @@ dependencies {
 
     testImplementation 'org.seleniumhq.selenium:selenium-java:4.50.0'
 
+    implementation 'com.microsoft.playwright:playwright:1.64.0'
+
+
     testImplementation 'org.assertj:assertj-core:3.27.7'
 
     testImplementation 'org.apache.commons:commons-configuration2:2.15.1'
