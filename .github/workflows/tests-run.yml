@@ -1,0 +1,178 @@
+name: Run tests with Selenium Grid
+
+on:
+  workflow_dispatch:
+    inputs:
+      tags:
+        description: 'Test tag to include'
+        required: true
+        default: 'regression'
+      browser:
+        description: 'Browser to use (chrome, firefox, edge)'
+        required: true
+        default: 'firefox'
+      browser-image-tag:
+        description: 'Tag of browser images (chrome, firefox, edge) to pull from ghcr'
+        required: true
+        default: 'latest'
+      threads:
+        description: 'Number of parallel browser nodes to run'
+        required: true
+        default: '2'
+      hub-image-tag:
+        description: 'Tag of hub image to pull from ghcr'
+        required: true
+        default: 'latest'
+
+  push:
+    branches:
+      - main
+      - "feature/**"
+
+  schedule:
+    - cron: '0 1 * * 5' # Weekly (Friday 01:00 UTC)
+#    - cron: '0 15 * * *' # test
+
+
+jobs:
+
+  run-tests:
+    name: Bring up grid, run Gradle tests, collect reports
+
+    runs-on: ubuntu-latest
+    # need permission to upload report
+    permissions:
+      contents: write
+      packages: read
+
+    env:
+      BROWSER: ${{ github.event.inputs.browser || 'firefox' }}
+      THREADS: ${{ github.event.inputs.threads || 2 }}
+      TAGS: ${{ github.event.inputs.tags || 'regression' }}
+      HUB_IMAGE_TAG: ${{ github.event.inputs['hub-image-tag'] || 'latest' }}
+      BROWSER_IMAGE_TAG: ${{ github.event.inputs['browser-image-tag'] || 'latest' }}
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v4
+
+      - name: Login to ghcr
+        uses: docker/login-action@v4
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Java
+        uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Install Docker Compose
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y docker-compose
+
+      - name: Prepare Downloads dir
+        run: |
+          mkdir -p Downloads
+          chmod a+w Downloads
+
+      - name: Start Selenium Grid
+        env:
+          REPO_OWNER: ${{ github.repository_owner }}
+          REPO_NAME: ${{ github.event.repository.name }}
+        run: |
+          docker network create selenium-grid-network || true
+          # set per-browser tags: only selected browser uses BROWSER_IMAGE_TAG, others use 'latest'
+          if [ "${BROWSER}" = "chrome" ]; then CHROME_IMAGE_TAG="${BROWSER_IMAGE_TAG}"; else CHROME_IMAGE_TAG="latest"; fi
+          if [ "${BROWSER}" = "firefox" ]; then FIREFOX_IMAGE_TAG="${BROWSER_IMAGE_TAG}"; else FIREFOX_IMAGE_TAG="latest"; fi
+          if [ "${BROWSER}" = "edge" ]; then EDGE_IMAGE_TAG="${BROWSER_IMAGE_TAG}"; else EDGE_IMAGE_TAG="latest"; fi
+          export HUB_IMAGE_TAG="${HUB_IMAGE_TAG}"
+          export CHROME_IMAGE_TAG FIREFOX_IMAGE_TAG EDGE_IMAGE_TAG
+          docker compose -f docker-compose-gh.yml up --scale selenium-${BROWSER}=${THREADS} -d
+
+      - name: Show running containers
+        run: |
+          docker ps --format "{{.Names}} {{.Image}}"
+
+      - name: Set up Gradle wrapper permissions
+        run: |
+          chmod +x gradlew
+
+      - name: Run checkstyle and pmd checks
+        run: |
+          ./gradlew qualityCheck
+
+      - name: Run Gradle tests
+        run: |
+          ./gradlew -DuseGrid=true -Dbrowser=$BROWSER -Dthreads=$THREADS -DincludeTags=$TAGS -Ddownloads=Downloads clean test
+
+
+      - name: Collect container logs
+        if: always()
+        run: |
+          mkdir -p logs
+          docker ps -a --format "{{.Names}}" | while read c; do docker logs "$c" > "logs/$c.log" || true; done || true
+
+      - name: Tear down
+        if: always()
+        run: |
+          docker compose down || true
+
+      - name: Set report directory
+        if: always()
+        id: set_report_dir
+        run: |
+          DATE=$(date -u +%Y%m%d_%H%M%S)
+          BRANCH_NAME="${{ github.ref_name }}"
+          SANITIZED_BRANCH=$(echo "$BRANCH_NAME" | sed 's#[/\\ ]#-#g' | sed 's/[^A-Za-z0-9._-]/-/g')
+          REPORT_DIR="${DATE}_${SANITIZED_BRANCH}"
+          echo "report_dir=${REPORT_DIR}" >> $GITHUB_OUTPUT
+
+
+      # Uses old Node.js 20. Could be possible to rewrite using actions/upload-pages-artifact and actions/deploy-pages, but supporting multiple reports as pages looks tricky in this case.
+      # Sticking to peaceiris/actions-gh-pages@v4 so far
+      - name: Deploy Allure report to GitHub Pages
+        if: always()
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: build/reports/allure-report/allureReport
+          destination_dir: reports/${{ steps.set_report_dir.outputs.report_dir }}
+
+      - name: Publish report link
+        if: always()
+        run: |
+          REPORT_URL="https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/reports/${{ steps.set_report_dir.outputs.report_dir }}/"
+          echo "## 🧪 Allure Report" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "[Open Allure Report]($REPORT_URL)" >> $GITHUB_STEP_SUMMARY
+
+      - name: Prepare public artifacts
+        if: always()
+        run: |
+          mkdir -p public/Downloads
+          mkdir -p public/${{ steps.set_report_dir.outputs.report_dir }}/allureReport
+          if [ -d build/reports/allure-report/allureReport ]; then cp -r build/reports/allure-report/allureReport/* public/${{ steps.set_report_dir.outputs.report_dir }}/allureReport/ || true; fi
+          if [ -d Downloads ]; then mkdir -p public/${{ steps.set_report_dir.outputs.report_dir }}/Downloads && cp -r Downloads/* public/${{ steps.set_report_dir.outputs.report_dir }}/Downloads/ || true; fi
+          tar -czf public-archives-${{ steps.set_report_dir.outputs.report_dir }}.tar.gz public/${{ steps.set_report_dir.outputs.report_dir }} || true
+
+      - name: Upload artifacts
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: public-artifacts
+          path: public-archives-${{ steps.set_report_dir.outputs.report_dir }}.tar.gz
+          retention-days: 3
+
+      - name: Upload logs
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: container-logs
+          path: logs
+          retention-days: 3

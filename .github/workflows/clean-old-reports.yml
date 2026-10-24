@@ -1,0 +1,80 @@
+name: Clean old Allure reports
+
+on:
+  workflow_dispatch:
+    inputs:
+      keep-count:
+        description: 'Number of most-recent reports to keep'
+        required: false
+        default: '5'
+      retention-days:
+        description: 'Minimum age (in days) before a report can be deleted'
+        required: false
+        default: '3'
+  schedule:
+    - cron: '0 0 * * 0' # Weekly (Sunday 00:00 UTC)
+#    - cron: '0 0 * * *' # test
+
+permissions:
+  contents: write
+
+jobs:
+  clean:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout gh-pages
+        uses: actions/checkout@v6
+        with:
+          ref: gh-pages
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: List reports (debug)
+        run: |
+          echo "Reports root: reports"
+          ls -1 reports || true
+
+      - name: Clean old reports
+        env:
+          KEEP: ${{ github.event.inputs['keep-count'] || '5' }}
+          RETENTION_DAYS: ${{ github.event.inputs['retention-days'] || '3' }}
+        run: |
+          set -euo pipefail
+          REPORTS_DIR=reports
+          if [ ! -d "$REPORTS_DIR" ]; then echo "No reports directory found, nothing to do"; exit 0; fi
+
+          # list directories sorted by name (date-prefixed) newest first
+          mapfile -t dirs < <(ls -1 "$REPORTS_DIR" | sort -r)
+
+          echo "Found ${#dirs[@]} report entries"
+          idx=0
+          for d in "${dirs[@]}"; do
+            idx=$((idx+1))
+            dirpath="$REPORTS_DIR/$d"
+            if [ "$idx" -le "$KEEP" ]; then
+              echo "Keeping $dirpath (within keep-count)"
+              continue
+            fi
+
+            # delete only if older than retention days
+            dir_date=$(basename "$dirpath" | cut -d'_' -f1)
+            dir_ts=$(date -d "$dir_date" +%s)
+            now_ts=$(date +%s)
+            age_days=$(( (now_ts - dir_ts) / 86400 ))
+            if [ "$age_days" -gt "$RETENTION_DAYS" ]; then
+                echo "Deleting $dirpath (older than $RETENTION_DAYS days and beyond keep-count)"
+                rm -rf "$dirpath"
+            else
+                echo "Skipping $dirpath (within retention days)"
+            fi
+          
+          done
+
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          if [ -n "$(git status --porcelain)" ]; then
+            git add -A
+            git commit -m "chore(reports): cleanup old reports (keep=${KEEP}, retention_days=${RETENTION_DAYS})"
+            git push origin HEAD:gh-pages
+          else
+            echo "No changes to commit"
+          fi

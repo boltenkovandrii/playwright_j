@@ -1,0 +1,93 @@
+plugins {
+    id 'java'
+    id 'io.qameta.allure' version '4.3.0'
+    id 'checkstyle'
+    id 'pmd'
+}
+
+group = 'com.andrii.test'
+version = '1.0-SNAPSHOT'
+
+java {
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(17))
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testImplementation platform('org.junit:junit-bom:6.1.3')
+    testImplementation 'org.junit.jupiter:junit-jupiter-api'
+    testImplementation 'org.junit.jupiter:junit-jupiter-engine'
+    testImplementation 'org.junit.jupiter:junit-jupiter-params'
+
+    testImplementation 'org.seleniumhq.selenium:selenium-java:4.50.0'
+
+    testImplementation 'org.assertj:assertj-core:3.27.7'
+
+    testImplementation 'org.apache.commons:commons-configuration2:2.15.1'
+    testImplementation 'commons-beanutils:commons-beanutils:1.11.0'
+
+    testImplementation 'ch.qos.logback:logback-classic:1.6.5'
+
+}
+
+allure {
+    version = "3.16.1"
+    adapter {
+        allureJavaVersion = "3.0.0"
+    }
+}
+
+
+tasks.withType(JavaCompile).configureEach  {
+    options.encoding = 'UTF-8' //To handle non-UTF characters
+}
+
+checkstyle {
+    toolVersion = '10.24.0'
+    configFile = file('src/test/resources/checkstyle.xml')
+}
+
+pmd {
+    toolVersion = '6.55.0'
+    consoleOutput = true
+    ruleSetFiles = files('src/test/resources/pmd.ruleset.xml')
+    ruleSets = []
+}
+
+test {
+
+    testLogging.showStandardStreams = true //to see standard output in tests
+
+    useJUnitPlatform(){
+        includeEngines 'junit-jupiter'
+    //            includeTags 'current'
+        includeTags System.getProperty("includeTags") ? System.getProperty("includeTags") : 'regression'
+        excludeTags 'WIP'
+    }
+
+    systemProperties = System.getProperties() as Map<String, ?>
+    systemProperties.put('junit.jupiter.extensions.autodetection.enabled' , true)
+    systemProperties.put('junit.jupiter.execution.parallel.enabled' , true)
+    systemProperties.put('junit.jupiter.execution.parallel.mode.default', 'same_thread')
+    systemProperties.put('junit.jupiter.execution.parallel.mode.classes.default', 'concurrent')
+    systemProperties.put('junit.jupiter.execution.parallel.config.strategy', 'custom')
+    systemProperties.put('junit.jupiter.execution.parallel.config.custom.class', 'com.andrii.test.base.ParallelExecutionStrategy')
+
+
+}
+
+
+tasks.named("test") {
+    finalizedBy("allureReport")
+}
+
+tasks.register('qualityCheck') {
+    group = 'verification'
+    description = 'Runs static analysis checks without tests'
+    dependsOn checkstyleMain, checkstyleTest, pmdMain, pmdTest
+}
