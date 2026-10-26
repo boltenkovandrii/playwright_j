@@ -1,4 +1,4 @@
-### PDP-01 — Check product page structure
+### PDP-01 - Check product page structure
 
 **Purpose**
 
@@ -37,7 +37,7 @@ Verify that the product details page opens correctly and all key UI blocks are p
 
 ---
 
-### PDP-02 — View product information
+### PDP-02 - View product information
 
 **Purpose**
 
@@ -78,7 +78,7 @@ Verify that a user can read all key product information on the product details p
 
 ---
 
-### PDP-03 — Change product quantity
+### PDP-03 - Change product quantity
 
 **Purpose**
 
@@ -121,7 +121,7 @@ Verify that a user can change the product quantity before adding to cart.
 
 ---
 
-### PDP-04 — Select product combination
+### PDP-04 - Select product combination
 
 **Purpose**
 
@@ -157,11 +157,11 @@ Verify that a user can select a different size and color combination and the pag
 **Notes**
 
 - Combination changes update the URL fragment and may trigger an image reload. These side effects are worth asserting during implementation if the page object supports them.
-- Selecting an unavailable combination (if any) may disable the add-to-cart button — worth noting as a boundary case.
+- Selecting an unavailable combination (if any) may disable the add-to-cart button - worth noting as a boundary case.
 
 ---
 
-### PDP-05 — Add product to cart
+### PDP-05 - Add product to cart
 
 **Purpose**
 
@@ -195,11 +195,11 @@ Verify that a user can add a product to the cart and receive a visual confirmati
 **Notes**
 
 - The cart modal is rendered by JavaScript after the add-to-cart request. It is not in the page source on initial load. This makes it a potential source of timing-related flakiness.
-- If the product has required combinations (size/color), they must be selected before adding — the default pre-selected values should satisfy this on the "Hummingbird printed t-shirt".
+- If the product has required combinations (size/color), they must be selected before adding - the default pre-selected values should satisfy this on the "Hummingbird printed t-shirt".
 
 ---
 
-### PDP-06 — Continue shopping after adding a product
+### PDP-06 - Continue shopping after adding a product
 
 **Purpose**
 
@@ -234,7 +234,7 @@ Verify that a user can dismiss the cart confirmation dialog and continue browsin
 
 ---
 
-### PDP-07 — Navigate to cart from the confirmation dialog
+### PDP-07 - Navigate to cart from the confirmation dialog
 
 **Purpose**
 

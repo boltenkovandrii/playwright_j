@@ -1,4 +1,4 @@
-# Playwright Java tests — Docker and reporting
+# Playwright Java tests - Docker and reporting
 
 The PrestaShop browser tests in `com.prestashop.test` are Playwright Java tests migrated from the companion Python suite. Existing Selenium/Wikipedia tests remain temporarily while their infrastructure is retired.
 
@@ -32,7 +32,7 @@ By default, successful first attempts discard screenshots, videos, and traces. F
 
 ---
 
-# Selenium Pipeline — Docker, Selenium Grid and CI
+# Selenium Pipeline - Docker, Selenium Grid and CI
 
 A Java-based Selenium test project focused on **browser automation infrastructure, Docker images, Selenium Grid, CI pipelines, and Allure reporting**.
 
@@ -104,9 +104,9 @@ The project uses Wikipedia as a simple application under test (AUT). The test su
 
 The main Java packages are:
 
-* `base` — configuration, WebDriver creation, test lifecycle, event handling, and parallel execution.
-* `pages` — Page Objects and reusable page components.
-* `tests` — UI test scenarios.
+* `base` - configuration, WebDriver creation, test lifecycle, event handling, and parallel execution.
+* `pages` - Page Objects and reusable page components.
+* `tests` - UI test scenarios.
 
 ## Prerequisites
 

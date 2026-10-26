@@ -1,4 +1,4 @@
-### SRCH-01 — Search by full product name
+### SRCH-01 - Search by full product name
 
 **Purpose**
 
@@ -36,7 +36,7 @@ Verify that a user can find a product by entering its full name into the storefr
 
 ---
 
-### SRCH-02 — Search by partial product name
+### SRCH-02 - Search by partial product name
 
 **Purpose**
 
@@ -74,7 +74,7 @@ Verify that a user can find a product using a partial product name.
 
 ---
 
-### SRCH-03 — Search with no matching results
+### SRCH-03 - Search with no matching results
 
 **Purpose**
 
@@ -113,7 +113,7 @@ Verify that the storefront handles a search query with no matches in a user-frie
 
 ---
 
-### SRCH-04 — Search from catalog page
+### SRCH-04 - Search from catalog page
 
 **Purpose**
 
@@ -152,7 +152,7 @@ Verify that a user can start a search while browsing a catalog page and receive 
 
 ---
 
-### SRCH-05 — Navigate through search pagination
+### SRCH-05 - Navigate through search pagination
 
 **Purpose**
 

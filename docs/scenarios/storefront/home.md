@@ -1,4 +1,4 @@
-### HOME-01 — Check home page structure
+### HOME-01 - Check home page structure
 
 **Purpose**
 
@@ -26,7 +26,7 @@ Verify that the storefront home page opens correctly and core layout blocks are 
 
 ---
 
-### HOME-02 — Check featured products block structure
+### HOME-02 - Check featured products block structure
 
 **Purpose**
 
@@ -54,7 +54,7 @@ Verify that the featured products section is displayed correctly on the home pag
 
 ---
 
-### HOME-03 — Navigate to category from main menu
+### HOME-03 - Navigate to category from main menu
 
 **Purpose**
 
@@ -92,7 +92,7 @@ Verify that a user can open the Clothes category from the home page navigation a
 
 ---
 
-### HOME-04 — Open featured product details page
+### HOME-04 - Open featured product details page
 
 **Purpose**
 

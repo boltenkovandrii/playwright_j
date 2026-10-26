@@ -4,6 +4,7 @@ import com.microsoft.playwright.Page;
 import com.prestashop.test.pages.Texts;
 
 import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
+import static com.prestashop.test.pages.BasePage.BOOTSTRAP_LG;
 
 public class Footer {
 
@@ -21,7 +22,7 @@ public class Footer {
     }
 
     public Footer signOut() {
-        if (viewportWidth() < 992) {
+        if (viewportWidth() < BOOTSTRAP_LG) {
             page.getByTestId("block_myaccount_infos").click();
         }
         page.getByTestId("block_myaccount_infos")

@@ -1,4 +1,4 @@
-### CART-01 — Check cart page structure
+### CART-01 - Check cart page structure
 
 **Purpose**
 
@@ -31,7 +31,7 @@ Verify that the cart page opens correctly after adding a product and core cart U
 
 ---
 
-### CART-02 — Add single product to cart
+### CART-02 - Add single product to cart
 
 **Purpose**
 
@@ -63,7 +63,7 @@ Verify that adding one product creates a single cart line with quantity 1.
 
 ---
 
-### CART-03 — Add multiple quantities from Product Page
+### CART-03 - Add multiple quantities from Product Page
 
 **Purpose**
 
@@ -94,7 +94,7 @@ Verify that changing quantity on the product page affects quantity added to cart
 
 ---
 
-### CART-04 — Remove product from cart
+### CART-04 - Remove product from cart
 
 **Purpose**
 
@@ -124,7 +124,7 @@ Verify that a user can remove an item and the cart becomes empty.
 
 ---
 
-### CART-05 — Update product quantity in cart
+### CART-05 - Update product quantity in cart
 
 **Purpose**
 
@@ -161,7 +161,7 @@ Verify that quantity updates in cart recalculate subtotal and total.
 
 ---
 
-### CART-06 — Continue shopping from cart
+### CART-06 - Continue shopping from cart
 
 **Purpose**
 
@@ -196,7 +196,7 @@ Verify that using "Continue shopping" from cart returns the user to shopping flo
 
 ---
 
-### CART-07 — Verify cart totals for multiple variants
+### CART-07 - Verify cart totals for multiple variants
 
 **Purpose**
 

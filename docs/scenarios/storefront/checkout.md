@@ -1,4 +1,4 @@
-### CHK-01 — Guest checkout page structure and checkout flow
+### CHK-01 - Guest checkout page structure and checkout flow
 
 **Purpose**
 

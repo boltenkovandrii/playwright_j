@@ -1,4 +1,4 @@
-### ACCT-01 — Login page structure
+### ACCT-01 - Login page structure
 
 **Purpose**
 
@@ -37,7 +37,7 @@ Verify that the login page opens correctly and all key UI elements are present.
 
 ---
 
-### ACCT-02 — Registration page structure
+### ACCT-02 - Registration page structure
 
 **Purpose**
 
@@ -75,7 +75,7 @@ Verify that the account registration page opens correctly and all key UI element
 
 ---
 
-### ACCT-03 — Login validation
+### ACCT-03 - Login validation
 
 **Purpose**
 
@@ -124,7 +124,7 @@ Verify that the login form correctly handles invalid credentials and allows a su
 
 ---
 
-### ACCT-04 — Registration validation
+### ACCT-04 - Registration validation
 
 **Purpose**
 
@@ -174,7 +174,7 @@ Verify that the registration form correctly validates required fields and input 
 
 ---
 
-### ACCT-05 — Logout
+### ACCT-05 - Logout
 
 **Purpose**
 

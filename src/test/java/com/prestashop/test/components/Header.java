@@ -6,6 +6,7 @@ import com.microsoft.playwright.options.SelectOption;
 import com.prestashop.test.pages.Texts;
 
 import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
+import static com.prestashop.test.pages.BasePage.BOOTSTRAP_LG;
 
 public class Header {
 
@@ -31,7 +32,7 @@ public class Header {
     }
 
     public Header verifyCurrentLanguage(String locale) {
-        if (viewportWidth() < 992) {
+        if (viewportWidth() < BOOTSTRAP_LG) {
             openMobileMenu();
             assertThat(mobileLanguageSelector.locator("option:checked")).hasText(Texts.get(locale, "language"));
             closeMobileMenu();
@@ -49,7 +50,7 @@ public class Header {
     public Header checkStructure() {
         assertThat(container).isVisible();
         assertThat(searchInput).isVisible();
-        if (viewportWidth() < 992) {
+        if (viewportWidth() < BOOTSTRAP_LG) {
             assertThat(page.getByTestId("menu-icon")).isVisible();
             assertThat(page.getByTestId("_mobile_cart")).isVisible();
         } else {
@@ -64,7 +65,7 @@ public class Header {
             return this;
         }
         String language = Texts.get(targetLocale, "language");
-        if (viewportWidth() < 992) {
+        if (viewportWidth() < BOOTSTRAP_LG) {
             openMobileMenu();
             mobileLanguageSelector.selectOption(new SelectOption().setLabel(language));
         } else {
@@ -77,7 +78,7 @@ public class Header {
 
     public Header clickCategory(String name) {
         Locator categoryLinks;
-        if (viewportWidth() < 992) {
+        if (viewportWidth() < BOOTSTRAP_LG) {
             openMobileMenu();
             categoryLinks = mobileMenu.locator(".category > a");
         } else {
@@ -88,7 +89,7 @@ public class Header {
     }
 
     public Header verifyCartCount(int expectedCount) {
-        Locator count = viewportWidth() < 992
+        Locator count = viewportWidth() < BOOTSTRAP_LG
                 ? page.getByTestId("_mobile_cart").locator(".cart-products-count")
                 : page.getByTestId("_desktop_cart").locator(".cart-products-count");
         assertThat(count).hasText("(" + expectedCount + ")");
@@ -139,7 +140,7 @@ public class Header {
     }
 
     private Locator activeUserInfo() {
-        return viewportWidth() < 992
+        return viewportWidth() < BOOTSTRAP_LG
                 ? page.getByTestId("_mobile_user_info")
                 : page.getByTestId("_desktop_user_info");
     }

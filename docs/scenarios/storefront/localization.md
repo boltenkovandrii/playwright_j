@@ -1,4 +1,4 @@
-### LOCA-01 — Switch storefront language
+### LOCA-01 - Switch storefront language
 
 **Purpose**
 
@@ -41,7 +41,7 @@ Verify that a user can change the active storefront language through the languag
 ---
 
 
-### LOCA-02 — Preserve storefront language across core pages
+### LOCA-02 - Preserve storefront language across core pages
 
 **Purpose**
 
@@ -81,7 +81,7 @@ Verify that the selected storefront language remains active when navigating thro
 
 ---
 
-**LOCA-03 — Verify localization of core storefront pages**
+**LOCA-03 - Verify localization of core storefront pages**
 
 **Purpose**
 

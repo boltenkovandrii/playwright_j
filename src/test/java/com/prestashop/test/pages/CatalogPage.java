@@ -117,7 +117,7 @@ public class CatalogPage extends BaseStorefrontPage {
     }
 
     public CatalogPage verifyActiveFilter(String text) {
-        if (viewportWidth() >= 992) {
+        if (viewportWidth() >= BOOTSTRAP_LG) {
             assertThat(page.getByTestId("js-active-search-filters")).containsText(text);
         }
         return this;
@@ -143,14 +143,14 @@ public class CatalogPage extends BaseStorefrontPage {
     }
 
     private void openMobileFiltersIfNeeded(String filterName) {
-        if (viewportWidth() < 992) {
+        if (viewportWidth() < BOOTSTRAP_LG) {
             page.getByTestId("search_filter_toggler").click();
             page.locator(".facet[data-name='" + filterName + "']").click();
         }
     }
 
     private void closeMobileFiltersIfNeeded() {
-        if (viewportWidth() < 992) {
+        if (viewportWidth() < BOOTSTRAP_LG) {
             page.getByTestId("search_filter_controls").locator("button").click();
         }
     }

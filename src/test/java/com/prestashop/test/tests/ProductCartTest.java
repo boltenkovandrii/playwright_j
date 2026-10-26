@@ -14,7 +14,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class ProductCartTest extends TestBase {
 
     @Test
-    @DisplayName("PDP-01/02 — Check product page and product information")
+    @DisplayName("PDP-01/02 - Check product page and product information")
     void productDetails() {
         runScenario(page -> new HomePage(page, "en").open().openCategory("Clothes")
                 .openProductByName("Hummingbird printed sweater")
@@ -25,7 +25,7 @@ class ProductCartTest extends TestBase {
     }
 
     @Test
-    @DisplayName("PDP-03/04 — Change quantity and product combination")
+    @DisplayName("PDP-03/04 - Change quantity and product combination")
     void quantityAndCombination() {
         runScenario(page -> {
             var product = new HomePage(page, "en").open().openCategory("Clothes")
@@ -41,7 +41,7 @@ class ProductCartTest extends TestBase {
     }
 
     @Test
-    @DisplayName("PDP-05/06/07 — Add product, continue shopping, and open cart")
+    @DisplayName("PDP-05/06/07 - Add product, continue shopping, and open cart")
     void addProductAndOpenCart() {
         runScenario(page -> {
             var product = new HomePage(page, "en").open().openCategory("Clothes")
@@ -55,7 +55,7 @@ class ProductCartTest extends TestBase {
     }
 
     @Test
-    @DisplayName("CART-01 to CART-07 — Cart operations")
+    @DisplayName("CART-01 to CART-07 - Cart operations")
     void cartOperations() {
         runScenario(page -> {
             var cart = new HomePage(page, "en").open().openCategory("Clothes")

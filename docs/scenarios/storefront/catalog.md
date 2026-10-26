@@ -1,4 +1,4 @@
-### CAT-01 — Check catalog page structure
+### CAT-01 - Check catalog page structure
 
 **Purpose**
 
@@ -28,7 +28,7 @@ Verify that the catalog page opens correctly and key catalog blocks are displaye
 - Category landing page
 - Catalog core UI blocks
 
-### CAT-02 — Browse products in a category
+### CAT-02 - Browse products in a category
 
 **Purpose**
 
@@ -56,7 +56,7 @@ Verify that a user can browse products inside a category.
 - Product grid
 - Product card rendering
 
-### CAT-03 — Open product details page
+### CAT-03 - Open product details page
 
 **Purpose**
 
@@ -84,7 +84,7 @@ Verify that a user can open a product details page from the category listing.
 - PDP opening
 - Category to PDP transition
 
-### CAT-04 — Change product sorting
+### CAT-04 - Change product sorting
 
 **Purpose**
 
@@ -114,7 +114,7 @@ Verify that sorting options change the order of products on the catalog page.
 - Sorting behavior
 - Product ordering
 
-### CAT-05 — Navigate through catalog pagination
+### CAT-05 - Navigate through catalog pagination
 
 **Purpose**
 
@@ -150,7 +150,7 @@ Verify that a user can navigate between catalog pages using pagination controls.
 - Catalog navigation
 - Multi-page product lists
 
-### CAT-06 — Navigate using breadcrumbs
+### CAT-06 - Navigate using breadcrumbs
 
 **Purpose**
 
@@ -178,7 +178,7 @@ the breadcrumb navigation.
 - Breadcrumbs
 - Product to category navigation
 
-### CAT-07 — Filter products by price
+### CAT-07 - Filter products by price
 
 **Purpose**
 
@@ -207,7 +207,7 @@ Verify that price filtering narrows product results according to selected range.
 - Price filtering
 - Result refinement
 
-### CAT-08 — Filter products by manufacturer
+### CAT-08 - Filter products by manufacturer
 
 **Purpose**
 

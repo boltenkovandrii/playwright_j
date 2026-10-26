@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test;
 class SearchLocalizationTest extends TestBase {
 
     @Test
-    @DisplayName("SRCH-01 to SRCH-05 — Search and paginate results")
+    @DisplayName("SRCH-01 to SRCH-05 - Search and paginate results")
     void searchAndPagination() {
         runScenario(page -> {
             var home = new HomePage(page, "en").open();
@@ -24,7 +24,7 @@ class SearchLocalizationTest extends TestBase {
     }
 
     @Test
-    @DisplayName("LOCA-01 to LOCA-03 — Switch and preserve storefront language")
+    @DisplayName("LOCA-01 to LOCA-03 - Switch and preserve storefront language")
     void localization() {
         runScenario(page -> {
             var home = new HomePage(page, "en").open();

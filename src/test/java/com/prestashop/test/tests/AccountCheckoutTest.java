@@ -14,7 +14,7 @@ class AccountCheckoutTest extends TestBase {
     private static final String DEMO_PASSWORD = "123456789";
 
     @Test
-    @DisplayName("ACCT-01/02 — Login and registration page structures")
+    @DisplayName("ACCT-01/02 - Login and registration page structures")
     void accountPageStructures() {
         runScenario(page -> {
             var login = new HomePage(page, "en").open().openLoginPage().checkStructure();
@@ -23,7 +23,7 @@ class AccountCheckoutTest extends TestBase {
     }
 
     @Test
-    @DisplayName("ACCT-03/05 — Login validation and logout")
+    @DisplayName("ACCT-03/05 - Login validation and logout")
     void loginAndLogout() {
         runScenario(page -> {
             var login = new HomePage(page, "en").open().openLoginPage();
@@ -36,7 +36,7 @@ class AccountCheckoutTest extends TestBase {
     }
 
     @Test
-    @DisplayName("CHK-01 — Guest checkout flow")
+    @DisplayName("CHK-01 - Guest checkout flow")
     void guestCheckout() {
         runScenario(page -> {
             var cart = new HomePage(page, "en").open().openCategory("Clothes")

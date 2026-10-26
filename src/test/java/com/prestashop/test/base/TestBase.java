@@ -6,6 +6,8 @@ import com.microsoft.playwright.BrowserType;
 import com.microsoft.playwright.Page;
 import com.microsoft.playwright.Playwright;
 import com.microsoft.playwright.Tracing;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -16,8 +18,13 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 public abstract class TestBase {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(TestBase.class);
+
+
     protected final void runScenario(Scenario scenario) {
         for (TestRunConfig run : PlaywrightSettings.testRuns()) {
+            LOGGER.info("Running scenario for browser: {} and profile: {}", run.browser(), run.profile());
+
             runScenario(run, scenario);
         }
     }
