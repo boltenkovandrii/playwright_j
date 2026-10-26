@@ -1,4 +1,4 @@
-package com.andrii.test.base;
+package com.prestashop.test.base;
 
 
 import org.apache.commons.configuration2.CompositeConfiguration;

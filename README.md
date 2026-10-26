@@ -1,3 +1,37 @@
+# Playwright Java tests — Docker and reporting
+
+The PrestaShop browser tests in `com.prestashop.test` are Playwright Java tests migrated from the companion Python suite. Existing Selenium/Wikipedia tests remain temporarily while their infrastructure is retired.
+
+## Running PrestaShop Playwright tests
+
+Start the local PrestaShop AUT first, then use the Gradle wrapper. Playwright supports the original browser set: `chromium`, `firefox`, and `webkit`. Firefox runs desktop profiles only because Playwright does not support Firefox mobile-device emulation.
+
+```powershell
+# Default: Chromium with the desktop_1920x1200 profile
+.\gradlew.bat test --tests "com.prestashop.test.tests.*"
+
+# A browser set and a profile set (runs their valid Cartesian product)
+.\gradlew.bat test --tests "com.prestashop.test.tests.*" `
+  -DpwBrowsers=chromium,webkit `
+  -DpwProfiles=desktop_1920x1200,mobile,tablet_landscape
+
+# Firefox on both desktop profiles, headed
+.\gradlew.bat test --tests "com.prestashop.test.tests.*" `
+  -DpwBrowsers=firefox `
+  -DpwProfiles=desktop_1920x1200,desktop_2560x1600 `
+  -Dheadless=false
+
+# Keep screenshots from every attempt, not only failed/retried attempts
+.\gradlew.bat test --tests "com.prestashop.test.tests.*" -DallureScreenshots=true
+
+# Disable test retries; failed attempts still retain a screenshot, video, and trace
+.\gradlew.bat test --tests "com.prestashop.test.tests.*" -DpwRetries=0
+```
+
+By default, successful first attempts discard screenshots, videos, and traces. Failed attempts and all retry attempts retain and attach these diagnostics to Allure. The retry count defaults to one (`-DpwRetries=1`).
+
+---
+
 # Selenium Pipeline — Docker, Selenium Grid and CI
 
 A Java-based Selenium test project focused on **browser automation infrastructure, Docker images, Selenium Grid, CI pipelines, and Allure reporting**.

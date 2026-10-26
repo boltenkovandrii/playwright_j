@@ -1,4 +1,4 @@
-package com.andrii.test.base;
+package com.prestashop.test.base;
 
 import org.junit.platform.engine.ConfigurationParameters;
 import org.junit.platform.engine.support.hierarchical.ParallelExecutionConfiguration;

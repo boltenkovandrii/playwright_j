@@ -1,0 +1,46 @@
+package com.prestashop.test.components;
+
+import com.microsoft.playwright.Locator;
+
+import java.util.List;
+
+import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
+
+public class ProductGrid {
+
+    private final Locator container;
+    private final Locator cards;
+
+    public ProductGrid(Locator parent) {
+        container = parent.locator(".products.row");
+        cards = container.locator(".product-miniature");
+    }
+
+    public ProductGrid verifyLoaded() {
+        assertThat(container).isVisible();
+        return this;
+    }
+
+    public ProductGrid checkStructure() {
+        assertThat(container).isVisible();
+        assertThat(cards.first()).isVisible();
+        productAt(0).checkStructure();
+        return this;
+    }
+
+    public ProductCard productAt(int index) {
+        return new ProductCard(cards.nth(index));
+    }
+
+    public List<String> names() {
+        return cards.all().stream().map(card -> new ProductCard(card).name()).toList();
+    }
+
+    public List<Double> prices() {
+        return cards.all().stream().map(card -> new ProductCard(card).price()).toList();
+    }
+
+    public void openProductByName(String name) {
+        cards.filter(new Locator.FilterOptions().setHasText(name)).first().locator(".product-title a").click();
+    }
+}
