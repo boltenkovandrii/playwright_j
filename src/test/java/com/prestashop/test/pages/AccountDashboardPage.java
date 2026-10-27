@@ -25,8 +25,4 @@ public class AccountDashboardPage extends BaseStorefrontPage {
         return this;
     }
 
-    public AccountDashboardPage verifyLoggedIn() {
-        header.verifyLoggedIn();
-        return this;
-    }
 }

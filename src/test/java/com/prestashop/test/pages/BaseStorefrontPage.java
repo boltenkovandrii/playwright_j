@@ -86,8 +86,7 @@ public class BaseStorefrontPage extends BasePage<BaseStorefrontPage> {
         return new SearchResultsPage(page, locale).verifyLoaded();
     }
 
-    //TODO: check if needed
-    public LoginPage asLoginPage() {
+   public LoginPage asLoginPage() {
         return new LoginPage(page, locale).verifyLoaded();
     }
 
@@ -99,4 +98,16 @@ public class BaseStorefrontPage extends BasePage<BaseStorefrontPage> {
     protected int viewportWidth() {
         return ((Number) page.evaluate("window.innerWidth")).intValue();
     }
+
+    public BaseStorefrontPage verifyLoggedIn() {
+        header.verifyLoggedIn();
+        return this;
+    }
+    public BaseStorefrontPage verifyNotLoggedIn() {
+        header.verifyNotLoggedIn();
+        return this;
+    }
+
+
+
 }

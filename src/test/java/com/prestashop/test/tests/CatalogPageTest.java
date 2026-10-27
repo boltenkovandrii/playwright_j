@@ -53,7 +53,7 @@ class CatalogPageTest extends TestBase {
     void filterProductsByPrice() {
         runScenario(page -> new HomePage(page, "en").open().openCategory("Accessories")
                 .checkResultCount(11)
-                .applyPriceFilter(22, 38).checkResultCount(3).verifyActiveFilter("Price----"));
+                .applyPriceFilter(22, 38).checkResultCount(3).verifyActiveFilter("Price"));
     }
 
     @Test
