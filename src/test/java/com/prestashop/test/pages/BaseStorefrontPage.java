@@ -90,6 +90,14 @@ public class BaseStorefrontPage extends BasePage<BaseStorefrontPage> {
         return new LoginPage(page, locale).verifyLoaded();
     }
 
+    public RegistrationPage asRegistrationPage() {
+        return new RegistrationPage(page, locale).verifyLoaded();
+    }
+
+    public HomePage asHomePage() {
+        return new HomePage(page, locale).verifyLoaded();
+    }
+
     protected String localizedUrl(String path) {
         String normalized = path.replaceFirst("^/", "");
         return PlaywrightSettings.baseUrl() + "/" + locale + "/" + normalized;
