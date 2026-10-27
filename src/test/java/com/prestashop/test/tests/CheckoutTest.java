@@ -12,9 +12,6 @@ import org.junit.jupiter.api.Test;
 @DisplayName("PrestaShop storefront - Checkout")
 class CheckoutTest extends TestBase {
 
-
-    //TODO: add missing verification steps
-
     @Test
     @DisplayName("CHK-01 — Guest checkout page structure and checkout flow")
     void guestCheckout() {
@@ -24,17 +21,27 @@ class CheckoutTest extends TestBase {
                     .openProductByName("Hummingbird printed t-shirt")
                     .addToCart()
                     .proceedToCart();
+
             CheckoutPage checkout = cart
                     .proceedToCheckout()
                     .checkStructure()
+                    .checkPersonalInfoStructure()
                     .fillPersonalInfo("Jane", "Doe", "jane.doe.chk01@example.com")
+                    .checkAddressesStructure()
                     .fillAddress("221B Baker Street", "Paris", "75001", "France", "5551234567", null)
+                    .checkShippingMethodStructure()
                     .selectShippingMethod("My carrier")
+                    .checkPaymentStructure()
                     .selectPaymentMethod("Pay by Cash on Delivery")
                     .acceptTerms();
-            checkout.placeOrder().checkStructure().verifyOrderReferencePresent()
-                    .verifyProductPresent("Hummingbird printed t-shirt").verifySubtotal(22.94)
-                    .verifyShipping(8.40).verifyTotal(31.34).verifyShippingMethod("My carrier")
+
+            checkout.placeOrder()
+                    .checkStructure()
+                    .verifyOrderReferencePresent()
+                    .verifyProductPresent("Hummingbird printed t-shirt")
+                    .verifySubtotal(22.94)
+                    .verifyShipping(8.40).verifyTotal(31.34)
+                    .verifyShippingMethod("My carrier")
                     .verifyPaymentMethod("Cash on delivery (COD)");
         });
     }

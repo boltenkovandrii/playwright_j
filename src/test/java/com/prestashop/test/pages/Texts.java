@@ -17,6 +17,10 @@ public final class Texts {
                     Map.entry("noMatches", "No matches were found for your search"),
                     Map.entry("searchResults", "Search Results"), Map.entry("brands", "Brands"),
                     Map.entry("continueCheckout", "Continue"), Map.entry("placeOrder", "Place order"),
+                    Map.entry("checkoutPersonalInformation", "1 PERSONAL INFORMATION"),
+                    Map.entry("checkoutAddresses", "2 ADDRESSES"),
+                    Map.entry("checkoutShipping", "3 SHIPPING METHOD"),
+                    Map.entry("checkoutPayment", "4 PAYMENT"),
                     Map.entry("confirmation", "Your order is confirmed")),
             "nl", Map.ofEntries(
                     Map.entry("language", "Nederlands"), Map.entry("search", "Doorzoek onze catalogus"),
@@ -30,6 +34,10 @@ public final class Texts {
                     Map.entry("noMatches", "Geen resultaten gevonden voor uw zoekopdracht"),
                     Map.entry("searchResults", "Zoekresultaten"), Map.entry("brands", "Merken"),
                     Map.entry("continueCheckout", "Doorgaan"), Map.entry("placeOrder", "Plaats bestelling"),
+                    Map.entry("checkoutPersonalInformation", "1 Persoonlijke gegevens"),
+                    Map.entry("checkoutAddresses", "2 Adressen"),
+                    Map.entry("checkoutShipping", "3 Verzendmethode"),
+                    Map.entry("checkoutPayment", "4 Betaling"),
                     Map.entry("confirmation", "Uw bestelling is bevestigd")));
 
     private Texts() {
