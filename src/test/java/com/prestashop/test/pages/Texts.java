@@ -21,6 +21,9 @@ public final class Texts {
                     Map.entry("checkoutAddresses", "2 ADDRESSES"),
                     Map.entry("checkoutShipping", "3 SHIPPING METHOD"),
                     Map.entry("checkoutPayment", "4 PAYMENT"),
+                    Map.entry("productAdded", "Product successfully added to your shopping cart"),
+                    Map.entry("cartItemsOne", "There is 1 item in your cart."),
+                    Map.entry("cartItemsMany", "There are {count} items in your cart."),
                     Map.entry("confirmation", "Your order is confirmed")),
             "nl", Map.ofEntries(
                     Map.entry("language", "Nederlands"), Map.entry("search", "Doorzoek onze catalogus"),
@@ -38,6 +41,9 @@ public final class Texts {
                     Map.entry("checkoutAddresses", "2 Adressen"),
                     Map.entry("checkoutShipping", "3 Verzendmethode"),
                     Map.entry("checkoutPayment", "4 Betaling"),
+                    Map.entry("productAdded", "Het product is succesvol aan uw winkelwagen toegevoegd"),
+                    Map.entry("cartItemsOne", "Er is 1 item in uw wagen."),
+                    Map.entry("cartItemsMany", "Er zijn {count} items in uw wagen."),
                     Map.entry("confirmation", "Uw bestelling is bevestigd")));
 
     private Texts() {

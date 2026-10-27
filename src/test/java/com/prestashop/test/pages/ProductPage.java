@@ -6,103 +6,176 @@ import com.microsoft.playwright.Page;
 import com.microsoft.playwright.options.SelectOption;
 
 import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
+import static com.microsoft.playwright.options.AriaRole.BUTTON;
+import static com.microsoft.playwright.options.AriaRole.LINK;
+import static com.microsoft.playwright.options.AriaRole.TAB;
 
 public class ProductPage extends BaseStorefrontPage {
 
+    private final Locator product;
+    private final Locator productName;
+    private final Locator productInformation;
+    private final Locator coverImage;
+    private final Locator price;
+    private final Locator regularPrice;
+    private final Locator shortDescription;
+    private final Locator descriptionTab;
+    private final Locator descriptionPanel;
+    private final Locator fullDescription;
+    private final Locator detailsTab;
+    private final Locator detailsPanel;
+    private final Locator inStock;
+    private final Locator addToCartButton;
+    private final Locator cartModal;
+    private final Locator modalTitle;
+    private final Locator modalProductName;
+    private final Locator modalProductQuantity;
+    private final Locator modalItemCount;
+    private final Locator modalTotal;
+    private final Locator modalSubtotal;
+    private final Locator continueShoppingButton;
+    private final Locator proceedToCartLink;
+    private final Locator quantityInput;
+    private final Locator quantityIncreaseButton;
+    private final Locator quantityDecreaseButton;
+    private final Locator sizeSelect;
+    private final Locator sizeOptions;
+    private final Locator selectedSize;
+    private final Locator colorOptions;
+
     public ProductPage(Page page, String locale) {
         super(page, locale);
+        product = page.getByTestId("main");
+        productName = product.locator("h1");
+        productInformation = page.locator(".product-information");
+        coverImage = page.locator(".product-cover .img-fluid");
+        price = page.locator(".current-price .current-price-value");
+        regularPrice = page.locator(".product-discount .regular-price");
+        shortDescription = page.locator("div[id*='product-description-short-']");
+        descriptionTab = page.getByRole(TAB, new Page.GetByRoleOptions().setName(Texts.get(locale, "description")));
+        descriptionPanel = page.getByTestId("description");
+        fullDescription = page.locator(".tab-content .product-description");
+        detailsTab = page.getByRole(TAB, new Page.GetByRoleOptions().setName(Texts.get(locale, "details")));
+        detailsPanel = page.getByTestId("product-details");
+        inStock = page.locator(".product-quantities span");
+        addToCartButton = page.locator("[data-button-action='add-to-cart']");
+        cartModal = page.getByTestId("blockcart-modal");
+        modalTitle = cartModal.locator(".modal-title");
+        modalProductName = cartModal.locator(".product-name");
+        modalProductQuantity = cartModal.locator(".product-quantity strong");
+        modalItemCount = cartModal.locator(".cart-products-count");
+        modalTotal = cartModal.locator(".product-total .value");
+        modalSubtotal = cartModal.locator(".subtotal.value");
+        continueShoppingButton = page.getByRole(BUTTON, new Page.GetByRoleOptions().setName(Texts.get(locale, "continue")));
+        proceedToCartLink = page.getByRole(LINK, new Page.GetByRoleOptions().setName(Texts.get(locale, "checkout")));
+        quantityInput = page.getByTestId("quantity_wanted");
+        quantityIncreaseButton = page.locator(".bootstrap-touchspin-up");
+        quantityDecreaseButton = page.locator(".bootstrap-touchspin-down");
+        sizeSelect = page.getByLabel(Texts.get(locale, "size"));
+        sizeOptions = sizeSelect.locator("option");
+        selectedSize = sizeSelect.locator("option:checked");
+        colorOptions = page.locator(".input-color");
     }
 
     @Override
     public ProductPage verifyLoaded() {
         super.verifyLoaded();
-        assertThat(page.getByTestId("main").locator("h1")).isVisible();
+        assertThat(product).isVisible();
         return this;
     }
 
     @Override
     public ProductPage checkStructure() {
         super.checkStructure();
-        assertThat(page.locator(".product-cover .img-fluid")).isVisible();
-        assertThat(page.locator(".product-information")).isVisible();
-        assertThat(page.locator("[data-button-action='add-to-cart']")).isVisible();
+        assertThat(coverImage).isVisible();
+        assertThat(productInformation).isVisible();
+        assertThat(shortDescription).isVisible();
+        assertThat(descriptionTab).isVisible();
+        assertThat(detailsTab).isVisible();
+        assertThat(addToCartButton).isVisible();
         return this;
     }
 
     public ProductPage verifyProductName(String name) {
-        assertThat(page.getByTestId("main").locator("h1")).containsText(name);
+        assertThat(productName).containsText(name);
         return this;
     }
 
     public ProductPage verifyPrice(double amount) {
-        assertThat(page.locator(".current-price .current-price-value")).hasText("€" + amount);
+        assertThat(price).hasText("€" + amount);
         return this;
     }
 
     public ProductPage verifyRegularPrice(double amount) {
-        assertThat(page.locator(".product-discount .regular-price")).hasText("€" + amount);
+        assertThat(regularPrice).hasText("€" + amount);
         return this;
     }
 
     public ProductPage verifyShortDescription(String text) {
-        assertThat(page.locator("div[id*='product-description-short-'] p")).containsText(text);
+        assertThat(shortDescription).containsText(text);
         return this;
     }
 
     public ProductPage verifyFullDescription(String text) {
-        page.getByRole(com.microsoft.playwright.options.AriaRole.TAB,
-                new Page.GetByRoleOptions().setName(Texts.get(locale, "description"))).click();
-        assertThat(page.locator(".tab-content .product-description")).containsText(text);
+        descriptionTab.click();
+        assertThat(descriptionPanel).isVisible();
+        assertThat(fullDescription).containsText(text);
         return this;
     }
 
     public ProductPage verifyInStockCount(int count) {
-        page.getByRole(com.microsoft.playwright.options.AriaRole.TAB,
-                new Page.GetByRoleOptions().setName(Texts.get(locale, "details"))).click();
-        assertThat(page.locator(".product-quantities span")).hasText(count + " Items");
+        detailsTab.click();
+        assertThat(detailsPanel).isVisible();
+        assertThat(inStock).hasText(count + " Items");
         return this;
     }
 
     public ProductPage increaseQuantity() {
-        page.locator(".bootstrap-touchspin-up").click();
+        quantityIncreaseButton.click();
         return this;
     }
 
     public ProductPage decreaseQuantity() {
-        page.locator(".bootstrap-touchspin-down").click();
+        quantityDecreaseButton.click();
         return this;
     }
 
     public ProductPage setQuantity(int value) {
-        Locator quantity = page.getByTestId("quantity_wanted");
-        quantity.fill(String.valueOf(value));
-        quantity.press("Tab");
+        quantityInput.fill(String.valueOf(value));
+        quantityInput.press("Tab");
         return this;
     }
 
-    public ProductPage verifyQuantity(int expectedQuantity) {
-        assertThat(page.getByTestId("quantity_wanted")).hasValue(String.valueOf(expectedQuantity));
+    public ProductPage verifyQuantity(int quantity) {
+        assertThat(quantityInput).hasValue(String.valueOf(quantity));
         return this;
     }
 
     public ProductPage verifySizeOptions(String... expectedSizes) {
-        Locator options = page.getByLabel(Texts.get(locale, "size")).locator("option");
-        assertThat(options).hasCount(expectedSizes.length);
+        assertThat(sizeOptions).hasCount(expectedSizes.length);
+        for (int index = 0; index < expectedSizes.length; index++) {
+            assertThat(sizeOptions.nth(index)).hasText(expectedSizes[index]);
+        }
         return this;
     }
 
     public ProductPage verifyColorOptionCount(int count) {
-        assertThat(page.locator(".input-color")).hasCount(count);
+        assertThat(colorOptions.first()).isVisible();
+        assertThat(colorOptions).hasCount(count);
         return this;
     }
 
     public ProductPage selectSize(String size) {
-        page.getByLabel(Texts.get(locale, "size")).selectOption(new SelectOption().setLabel(size));
+        //need to wait till request is processed, otherwise consequent actions may fail due to the page not being updated yet
+        page.waitForResponse(resp -> resp.url().contains("controller=product") && resp.status() == 200,
+                () ->  sizeSelect.selectOption(new SelectOption().setLabel(size))
+        );
+        assertThat(selectedSize).hasText(size);
         return this;
     }
 
     public ProductPage verifySelectedSize(String size) {
-        assertThat(page.getByLabel(Texts.get(locale, "size")).locator("option:checked")).hasText(size);
+        assertThat(selectedSize).hasText(size);
         return this;
     }
 
@@ -111,7 +184,8 @@ public class ProductPage extends BaseStorefrontPage {
         if (!option.isChecked()) {
             String original = imageSource();
             option.check(new Locator.CheckOptions().setForce(true));
-            assertThat(page.locator(".product-cover .img-fluid")).not().hasAttribute("src", original);
+            assertThat(option).isChecked();
+            assertThat(coverImage).not().hasAttribute("src", original);
         }
         return this;
     }
@@ -121,8 +195,14 @@ public class ProductPage extends BaseStorefrontPage {
         return this;
     }
 
+    public ProductPage verifyProductContextVisible() {
+        assertThat(productName).isVisible();
+        assertThat(addToCartButton).isVisible();
+        return this;
+    }
+
     public String imageSource() {
-        String source = page.locator(".product-cover .img-fluid").getAttribute("src");
+        String source = coverImage.getAttribute("src");
         if (source == null) {
             throw new AssertionError("Product image source is not available");
         }
@@ -131,30 +211,41 @@ public class ProductPage extends BaseStorefrontPage {
 
     public ProductPage addToCart() {
         AllureArtifacts.screenshot(page, "Adding product to cart");
-        page.locator("[data-button-action='add-to-cart']").click();
-        assertThat(page.getByTestId("blockcart-modal")).isVisible();
+        addToCartButton.click();
+        assertThat(cartModal).isVisible();
         return this;
     }
 
-    public ProductPage verifyAddToCartConfirmation(String productName, int quantity, double total, double subtotal) {
-        Locator modal = page.getByTestId("blockcart-modal");
-        assertThat(modal.locator(".product-name")).hasText(productName);
-        assertThat(modal.locator(".product-quantity strong")).hasText(String.valueOf(quantity));
-        assertThat(modal.locator(".product-total .value")).hasText("€" + total);
-        assertThat(modal.locator(".subtotal.value")).hasText("€" + subtotal);
+    public ProductPage verifyAddToCartConfirmation(String name, int quantity, double total, double subtotal) {
+        assertThat(modalTitle).containsText(Texts.get(locale, "productAdded"));
+        assertThat(modalProductName).hasText(name);
+        assertThat(modalProductQuantity).hasText(String.valueOf(quantity));
+        assertThat(modalItemCount).hasText(cartItemCountText(quantity));
+        assertThat(modalTotal).hasText("€" + total);
+        assertThat(modalSubtotal).hasText("€" + subtotal);
+        assertThat(continueShoppingButton).isVisible();
+        assertThat(proceedToCartLink).isVisible();
         return this;
     }
 
     public ProductPage continueShopping() {
-        page.getByRole(com.microsoft.playwright.options.AriaRole.BUTTON,
-                new Page.GetByRoleOptions().setName(Texts.get(locale, "continue"))).click();
-        assertThat(page.getByTestId("blockcart-modal")).isHidden();
+        continueShoppingButton.click();
+        assertThat(cartModal).isHidden();
+        return this;
+    }
+
+    public ProductPage verifyAddToCartConfirmationClosed() {
+        assertThat(cartModal).isHidden();
+        return this;
+    }
+
+    public ProductPage verifyHeaderCartCount(int count) {
+        header.verifyCartCount(count);
         return this;
     }
 
     public CartPage proceedToCart() {
-        page.getByRole(com.microsoft.playwright.options.AriaRole.LINK,
-                new Page.GetByRoleOptions().setName(Texts.get(locale, "checkout"))).click();
+        proceedToCartLink.click();
         return new CartPage(page, locale).verifyLoaded();
     }
 
@@ -165,5 +256,12 @@ public class ProductPage extends BaseStorefrontPage {
 
     private Locator colorOption(String color) {
         return page.locator(".input-color[title='" + color + "'], .input-color[aria-label='" + color + "']");
+    }
+
+    private String cartItemCountText(int count) {
+        if (count == 1) {
+            return Texts.get(locale, "cartItemsOne");
+        }
+        return Texts.get(locale, "cartItemsMany").replace("{count}", String.valueOf(count));
     }
 }

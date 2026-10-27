@@ -44,6 +44,11 @@ public class BaseStorefrontPage extends BasePage<BaseStorefrontPage> {
         return this;
     }
 
+    public BaseStorefrontPage verifyHeaderCartCount(int count) {
+        header.verifyCartCount(count);
+        return this;
+    }
+
     public BaseStorefrontPage checkStructure() {
         assertThat(page.getByTestId("main")).isVisible();
         header.checkStructure();

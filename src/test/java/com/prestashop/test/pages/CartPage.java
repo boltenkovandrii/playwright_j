@@ -4,11 +4,32 @@ import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
 
 import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
+import static com.microsoft.playwright.options.AriaRole.LINK;
 
 public class CartPage extends BaseStorefrontPage {
+    private final Locator cart;
+    private final Locator cartOverview;
+    private final Locator detailedTotals;
+    private final Locator cartItems;
+    private final Locator productNames;
+    private final Locator productsSubtotal;
+    private final Locator total;
+    private final Locator emptyMessage;
+    private final Locator continueShoppingLink;
+    private final Locator proceedToCheckoutLink;
 
     public CartPage(Page page, String locale) {
         super(page, locale);
+        cart = page.locator(".cart-grid");
+        cartOverview = page.locator(".cart-overview");
+        detailedTotals = page.locator(".cart-detailed-totals");
+        cartItems = page.locator(".cart-items .cart-item");
+        productNames = cartItems.locator(".product-line-info a.label");
+        productsSubtotal = page.getByTestId("cart-subtotal-products").locator(".value");
+        total = page.locator(".cart-summary-line.cart-total .value");
+        emptyMessage = page.locator(".no-items");
+        continueShoppingLink = page.getByRole(LINK, new Page.GetByRoleOptions().setName(Texts.get(locale, "continue")));
+        proceedToCheckoutLink = page.getByRole(LINK, new Page.GetByRoleOptions().setName(Texts.get(locale, "checkout")));
     }
 
     @Override
@@ -21,19 +42,35 @@ public class CartPage extends BaseStorefrontPage {
     @Override
     public CartPage checkStructure() {
         super.checkStructure();
-        assertThat(page.locator(".cart-grid")).isVisible();
-        assertThat(page.locator(".cart-overview")).isVisible();
+        assertThat(cart).isVisible();
+        assertThat(cartOverview).isVisible();
+        assertThat(detailedTotals).isVisible();
+        assertThat(continueShoppingLink).isVisible();
+        assertThat(proceedToCheckoutLink).isVisible();
         return this;
     }
 
     public CartPage checkEmptyStructure() {
         super.checkStructure();
-        assertThat(page.locator(".no-items")).containsText(Texts.get(locale, "cartEmpty"));
+        assertThat(emptyMessage).isVisible();
+        assertThat(emptyMessage).containsText(Texts.get(locale, "cartEmpty"));
         return this;
     }
 
     public CartPage verifyProductCount(int count) {
-        assertThat(cartItems()).hasCount(count);
+        assertThat(cartItems).hasCount(count);
+        return this;
+    }
+
+    public CartPage verifyProductWithNamePresent(String name, int count) {
+        Locator matches = productNames.filter(new Locator.FilterOptions().setHasText(name));
+        assertThat(matches).hasCount(count);
+        assertThat(matches.first()).isVisible();
+        return this;
+    }
+
+    public CartPage verifyProductPrice(String name, double price) {
+        assertThat(item(new ProductSpec(name)).locator(".current-price .price")).hasText("€" + price);
         return this;
     }
 
@@ -57,34 +94,27 @@ public class CartPage extends BaseStorefrontPage {
     }
 
     public CartPage verifyProductsSubtotal(double amount) {
-        assertThat(page.getByTestId("cart-subtotal-products").locator(".value")).hasText("€" + amount);
+        assertThat(productsSubtotal).hasText("€" + amount);
         return this;
     }
 
     public CartPage verifyTotal(double amount) {
-        assertThat(page.locator(".cart-summary-line.cart-total .value")).hasText("€" + amount);
+        assertThat(total).hasText("€" + amount);
         return this;
     }
 
-    //TODO: check if needed
     public HomePage continueShopping() {
-        page.getByRole(com.microsoft.playwright.options.AriaRole.LINK,
-                new Page.GetByRoleOptions().setName(Texts.get(locale, "continue"))).click();
+        continueShoppingLink.click();
         return new HomePage(page, locale).verifyLoaded();
     }
 
     public CheckoutPage proceedToCheckout() {
-        page.getByRole(com.microsoft.playwright.options.AriaRole.LINK,
-                new Page.GetByRoleOptions().setName(Texts.get(locale, "checkout"))).click();
+        proceedToCheckoutLink.click();
         return new CheckoutPage(page, locale).verifyLoaded();
     }
 
-    private Locator cartItems() {
-        return page.locator(".cart-items .cart-item");
-    }
-
     private Locator item(ProductSpec product) {
-        Locator candidates = cartItems().filter(new Locator.FilterOptions().setHasText(product.name()));
+        Locator candidates = cartItems.filter(new Locator.FilterOptions().setHasText(product.name()));
         for (var attribute : product.attributes().entrySet()) {
             candidates = candidates.filter(new Locator.FilterOptions()
                     .setHas(page.locator("." + attribute.getKey() + " .value")
