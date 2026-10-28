@@ -2,6 +2,7 @@ package com.prestashop.test.tests;
 
 import com.prestashop.test.base.TestBase;
 import com.prestashop.test.pages.HomePage;
+import com.prestashop.test.pages.ProductPage;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -42,7 +43,7 @@ class ProductPageTest extends TestBase {
     @Test @DisplayName("PDP-03 - Change product quantity")
     void changeProductQuantity() {
         runScenario(page -> {
-            var product = new HomePage(page, "en")
+            ProductPage product = new HomePage(page, "en")
                     .open()
                     .openCategory("Clothes")
                     .openProductByName(T_SHIRT);
@@ -64,7 +65,7 @@ class ProductPageTest extends TestBase {
     @Test @DisplayName("PDP-04 - Select product combination")
     void selectProductCombination() {
         runScenario(page -> {
-            var product = new HomePage(page, "en").open().openCategory("Clothes").openProductByName(T_SHIRT);
+            ProductPage product = new HomePage(page, "en").open().openCategory("Clothes").openProductByName(T_SHIRT);
             product.verifySizeOptions("S", "M", "L", "XL")
                     .verifyColorOptionCount(2)
                     .verifySelectedSize("S")
@@ -96,10 +97,10 @@ class ProductPageTest extends TestBase {
     @Test @DisplayName("PDP-06 - Continue shopping after adding a product")
     void continueShoppingAfterAdd() {
         runScenario(page -> {
-            var product = new HomePage(page, "en")
+            ProductPage product = new HomePage(page, "en")
                     .open()
-                    .openCategory("Clothes"
-                    ).openProductByName(T_SHIRT);
+                    .openCategory("Clothes")
+                    .openProductByName(T_SHIRT);
 
             product.addToCart()
                     .verifyAddToCartConfirmation(T_SHIRT, 1, 22.94, 22.94)

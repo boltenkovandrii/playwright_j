@@ -1,7 +1,9 @@
 package com.prestashop.test.tests;
 
 import com.prestashop.test.base.TestBase;
+import com.prestashop.test.pages.CartPage;
 import com.prestashop.test.pages.HomePage;
+import com.prestashop.test.pages.ProductPage;
 import com.prestashop.test.pages.ProductSpec;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
@@ -38,7 +40,7 @@ class CartPageTest extends TestBase {
     @Test @DisplayName("CART-03 - Add multiple quantities from product page")
     void addMultipleQuantities() {
         runScenario(page -> {
-            var product = new HomePage(page, "en")
+            ProductPage product = new HomePage(page, "en")
                     .open()
                     .openCategory("Clothes")
                     .openProductByName(T_SHIRT);
@@ -66,7 +68,7 @@ class CartPageTest extends TestBase {
     @Test @DisplayName("CART-05 - Update product quantity in cart")
     void updateProductQuantity() {
         runScenario(page -> {
-            var product = new ProductSpec(T_SHIRT);
+            ProductSpec product = new ProductSpec(T_SHIRT);
             new HomePage(page, "en")
                     .open()
                     .openCategory("Clothes")
@@ -86,11 +88,11 @@ class CartPageTest extends TestBase {
     @Test @DisplayName("CART-06 - Continue shopping from cart")
     void continueShopping() {
         runScenario(page -> {
-            var product = new HomePage(page, "en")
+            ProductPage product = new HomePage(page, "en")
                     .open()
                     .openCategory("Clothes")
                     .openProductByName(T_SHIRT);
-            var home = product.addToCart()
+            HomePage home = product.addToCart()
                     .proceedToCart()
                     .continueShopping();
 
@@ -108,7 +110,7 @@ class CartPageTest extends TestBase {
     @Test @DisplayName("CART-07 - Verify cart totals for multiple variants")
     void cartTotalsForVariants() {
         runScenario(page -> {
-            var product = new HomePage(page, "en")
+            ProductPage product = new HomePage(page, "en")
                     .open()
                     .openCategory("Clothes")
                     .openProductByName(T_SHIRT);
@@ -120,9 +122,9 @@ class CartPageTest extends TestBase {
                     .selectSize("XL")
                     .selectColor("White")
                     .setQuantity(3);
-            var cart = product.addToCart().proceedToCart();
-            var mediumBlack = new ProductSpec(T_SHIRT, java.util.Map.of("size", "M", "color", "Black"));
-            var extraLargeWhite = new ProductSpec(T_SHIRT, java.util.Map.of("size", "XL", "color", "White"));
+            CartPage cart = product.addToCart().proceedToCart();
+            ProductSpec mediumBlack = new ProductSpec(T_SHIRT, java.util.Map.of("size", "M", "color", "Black"));
+            ProductSpec extraLargeWhite = new ProductSpec(T_SHIRT, java.util.Map.of("size", "XL", "color", "White"));
             cart.verifyProductCount(2)
                     .verifyProductQuantity(mediumBlack, 2)
                     .verifyProductQuantity(extraLargeWhite, 3)

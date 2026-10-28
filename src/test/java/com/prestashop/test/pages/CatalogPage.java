@@ -1,5 +1,6 @@
 package com.prestashop.test.pages;
 
+import com.microsoft.playwright.options.BoundingBox;
 import com.prestashop.test.components.ProductGrid;
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Mouse;
@@ -129,8 +130,8 @@ public class CatalogPage extends BaseStorefrontPage {
         double maximum = Double.parseDouble(facet.getAttribute("data-slider-max"));
         Locator track = facet.locator(".ui-slider");
         Locator handle = facet.locator(".ui-slider-handle").nth(index);
-        var trackBox = track.boundingBox();
-        var handleBox = handle.boundingBox();
+        BoundingBox trackBox = track.boundingBox();
+        BoundingBox handleBox = handle.boundingBox();
         if (trackBox == null || handleBox == null) {
             throw new AssertionError("Price slider is not ready");
         }

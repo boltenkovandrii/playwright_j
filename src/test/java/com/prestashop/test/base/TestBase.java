@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Comparator;
+import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.fail;
 
@@ -99,7 +100,7 @@ public abstract class TestBase {
         }
         Path videoDirectory = outputDirectory.resolve("video");
         if (Files.isDirectory(videoDirectory)) {
-            try (var files = Files.list(videoDirectory)) {
+            try (Stream<Path> files = Files.list(videoDirectory)) {
                 files.filter(path -> path.toString().endsWith(".webm"))
                         .forEach(path -> AllureArtifacts.attachFile(path, "Video", "video/webm"));
             } catch (IOException e) {
@@ -112,7 +113,7 @@ public abstract class TestBase {
         if (!Files.exists(directory)) {
             return;
         }
-        try (var files = Files.walk(directory)) {
+        try (Stream<Path> files = Files.walk(directory)) {
             files.sorted(Comparator.reverseOrder()).forEach(path -> {
                 try {
                     Files.delete(path);
