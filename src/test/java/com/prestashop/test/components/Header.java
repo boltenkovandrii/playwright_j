@@ -3,9 +3,12 @@ package com.prestashop.test.components;
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
 import com.microsoft.playwright.options.SelectOption;
+import com.prestashop.test.base.AllureArtifacts;
+import com.prestashop.test.base.AriaSnapshots;
 import com.prestashop.test.pages.Texts;
 
 import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
+import static com.microsoft.playwright.options.AriaRole.LINK;
 import static com.prestashop.test.pages.BasePage.BOOTSTRAP_LG;
 
 public class Header {
@@ -14,16 +17,30 @@ public class Header {
     private final Locator container;
     private final Locator desktopLanguageSelector;
     private final Locator mobileLanguageSelector;
+    private final Locator menuButton;
     private final Locator mobileMenu;
     private final Locator searchInput;
+    private final Locator desktopCart;
+    private final Locator mobileCart;
+    private final Locator desktopCartProductsCount;
+    private final Locator mobileCartProductsCount;
+    private final Locator desktopUserInfo;
+    private final Locator mobileUserInfo;
 
     public Header(Page page) {
         this.page = page;
         container = page.getByTestId("header");
         desktopLanguageSelector = page.getByTestId("_desktop_language_selector").locator("button");
         mobileLanguageSelector = page.getByTestId("_mobile_language_selector").locator("select");
+        menuButton = page.getByTestId("menu-icon");
         mobileMenu = page.getByTestId("mobile_top_menu_wrapper");
         searchInput = container.getByTestId("search_widget").locator("input[type='text']");
+        desktopCart = page.getByTestId("_desktop_cart");
+        mobileCart = page.getByTestId("_mobile_cart");
+        desktopCartProductsCount = desktopCart.locator(".cart-products-count");
+        mobileCartProductsCount = mobileCart.locator(".cart-products-count");
+        desktopUserInfo = page.getByTestId("_desktop_user_info");
+        mobileUserInfo = page.getByTestId("_mobile_user_info");
     }
 
     public Header verifyLoaded() {
@@ -47,15 +64,22 @@ public class Header {
         return this;
     }
 
-    public Header checkStructure() {
+    public Header checkStructure(String locale) {
+        AllureArtifacts.screenshot(container, "Checking header structure");
         assertThat(container).isVisible();
         assertThat(searchInput).isVisible();
         if (viewportWidth() < BOOTSTRAP_LG) {
-            assertThat(page.getByTestId("menu-icon")).isVisible();
-            assertThat(page.getByTestId("_mobile_cart")).isVisible();
+            assertThat(menuButton).isVisible();
+            assertThat(mobileCart).isVisible();
+            assertThat(desktopCart).isHidden();
+            assertThat(desktopLanguageSelector).isHidden();
+            assertThat(container).matchesAriaSnapshot(AriaSnapshots.load("header_compact", locale));
         } else {
-            assertThat(page.getByTestId("_desktop_cart")).isVisible();
+            assertThat(menuButton).isHidden();
+            assertThat(mobileCart).isHidden();
+            assertThat(desktopCart).isVisible();
             assertThat(desktopLanguageSelector).isVisible();
+            assertThat(container).matchesAriaSnapshot(AriaSnapshots.load("header", locale));
         }
         return this;
     }
@@ -70,7 +94,7 @@ public class Header {
             mobileLanguageSelector.selectOption(new SelectOption().setLabel(language));
         } else {
             desktopLanguageSelector.click();
-            page.getByRole(com.microsoft.playwright.options.AriaRole.LINK,
+            page.getByRole(LINK,
                     new Page.GetByRoleOptions().setName(language).setExact(true)).click();
         }
         return this;
@@ -89,9 +113,8 @@ public class Header {
     }
 
     public Header verifyCartCount(int expectedCount) {
-        Locator count = viewportWidth() < BOOTSTRAP_LG
-                ? page.getByTestId("_mobile_cart").locator(".cart-products-count")
-                : page.getByTestId("_desktop_cart").locator(".cart-products-count");
+        Locator count = viewportWidth() < BOOTSTRAP_LG ? mobileCartProductsCount : desktopCartProductsCount;
+        assertThat(count).isVisible();
         assertThat(count).hasText("(" + expectedCount + ")");
         return this;
     }
@@ -122,27 +145,35 @@ public class Header {
         return this;
     }
 
+    public String accountName() {
+        String accountName = activeUserInfo().locator(".account span").textContent();
+        if (accountName == null) {
+            throw new AssertionError("Account name text is not available");
+        }
+        return accountName.strip();
+    }
+
     public Header signOut() {
         activeUserInfo().locator(".logout").click();
         return this;
     }
 
     private Header openMobileMenu() {
-        page.getByTestId("menu-icon").click();
+        menuButton.click();
         assertThat(mobileMenu).isVisible();
         return this;
     }
 
     private Header closeMobileMenu() {
-        page.getByTestId("menu-icon").click();
+        menuButton.click();
         assertThat(mobileMenu).isHidden();
         return this;
     }
 
     private Locator activeUserInfo() {
         return viewportWidth() < BOOTSTRAP_LG
-                ? page.getByTestId("_mobile_user_info")
-                : page.getByTestId("_desktop_user_info");
+                ? mobileUserInfo
+                : desktopUserInfo;
     }
 
     private int viewportWidth() {

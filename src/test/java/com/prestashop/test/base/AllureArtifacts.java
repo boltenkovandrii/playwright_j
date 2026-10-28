@@ -1,6 +1,7 @@
 package com.prestashop.test.base;
 
 import com.microsoft.playwright.Page;
+import com.microsoft.playwright.Locator;
 import io.qameta.allure.Allure;
 import io.qameta.allure.AttachmentOptions;
 
@@ -28,6 +29,13 @@ public final class AllureArtifacts {
         Attempt attempt = ATTEMPT.get();
         if (attempt != null && (attempt.retainArtifacts || PlaywrightSettings.screenshotsEnabled())) {
             attachPng(page.screenshot(new Page.ScreenshotOptions().setFullPage(true)), name);
+        }
+    }
+
+    public static void screenshot(Locator locator, String name) {
+        Attempt attempt = ATTEMPT.get();
+        if (attempt != null && (attempt.retainArtifacts || PlaywrightSettings.screenshotsEnabled())) {
+            attachPng(locator.screenshot(), name);
         }
     }
 

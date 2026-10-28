@@ -1,6 +1,7 @@
 package com.prestashop.test.components;
 
 import com.microsoft.playwright.Locator;
+import com.prestashop.test.base.AllureArtifacts;
 
 import java.util.List;
 
@@ -22,6 +23,7 @@ public class ProductGrid {
     }
 
     public ProductGrid checkStructure() {
+        AllureArtifacts.screenshot(container, "Checking product grid structure");
         assertThat(container).isVisible();
         assertThat(cards.first()).isVisible();
         productAt(0).checkStructure();

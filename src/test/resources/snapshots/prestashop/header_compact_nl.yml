@@ -1,0 +1,6 @@
+- navigation:
+  - text: /( \(\d\))?/
+- status
+- textbox "Zoeken":
+  - /placeholder: Doorzoek onze catalogus
+

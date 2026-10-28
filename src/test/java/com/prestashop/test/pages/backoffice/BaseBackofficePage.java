@@ -17,6 +17,10 @@ public class BaseBackofficePage extends BasePage<BaseBackofficePage> {
         return verifyLoaded();
     }
 
+    public BaseBackofficePage open() {
+        return open("");
+    }
+
     @Override
     public BaseBackofficePage verifyLoaded() {
         assertThat(page.locator("body")).isVisible();

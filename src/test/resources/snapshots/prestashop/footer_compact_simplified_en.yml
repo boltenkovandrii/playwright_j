@@ -1,0 +1,10 @@
+- paragraph: Get our latest news and special sales
+- button /(OK)|(Subscribe)/
+- textbox "Get our latest news and special sales":
+  - /placeholder: Your email address
+- paragraph: You may unsubscribe at any moment. For that purpose, please find our contact info in the legal notice.
+- list
+- paragraph
+- paragraph:
+  - link /.*Ecommerce software by PrestaShop.*/:
+    - /url: https://www.prestashop-project.org/

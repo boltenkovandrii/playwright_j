@@ -1,5 +1,6 @@
 package com.prestashop.test.pages;
 
+import com.prestashop.test.base.AllureArtifacts;
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
 
@@ -34,6 +35,7 @@ public class CartPage extends BaseStorefrontPage {
 
     @Override
     public CartPage verifyLoaded() {
+        AllureArtifacts.screenshot(page, "Cart page");
         super.verifyLoaded();
         assertThat(page.getByTestId("cart")).isVisible();
         return this;
@@ -41,6 +43,7 @@ public class CartPage extends BaseStorefrontPage {
 
     @Override
     public CartPage checkStructure() {
+        AllureArtifacts.screenshot(page, "Checking cart page structure");
         super.checkStructure();
         assertThat(cart).isVisible();
         assertThat(cartOverview).isVisible();
@@ -51,6 +54,7 @@ public class CartPage extends BaseStorefrontPage {
     }
 
     public CartPage checkEmptyStructure() {
+        AllureArtifacts.screenshot(page, "Checking empty cart structure");
         super.checkStructure();
         assertThat(emptyMessage).isVisible();
         assertThat(emptyMessage).containsText(Texts.get(locale, "cartEmpty"));
@@ -80,6 +84,7 @@ public class CartPage extends BaseStorefrontPage {
     }
 
     public CartPage setProductQuantity(ProductSpec product, int quantity) {
+        AllureArtifacts.screenshot(page, "Updating quantity for " + product + " to " + quantity);
         Locator input = item(product).locator("input.js-cart-line-product-quantity");
         input.fill(String.valueOf(quantity));
         input.press("Tab");
@@ -88,6 +93,7 @@ public class CartPage extends BaseStorefrontPage {
     }
 
     public CartPage removeProduct(ProductSpec product) {
+        AllureArtifacts.screenshot(page, "Removing product from cart: " + product);
         item(product).locator(".remove-from-cart").click();
         assertThat(item(product)).hasCount(0);
         return this;
@@ -104,13 +110,23 @@ public class CartPage extends BaseStorefrontPage {
     }
 
     public HomePage continueShopping() {
+        AllureArtifacts.screenshot(page, "Continuing shopping from cart page");
         continueShoppingLink.click();
         return new HomePage(page, locale).verifyLoaded();
     }
 
     public CheckoutPage proceedToCheckout() {
+        AllureArtifacts.screenshot(page, "Proceeding from cart to checkout");
         proceedToCheckoutLink.click();
         return new CheckoutPage(page, locale).verifyLoaded();
+    }
+
+    @Override
+    public CartPage verifyCurrentLanguage(String expectedLocale) {
+        super.verifyCurrentLanguage(expectedLocale);
+        assertThat(continueShoppingLink).isVisible();
+        assertThat(proceedToCheckoutLink).isVisible();
+        return this;
     }
 
     private Locator item(ProductSpec product) {

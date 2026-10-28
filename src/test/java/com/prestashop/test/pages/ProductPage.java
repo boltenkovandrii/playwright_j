@@ -81,6 +81,7 @@ public class ProductPage extends BaseStorefrontPage {
 
     @Override
     public ProductPage verifyLoaded() {
+        AllureArtifacts.screenshot(page, "Product page");
         super.verifyLoaded();
         assertThat(product).isVisible();
         return this;
@@ -88,6 +89,7 @@ public class ProductPage extends BaseStorefrontPage {
 
     @Override
     public ProductPage checkStructure() {
+        AllureArtifacts.screenshot(page, "Checking product page structure");
         super.checkStructure();
         assertThat(coverImage).isVisible();
         assertThat(productInformation).isVisible();
@@ -99,6 +101,7 @@ public class ProductPage extends BaseStorefrontPage {
     }
 
     public ProductPage verifyProductName(String name) {
+        AllureArtifacts.screenshot(page, "Verifying product name");
         assertThat(productName).containsText(name);
         return this;
     }
@@ -119,6 +122,7 @@ public class ProductPage extends BaseStorefrontPage {
     }
 
     public ProductPage verifyFullDescription(String text) {
+        AllureArtifacts.screenshot(page, "Verifying full description");
         descriptionTab.click();
         assertThat(descriptionPanel).isVisible();
         assertThat(fullDescription).containsText(text);
@@ -126,6 +130,7 @@ public class ProductPage extends BaseStorefrontPage {
     }
 
     public ProductPage verifyInStockCount(int count) {
+        AllureArtifacts.screenshot(page, "Verifying stock count");
         detailsTab.click();
         assertThat(detailsPanel).isVisible();
         assertThat(inStock).hasText(count + " Items");
@@ -168,7 +173,8 @@ public class ProductPage extends BaseStorefrontPage {
     }
 
     public ProductPage selectSize(String size) {
-        //need to wait till request is processed, otherwise consequent actions may fail due to the page not being updated yet
+        AllureArtifacts.screenshot(page, "Selecting size: " + size);
+        // Need to wait until the request is processed, otherwise subsequent actions can use stale page state.
         page.waitForResponse(resp -> resp.url().contains("controller=product") && resp.status() == 200,
                 () ->  sizeSelect.selectOption(new SelectOption().setLabel(size))
         );
@@ -184,10 +190,13 @@ public class ProductPage extends BaseStorefrontPage {
     public ProductPage selectColor(String color) {
         Locator option = colorOption(color);
         if (!option.isChecked()) {
+            AllureArtifacts.screenshot(page, "Selecting color: " + color);
             String original = imageSource();
             option.check(new Locator.CheckOptions().setForce(true));
             assertThat(option).isChecked();
             assertThat(coverImage).not().hasAttribute("src", original);
+        } else {
+            AllureArtifacts.screenshot(page, "Color is already selected: " + color);
         }
         return this;
     }
@@ -215,6 +224,7 @@ public class ProductPage extends BaseStorefrontPage {
         AllureArtifacts.screenshot(page, "Adding product to cart");
         addToCartButton.click();
         assertThat(cartModal).isVisible();
+        AllureArtifacts.screenshot(page, "After adding item to cart");
         return this;
     }
 
@@ -231,6 +241,7 @@ public class ProductPage extends BaseStorefrontPage {
     }
 
     public ProductPage continueShopping() {
+        AllureArtifacts.screenshot(page, "Continuing shopping from cart confirmation");
         continueShoppingButton.click();
         assertThat(cartModal).isHidden();
         return this;
@@ -247,11 +258,13 @@ public class ProductPage extends BaseStorefrontPage {
     }
 
     public CartPage proceedToCart() {
+        AllureArtifacts.screenshot(page, "Going to cart");
         proceedToCartLink.click();
         return new CartPage(page, locale).verifyLoaded();
     }
 
     public CatalogPage goToCategoryFromBreadcrumb(String name) {
+        AllureArtifacts.screenshot(page, "Going to category from breadcrumb");
         breadcrumbLinks.filter(new Locator.FilterOptions().setHasText(name)).click();
         return new CatalogPage(page, locale).verifyLoaded();
     }
@@ -265,5 +278,14 @@ public class ProductPage extends BaseStorefrontPage {
             return Texts.get(locale, "cartItemsOne");
         }
         return Texts.get(locale, "cartItemsMany").replace("{count}", String.valueOf(count));
+    }
+
+    @Override
+    public ProductPage verifyCurrentLanguage(String expectedLocale) {
+        super.verifyCurrentLanguage(expectedLocale);
+        assertThat(descriptionTab).isVisible();
+        assertThat(detailsTab).isVisible();
+        assertThat(sizeSelect).isVisible();
+        return this;
     }
 }

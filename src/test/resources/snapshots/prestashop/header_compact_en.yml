@@ -1,0 +1,7 @@
+- navigation:
+  - text: /( \(\d\))?/
+  - link "":
+    - /url: /.*/en/login\?back=.*/
+- status
+- textbox "Search":
+  - /placeholder: Search our catalog

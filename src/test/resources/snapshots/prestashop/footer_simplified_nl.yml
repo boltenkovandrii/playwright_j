@@ -1,0 +1,52 @@
+- paragraph: Ontvang ons laatste nieuws en aanbiedingen
+- button "Abonneer"
+- textbox "Ontvang ons laatste nieuws en aanbiedingen":
+  - /placeholder: Uw e-mailadres
+- paragraph: U kunt op elk gewenst moment weer uitschrijven. Hiervoor kunt u de contactgegevens gebruiken uit de algemene voorwaarden.
+- list
+- paragraph: Products
+- list:
+  - listitem:
+    - link "Aanbiedingen":
+      - /url: /.*/nl/aanbiedingen/
+  - listitem:
+    - link "Nieuwe producten":
+      - /url: /.*/nl/nieuwe-producten/
+  - listitem:
+    - link "Best verkochte producten":
+      - /url: /.*/nl/best.*verkochte.*producten/
+- paragraph: Our company
+- list:
+  - listitem:
+    - link "Levering":
+      - /url: /.*/nl/content/1-levering/
+  - listitem:
+    - link "Wettelijke Mededeling":
+      - /url: /.*/nl/content/2-wettelijke-mededeling/
+  - listitem:
+    - link "Gebruiksvoorwaarden":
+      - /url: /.*/nl/content/3-gebruiks-voorwaarden/
+  - listitem:
+    - link "Over ons":
+      - /url: /.*/nl/content/4-over-ons/
+  - listitem:
+    - link "Veilige betaling":
+      - /url: /.*/nl/content/5-veilige-betaling/
+  - listitem:
+    - link "Contacteer ons":
+      - /url: /.*/nl/contact-opnemen/
+  - listitem:
+    - link "Sitemap":
+      - /url: /.*/nl/sitemap/
+  - listitem:
+    - link "Winkels":
+      - /url: /.*/nl/winkels/
+- paragraph: Winkel informatie
+- text: "PrestaShop Frankrijk E-mail ons:"
+- link "demo@prestashop.com":
+  - /url: mailto:demo@prestashop.com
+- paragraph
+- paragraph:
+  - link /.*E-commerce-software van PrestaShop.*/:
+    - /url: https://www.prestashop-project.org/
+

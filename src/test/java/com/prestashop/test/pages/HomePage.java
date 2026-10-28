@@ -26,6 +26,7 @@ public class HomePage extends BaseStorefrontPage {
 
     @Override
     public HomePage verifyLoaded() {
+        AllureArtifacts.screenshot(page, "Home page");
         super.verifyLoaded();
         assertThat(page.getByTestId("carousel")).isVisible();
         featuredProducts.verifyLoaded();
@@ -46,16 +47,20 @@ public class HomePage extends BaseStorefrontPage {
     }
 
     public CatalogPage openCategory(String name) {
+        AllureArtifacts.screenshot(page, "Opening category: " + name);
         header.clickCategory(name);
         return new CatalogPage(page, locale).verifyLoaded();
     }
 
     public ProductPage openFeaturedProductByName(String name) {
+        AllureArtifacts.screenshot(page, "Opening featured product by name: " + name);
         featuredProducts.openProductByName(name);
         return new ProductPage(page, locale).verifyLoaded();
     }
 
     public SearchResultsPage openSearchResults(String query, Integer resultsPerPage, Integer pageNumber) {
+        AllureArtifacts.screenshot(page, "Opening search results for query: " + query
+                + " and resultsPerPage: " + resultsPerPage + " using direct URL");
         String path = "search?search_query=" + URLEncoder.encode(query, StandardCharsets.UTF_8);
         if (resultsPerPage != null) {
             path += "&resultsPerPage=" + resultsPerPage;

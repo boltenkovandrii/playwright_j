@@ -1,0 +1,19 @@
+- navigation:
+  - link "Contact us":
+    - /url: /.*/en/contact-us/
+  - button "Language dropdown": English 
+  - link " Sign in":
+    - /url: /.*/en/login\?back=.*/
+- list:
+  - listitem:
+    - link "Clothes":
+      - /url: /.*/en/3-clothes/
+  - listitem:
+    - link "Accessories":
+      - /url: /.*/en/6-accessories/
+  - listitem:
+    - link "Art":
+      - /url: /.*/en/9-art/
+- status
+- textbox "Search":
+  - /placeholder: Search our catalog

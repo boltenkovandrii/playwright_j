@@ -1,79 +1,144 @@
 package com.prestashop.test.pages;
 
+import com.prestashop.test.base.AllureArtifacts;
+import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
 
 import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
+import static com.microsoft.playwright.options.AriaRole.BUTTON;
+import static com.microsoft.playwright.options.AriaRole.HEADING;
 
 public class RegistrationPage extends BaseStorefrontPage {
 
+    private final Locator heading;
+    private final Locator socialTitleMr;
+    private final Locator socialTitleMrs;
+    private final Locator firstNameInput;
+    private final Locator lastNameInput;
+    private final Locator emailInput;
+    private final Locator passwordInput;
+    private final Locator birthdayInput;
+    private final Locator newsletterCheckbox;
+    private final Locator offersCheckbox;
+    private final Locator privacyCheckbox;
+    private final Locator psgdprCheckbox;
+    private final Locator submitButton;
+    private final Locator errorAlert;
+    private final Locator fieldErrors;
+    private final Locator errorMessage;
+
     public RegistrationPage(Page page, String locale) {
         super(page, locale);
+        heading = page.getByRole(HEADING, new Page.GetByRoleOptions().setName(Texts.get(locale, "registration")));
+        socialTitleMr = page.getByTestId("field-id_gender-1");
+        socialTitleMrs = page.getByTestId("field-id_gender-2");
+        firstNameInput = page.getByTestId("field-firstname");
+        lastNameInput = page.getByTestId("field-lastname");
+        emailInput = page.getByTestId("field-email");
+        passwordInput = page.getByTestId("field-password");
+        birthdayInput = page.getByTestId("field-birthday");
+        newsletterCheckbox = page.locator("input[name='newsletter']");
+        offersCheckbox = page.locator("input[name='optin']");
+        privacyCheckbox = page.locator("input[name='customer_privacy']");
+        psgdprCheckbox = page.locator("input[name='psgdpr']");
+        submitButton = page.getByRole(BUTTON, new Page.GetByRoleOptions().setName(Texts.get(locale, "save")));
+        errorAlert = page.getByTestId("notifications").locator(".alert-danger");
+        fieldErrors = page.locator(".form-group.has-error");
+        errorMessage = page.locator(".alert-danger");
+    }
+
+    public RegistrationPage open(String path) {
+        page.navigate(localizedUrl(path));
+        return verifyLoaded();
     }
 
     @Override
     public RegistrationPage verifyLoaded() {
+        AllureArtifacts.screenshot(page, "Registration page");
         super.verifyLoaded();
-        assertThat(page.getByRole(com.microsoft.playwright.options.AriaRole.HEADING,
-                new Page.GetByRoleOptions().setName(Texts.get(locale, "registration")))).isVisible();
+        assertThat(heading).isVisible();
         return this;
     }
 
     @Override
     public RegistrationPage checkStructure() {
+        AllureArtifacts.screenshot(page, "Checking registration page structure");
         super.checkStructure();
-        assertThat(page.getByTestId("field-firstname")).isVisible();
-        assertThat(page.getByTestId("field-lastname")).isVisible();
-        assertThat(page.getByTestId("field-email")).isVisible();
-        assertThat(page.getByTestId("field-password")).isVisible();
+        assertThat(heading).isVisible();
+        assertThat(socialTitleMr).isVisible();
+        assertThat(socialTitleMrs).isVisible();
+        assertThat(firstNameInput).isVisible();
+        assertThat(lastNameInput).isVisible();
+        assertThat(emailInput).isVisible();
+        assertThat(passwordInput).isVisible();
+        assertThat(birthdayInput).isVisible();
+        assertThat(newsletterCheckbox).isVisible();
+        assertThat(offersCheckbox).isVisible();
+        assertThat(privacyCheckbox).isVisible();
+        assertThat(psgdprCheckbox).isVisible();
+        assertThat(submitButton).isVisible();
         return this;
     }
 
     public RegistrationPage fillWith(String firstName, String lastName, String email, String password, String birthday) {
-        fillIfPresent("field-firstname", firstName);
-        fillIfPresent("field-lastname", lastName);
-        fillIfPresent("field-email", email);
-        fillIfPresent("field-password", password);
-        fillIfPresent("field-birthday", birthday);
-        checkIfNeeded("input[name='customer_privacy']");
-        checkIfNeeded("input[name='psgdpr']");
+        AllureArtifacts.screenshot(page, "Submitting registration form with partial data");
+        fillIfPresent(firstNameInput, firstName);
+        fillIfPresent(lastNameInput, lastName);
+        fillIfPresent(emailInput, email);
+        fillIfPresent(passwordInput, password);
+        fillIfPresent(birthdayInput, birthday);
+        checkIfNeeded(privacyCheckbox);
+        checkIfNeeded(psgdprCheckbox);
         return this;
     }
 
     public BaseStorefrontPage submit() {
-        page.getByRole(com.microsoft.playwright.options.AriaRole.BUTTON,
-                new Page.GetByRoleOptions().setName(Texts.get(locale, "save"))).click();
+        AllureArtifacts.screenshot(page, "Submitting the registration form");
+        submitButton.click();
+        // Depending on input this either stays on this page with an error or redirects to the home page.
         return new BaseStorefrontPage(page, locale).verifyLoaded();
     }
 
     public RegistrationPage verifyFirstNameError() {
-        assertThat(page.getByTestId("field-firstname")).hasJSProperty("validity.valid", false);
+        // Do not check the message itself: it is browser-dependent, not PrestaShop functionality.
+        assertThat(firstNameInput).hasJSProperty("validity.valid", false);
         return this;
     }
 
     public RegistrationPage verifyEmailError() {
-        assertThat(page.getByTestId("field-email")).hasJSProperty("validity.valid", false);
+        // Do not check the message itself: it is browser-dependent, not PrestaShop functionality.
+        assertThat(emailInput).hasJSProperty("validity.valid", false);
         return this;
     }
 
     public RegistrationPage verifyPasswordError() {
-        assertThat(page.getByTestId("field-password")).hasJSProperty("validity.valid", false);
+        // Do not check the message itself: it is browser-dependent, not PrestaShop functionality.
+        assertThat(passwordInput).hasJSProperty("validity.valid", false);
         return this;
     }
 
     public RegistrationPage verifyErrorMessage(String message) {
-        assertThat(page.locator(".alert-danger")).hasText(message);
+        assertThat(errorMessage).isVisible();
+        assertThat(errorMessage).hasText(message);
         return this;
     }
 
-    private void fillIfPresent(String testId, String value) {
+    private void fillIfPresent(Locator input, String value) {
         if (value != null && !value.isEmpty()) {
-            page.getByTestId(testId).fill(value);
+            input.fill(value);
         }
     }
 
-    private void checkIfNeeded(String selector) {
-        if (!page.locator(selector).isChecked()) {
-            page.locator(selector).check();
+    private void checkIfNeeded(Locator checkbox) {
+        if (!checkbox.isChecked()) {
+            checkbox.check();
         }
+    }
+
+    @Override
+    public RegistrationPage verifyCurrentLanguage(String expectedLocale) {
+        super.verifyCurrentLanguage(expectedLocale);
+        assertThat(heading).isVisible();
+        return this;
     }
 }

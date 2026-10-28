@@ -51,7 +51,8 @@ public class BaseStorefrontPage extends BasePage<BaseStorefrontPage> {
 
     public BaseStorefrontPage checkStructure() {
         assertThat(page.getByTestId("main")).isVisible();
-        header.checkStructure();
+        header.checkStructure(locale);
+        header.verifyCurrentLanguage(locale);
         footer.checkStructure();
         return this;
     }
@@ -120,7 +121,5 @@ public class BaseStorefrontPage extends BasePage<BaseStorefrontPage> {
         header.verifyNotLoggedIn();
         return this;
     }
-
-
 
 }

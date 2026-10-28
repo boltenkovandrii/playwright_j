@@ -1,5 +1,6 @@
 package com.prestashop.test.pages;
 
+import com.prestashop.test.base.AllureArtifacts;
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
 import com.microsoft.playwright.options.SelectOption;
@@ -93,6 +94,8 @@ public class CheckoutPage extends BaseStorefrontPage {
 
     @Override
     public CheckoutPage verifyLoaded() {
+        AllureArtifacts.screenshot(page, "Checkout page");
+        header.verifyLoaded();
         assertThat(checkout).isVisible();
         assertThat(personalInfoStep).isVisible();
         return this;
@@ -100,6 +103,7 @@ public class CheckoutPage extends BaseStorefrontPage {
 
     @Override
     public CheckoutPage checkStructure() {
+        AllureArtifacts.screenshot(page, "Checking checkout page structure");
         assertThat(checkout).isVisible();
         assertThat(subtotalProducts).isVisible();
         assertThat(subtotalShipping).isVisible();
@@ -112,6 +116,7 @@ public class CheckoutPage extends BaseStorefrontPage {
     }
 
     public CheckoutPage checkPersonalInfoStructure() {
+        AllureArtifacts.screenshot(page, "Checking personal information step structure");
         assertThat(personalInfoStep).isVisible();
         assertThat(personalInfoHeading).isVisible();
         assertThat(personalInfoForm).isVisible();
@@ -123,6 +128,7 @@ public class CheckoutPage extends BaseStorefrontPage {
     }
 
     public CheckoutPage fillPersonalInfo(String firstName, String lastName, String email) {
+        AllureArtifacts.screenshot(page, "Filling personal information");
         firstNameInput.fill(firstName);
         lastNameInput.fill(lastName);
         emailInput.fill(email);
@@ -134,6 +140,7 @@ public class CheckoutPage extends BaseStorefrontPage {
     }
 
     public CheckoutPage checkAddressesStructure() {
+        AllureArtifacts.screenshot(page, "Checking addresses step structure");
         assertThat(addressesStep).isVisible();
         assertThat(addressesHeading).isVisible();
         assertThat(addressInput).isVisible();
@@ -145,10 +152,12 @@ public class CheckoutPage extends BaseStorefrontPage {
     }
 
     public CheckoutPage fillAddress(String address, String city, String postcode, String country, String phone, String state) {
+        AllureArtifacts.screenshot(page, "Filling address information");
         addressInput.fill(address);
         cityInput.fill(city);
         postcodeInput.fill(postcode);
         countrySelect.selectOption(new SelectOption().setLabel(country));
+        // State is mandatory if present, so null is valid only for countries such as France.
         if (state != null) {
             stateSelect.selectOption(new SelectOption().setLabel(state));
         } else {
@@ -161,6 +170,7 @@ public class CheckoutPage extends BaseStorefrontPage {
     }
 
     public CheckoutPage checkShippingMethodStructure() {
+        AllureArtifacts.screenshot(page, "Checking shipping step structure");
         assertThat(shippingStep).isVisible();
         assertThat(shippingHeading).isVisible();
         assertThat(shippingOptionRadios.first()).isVisible();
@@ -169,14 +179,17 @@ public class CheckoutPage extends BaseStorefrontPage {
     }
 
     public CheckoutPage selectShippingMethod(String name) {
+        AllureArtifacts.screenshot(page, "Selecting shipping method");
         Locator option = deliveryOptions.filter(new Locator.FilterOptions().setHasText(name));
-        option.locator("input[type='radio']").check();
-        page.waitForLoadState();
+        // Wait for the AJAX update before the following Continue action.
+        page.waitForResponse(response -> response.url().contains("action=selectDeliveryOption"),
+                () -> option.locator("input[type='radio']").check());
         shippingContinueButton.click();
         return this;
     }
 
     public CheckoutPage checkPaymentStructure() {
+        AllureArtifacts.screenshot(page, "Checking payment step structure");
         assertThat(paymentStep).isVisible();
         assertThat(paymentHeading).isVisible();
         assertThat(paymentOptionRadios.first()).isVisible();
@@ -186,6 +199,7 @@ public class CheckoutPage extends BaseStorefrontPage {
     }
 
     public CheckoutPage selectPaymentMethod(String name) {
+        AllureArtifacts.screenshot(page, "Selecting payment method");
         Locator paymentRadio = paymentOptions.filter(new Locator.FilterOptions().setHasText(name))
                 .locator("input[type='radio'][name='payment-option']");
         paymentRadio.check();
@@ -194,12 +208,14 @@ public class CheckoutPage extends BaseStorefrontPage {
     }
 
     public CheckoutPage acceptTerms() {
+        AllureArtifacts.screenshot(page, "Accepting terms and conditions");
         checkIfNeeded(termsCheckbox);
         assertThat(termsCheckbox).isChecked();
         return this;
     }
 
     public OrderConfirmationPage placeOrder() {
+        AllureArtifacts.screenshot(page, "Placing order");
         placeOrderButton.click();
         return new OrderConfirmationPage(page, locale).verifyLoaded();
     }
@@ -208,5 +224,16 @@ public class CheckoutPage extends BaseStorefrontPage {
         if (!locator.isChecked()) {
             locator.check();
         }
+    }
+
+    @Override
+    public CheckoutPage verifyCurrentLanguage(String expectedLocale) {
+        // Do not call super: checkout has no language selector in its header.
+        assertThat(personalInfoHeading).isVisible();
+        assertThat(addressesHeading).isVisible();
+        assertThat(shippingHeading).isVisible();
+        assertThat(paymentHeading).isVisible();
+        assertThat(personalInfoContinueButton).isVisible();
+        return this;
     }
 }

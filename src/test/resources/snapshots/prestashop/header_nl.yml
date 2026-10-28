@@ -1,0 +1,21 @@
+- navigation:
+  - link "Contacteer ons":
+    - /url: /.*/nl/contact-opnemen/
+  - button "Vervolgkeuzelijst taal": Nederlands 
+  - link / (Inloggen|Afmelden)/:
+    - /url: /.*/nl/(aanmelden\?back=.*|\?mylogout=)/
+- list:
+  - listitem:
+    - link "Clothes":
+      - /url: /.*/nl/3-clothes/
+  - listitem:
+    - link "Accessoires":
+      - /url: /.*/nl/6-accessories/
+  - listitem:
+    - link "Art":
+      - /url: /.*/nl/9-art/
+- status
+- textbox "Zoeken":
+  - /placeholder: Doorzoek onze catalogus
+
+
