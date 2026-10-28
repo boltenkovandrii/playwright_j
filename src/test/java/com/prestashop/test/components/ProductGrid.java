@@ -28,6 +28,11 @@ public class ProductGrid {
         return this;
     }
 
+    public ProductGrid checkCount(int expectedCount) {
+        assertThat(cards).hasCount(expectedCount);
+        return this;
+    }
+
     public ProductCard productAt(int index) {
         return new ProductCard(cards.nth(index));
     }

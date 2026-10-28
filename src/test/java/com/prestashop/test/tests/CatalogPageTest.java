@@ -26,10 +26,22 @@ class CatalogPageTest extends TestBase {
     void browseProductsInCategory() {
         runScenario(page -> {
             CatalogPage catalog = new HomePage(page, "en").open().openCategory("Accessories").checkResultCount(11);
+            catalog.verifyCategoryName("Accessories");
             catalog.products().productAt(0).checkStructure();
             catalog.products().productAt(1).checkStructure();
             assertThat(catalog.products().names()).hasSizeGreaterThanOrEqualTo(2).doesNotHaveDuplicates();
         });
+    }
+
+    @Test
+    @DisplayName("CAT-03 - Open product details page")
+    void openProductDetailsPage() {
+        runScenario(page -> new HomePage(page, "en")
+                .open()
+                .openCategory("Clothes")
+                .openProductByName("Hummingbird printed t-shirt")
+                .verifyProductName("Hummingbird printed t-shirt")
+                .checkStructure());
     }
 
     @Test
@@ -46,6 +58,7 @@ class CatalogPageTest extends TestBase {
     @Test
     @DisplayName("CAT-05 - Navigate through catalog pagination")
     void catalogPagination() {
+        // don't have enough products, so using workaround to check pagination
         runScenario(page -> new HomePage(page, "en")
                 .open()
                 .openCategory("Accessories")
@@ -54,7 +67,19 @@ class CatalogPageTest extends TestBase {
                 .checkResultCount(8)
                 .checkPaginationVisible(true)
                 .goToPage(2)
-                .checkResultCount(3));
+                .checkResultCount(3)
+                .checkPaginationVisible(true));
+    }
+
+    @Test
+    @DisplayName("CAT-06 - Navigate using breadcrumbs")
+    void navigateUsingBreadcrumbs() {
+        runScenario(page -> new HomePage(page, "en")
+                .open()
+                .openCategory("Clothes")
+                .openProductByName("Hummingbird printed sweater")
+                .goToCategoryFromBreadcrumb("Clothes")
+                .verifyCategoryName("Clothes"));
     }
 
     @Test

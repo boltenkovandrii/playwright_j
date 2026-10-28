@@ -62,26 +62,31 @@ class AccountTest extends TestBase {
                     .openLoginPage()
                     .openRegistrationPage();
 
+            // Submit the form with all fields empty.
             registration = registration.submit()
                     .asRegistrationPage()
                     .verifyFirstNameError();
 
+            // Enter an invalid email format then submit.
             registration = registration.fillWith("A", "B", "not-an-email", "", "")
                     .submit()
                     .asRegistrationPage()
                     .verifyEmailError();
 
+            // Enter valid email, but a password that does not meet the minimum requirements (e.g., too short), and submit.
             String uniqueEmail = "testuser." + UUID.randomUUID().toString().substring(0, 8) + "@example.com";
             registration = registration.fillWith("A", "B", uniqueEmail, "1", "")
                     .submit()
                     .asRegistrationPage()
                     .verifyPasswordError();
 
+            // Entering an email address that is already registered
             registration = registration.fillWith("Jane", "Doe", DEMO_EMAIL, "ValidPass123!", "01/01/1990")
                     .submit()
                     .asRegistrationPage()
                     .verifyErrorMessage("The email is already used, please choose another one or sign in");
 
+            // Valid input
             registration.fillWith("Jane", "Doe", uniqueEmail, "ValidPass123!", "01/01/1990")
                     .submit()
                     .asHomePage()

@@ -9,6 +9,7 @@ import com.microsoft.playwright.Page;
 import java.util.regex.Pattern;
 
 import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
+import static com.microsoft.playwright.options.AriaRole.LINK;
 
 public class CatalogPage extends BaseStorefrontPage {
 
@@ -52,7 +53,7 @@ public class CatalogPage extends BaseStorefrontPage {
     }
 
     public CatalogPage checkResultCount(int expectedCount) {
-        assertThat(page.getByTestId("js-product-list").locator(".product-miniature")).hasCount(expectedCount);
+        productGrid.checkCount(expectedCount);
         return this;
     }
 
@@ -96,7 +97,7 @@ public class CatalogPage extends BaseStorefrontPage {
     }
 
     public CatalogPage goToPage(int pageNumber) {
-        pageList.getByRole(com.microsoft.playwright.options.AriaRole.LINK,
+        pageList.getByRole(LINK,
                 new Locator.GetByRoleOptions().setName(String.valueOf(pageNumber)).setExact(true)).click();
         assertThat(page.locator("nav.pagination ul.page-list li.current a")).hasText(String.valueOf(pageNumber));
         return new CatalogPage(page, locale).verifyLoaded();

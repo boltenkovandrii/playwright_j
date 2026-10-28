@@ -42,6 +42,7 @@ public class ProductPage extends BaseStorefrontPage {
     private final Locator sizeOptions;
     private final Locator selectedSize;
     private final Locator colorOptions;
+    private final Locator breadcrumbLinks;
 
     public ProductPage(Page page, String locale) {
         super(page, locale);
@@ -75,6 +76,7 @@ public class ProductPage extends BaseStorefrontPage {
         sizeOptions = sizeSelect.locator("option");
         selectedSize = sizeSelect.locator("option:checked");
         colorOptions = page.locator(".input-color");
+        breadcrumbLinks = page.locator("nav.breadcrumb a");
     }
 
     @Override
@@ -250,7 +252,7 @@ public class ProductPage extends BaseStorefrontPage {
     }
 
     public CatalogPage goToCategoryFromBreadcrumb(String name) {
-        page.locator("nav.breadcrumb a").filter(new Locator.FilterOptions().setHasText(name)).click();
+        breadcrumbLinks.filter(new Locator.FilterOptions().setHasText(name)).click();
         return new CatalogPage(page, locale).verifyLoaded();
     }
 
