@@ -44,17 +44,18 @@ class LocalizationTest extends TestBase {
         runScenario(page -> {
             HomePage home = new HomePage(page, "en").open().switchLanguage("nl");
             home.verifyCurrentLanguage("nl");
+
             CatalogPage catalog = home.openCategory("Clothes"); // Should be localized?
             catalog.verifyCurrentLanguage("nl");
 
-            ProductPage product = catalog.openProductByName(PRODUCT_NAME);
-            product.checkStructure().verifyCurrentLanguage("nl");
+            ProductPage product = catalog.openProductByName(PRODUCT_NAME).checkStructure();
+            product.verifyCurrentLanguage("nl");
 
-            CartPage cart = product.addToCart().proceedToCart();
-            cart.checkStructure().verifyCurrentLanguage("nl");
+            CartPage cart = product.addToCart().proceedToCart().checkStructure();
+            cart.verifyCurrentLanguage("nl");
 
-            CheckoutPage checkout = cart.proceedToCheckout();
-            checkout.checkStructure().verifyCurrentLanguage("nl");
+            CheckoutPage checkout = cart.proceedToCheckout().checkStructure();
+            checkout.verifyCurrentLanguage("nl");
         });
     }
 
@@ -72,25 +73,30 @@ class LocalizationTest extends TestBase {
             CatalogPage catalog = home.openCategory("Clothes"); // Should be localized?
             catalog.verifyCurrentLanguage("nl");
 
-            ProductPage product = catalog.openProductByName(PRODUCT_NAME);
-            product.verifyCurrentLanguage("nl").checkStructure();
+            ProductPage product = catalog.openProductByName(PRODUCT_NAME).checkStructure();
+            product.verifyCurrentLanguage("nl");
 
-            CartPage cart = product.addToCart().proceedToCart();
-            cart.verifyCurrentLanguage("nl").checkStructure();
+            CartPage cart = product.addToCart().proceedToCart().checkStructure();
+            cart.verifyCurrentLanguage("nl");
 
-            CheckoutPage checkout = cart.proceedToCheckout();
-            checkout.verifyCurrentLanguage("nl").checkStructure();
+            CheckoutPage checkout = cart.proceedToCheckout().checkStructure();
+            checkout.verifyCurrentLanguage("nl");
 
-            LoginPage login = new HomePage(page, "en").open().switchLanguage("nl").openLoginPage();
-            login.verifyCurrentLanguage("nl").checkStructure();
+            LoginPage login = new HomePage(page, "en").open().switchLanguage("nl").openLoginPage().checkStructure();
+            login.verifyCurrentLanguage("nl");
 
-            RegistrationPage registration = login.openRegistrationPage();
-            registration.verifyCurrentLanguage("nl").checkStructure();
+            RegistrationPage registration = login.openRegistrationPage().checkStructure();
+            registration.verifyCurrentLanguage("nl");
 
-            HomePage authenticatedHome = new HomePage(page, "en").open().switchLanguage("nl")
-                    .openLoginPage().login(DEMO_EMAIL, DEMO_PASSWORD);
-            AccountDashboardPage account = authenticatedHome.openAccountPage();
-            account.verifyCurrentLanguage("nl").checkStructure();
+            HomePage authenticatedHome = new HomePage(page, "en")
+                    .open()
+                    .switchLanguage("nl")
+                    .openLoginPage()
+                    .login(DEMO_EMAIL, DEMO_PASSWORD);
+            authenticatedHome.verifyCurrentLanguage("nl");
+
+            AccountDashboardPage account = authenticatedHome.openAccountPage().checkStructure();
+            account.verifyCurrentLanguage("nl");
         });
     }
 }

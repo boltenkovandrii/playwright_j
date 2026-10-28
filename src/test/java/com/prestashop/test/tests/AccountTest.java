@@ -23,7 +23,8 @@ class AccountTest extends TestBase {
     void loginPageStructures() {
         runScenario(page -> {
             new HomePage(page, "en")
-                    .open().openLoginPage()
+                    .open()
+                    .openLoginPage()
                     .checkStructure();
         });
     }

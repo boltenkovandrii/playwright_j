@@ -48,16 +48,16 @@ class ProductPageTest extends TestBase {
                     .openCategory("Clothes")
                     .openProductByName(T_SHIRT);
 
-            product.verifyQuantity(1)
-                    .increaseQuantity()
+            product.verifyQuantity(1) //Check default quantity
+                    .increaseQuantity() //Increase the quantity to 2 using arrows.
                     .verifyQuantity(2)
-                    .decreaseQuantity()
+                    .decreaseQuantity() //Decrease the quantity back to 1 using arrows.
                     .verifyQuantity(1)
-                    .decreaseQuantity()
+                    .decreaseQuantity() //Try to decrease the quantity below 1 using arrows, the quantity should remain 1.
                     .verifyQuantity(1)
-                    .setQuantity(0)
+                    .setQuantity(0) //Try to set the quantity to 0 using the input field, the quantity should remain 1.
                     .verifyQuantity(1)
-                    .setQuantity(3)
+                    .setQuantity(3) //Set the quantity to 3 using the input field.
                     .verifyQuantity(3);
         });
     }
