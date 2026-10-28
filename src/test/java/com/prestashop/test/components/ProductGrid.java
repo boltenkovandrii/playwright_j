@@ -45,6 +45,13 @@ public class ProductGrid {
         return cards.all().stream().map(card -> new ProductCard(card).price()).toList();
     }
 
+    public ProductGrid verifyNamesContain(String term) {
+        for (Locator card : cards.all()) {
+            assertThat(card.locator(".product-title a")).containsText(term);
+        }
+        return this;
+    }
+
     public void openProductByName(String name) {
         cards.filter(new Locator.FilterOptions().setHasText(name)).first().locator(".product-title a").click();
     }
