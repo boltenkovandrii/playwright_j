@@ -139,14 +139,8 @@ public class CatalogPage extends BaseStorefrontPage {
     public CatalogPage applyPriceFilter(int minimum, int maximum) {
         AllureArtifacts.screenshot(page, "Applying price filter");
         openMobileFiltersIfNeeded("Price");
-//        dragPriceHandle(0, minimum);
         dragPriceHandleIterative(0, minimum);
-        // Applying the filter triggers an AJAX update/re-render.
-        waitForPriceSliderValue(0, minimum);
-//        dragPriceHandle(1, maximum);
         dragPriceHandleIterative(1, maximum);
-        // Applying the filter triggers an AJAX update/re-render.
-        waitForPriceSliderValue(1, maximum);
         closeMobileFiltersIfNeeded();
         return new CatalogPage(page, locale).verifyLoaded();
     }
@@ -175,53 +169,31 @@ public class CatalogPage extends BaseStorefrontPage {
         }
 
         double bounded = Math.max(minimum, Math.min(maximum, target));
-        double x = trackBox.x + ((bounded - minimum) / (maximum - minimum)) * trackBox.width ;
+        double x = trackBox.x + ((bounded - minimum) / (maximum - minimum)) * trackBox.width;
         handle.hover();
         page.mouse().down();
         page.mouse().move(x, handleBox.y + handleBox.height / 2, new Mouse.MoveOptions().setSteps(12));
         page.mouse().up();
     }
 
-    private void waitForPriceSliderValue(int index, double expectedValue) {
-        page.waitForFunction(
-                "([selector, index, expected]) => {"
-                        + "const facet = document.querySelector(selector);"
-                        + "if (!facet) return false;"
-                        + "const value = facet.getAttribute('data-slider-values');"
-                        + "if (!value) return false;"
-                        + "try { return JSON.parse(value)[index] === String(expected); } catch { return false; }"
-                        + "}",
-                new Object[] {".faceted-slider[data-slider-label='Price']", index, expectedValue});
-    }
 
-
-    /////////////////////////////////////
-
-
-    private void dragPriceHandleIterative(int index, int target){
-        System.out.println("####### Dragging price handle at index " + index + " to target " + target);
+    private void dragPriceHandleIterative(int index, int target) {
+        // The drag operation triggers an AJAX update/re-render, so we wait for the response before proceeding.
         page.waitForResponse(response -> response.url().contains("Price-"),
                 () -> dragPriceHandle(index, target)
         );
 
-        System.out.println("####### Waiting for price slider value at index " + index + " to reach target " + target);
         int currentValue = getPriceSliderValue(index);
         int counter = 0;
-        System.out.println("####### Initial value at index " + index + " is " + currentValue + ", target is " + target);
-        // depending on the viewport size, the dragPriceHandle may not reach the target value, so we need to check and adjust iteratively
+        // Viewport-dependent drag precision can require one-pixel corrections.
         while (getPriceSliderValue(index) != target && counter < 10) {
-            System.out.println("####### Current value at index " + index + " is " + currentValue + ", target is " + target);
             AllureArtifacts.screenshot(page, "Applying price filter iteration " + counter + " for index " + index + " with target " + target);
             counter++;
             boolean increase = currentValue < target;
             movePriceHandlerOneStep(index, increase);
-            waitForPriceSliderValue(index, target);
             currentValue = getPriceSliderValue(index);
         }
-
-
     }
-
 
     private void movePriceHandlerOneStep(int index, boolean increase) {
         Locator facet = page.locator(".faceted-slider[data-slider-label='Price']");
@@ -233,21 +205,18 @@ public class CatalogPage extends BaseStorefrontPage {
         BoundingBox trackBox = track.boundingBox();
         BoundingBox handleBox = handle.boundingBox();
 
-        double step =  trackBox.width/(maximum - minimum);
+        double step = trackBox.width / (maximum - minimum);
         double x = handleBox.x + (increase ? step : -step);
 
+        // The drag operation triggers an AJAX update/re-render, so we wait for the response before proceeding.
         page.waitForResponse(response -> response.url().contains("Price-"),
                 () -> {
                     handle.hover();
                     page.mouse().down();
                     page.mouse().move(x, handleBox.y + handleBox.height / 2, new Mouse.MoveOptions().setSteps(1));
                     page.mouse().up();
-                }
-        );
-
-
+                });
     }
-
 
     private int getPriceSliderValue(int index) {
         Locator facet = page.locator(".faceted-slider[data-slider-label='Price']");
@@ -256,18 +225,12 @@ public class CatalogPage extends BaseStorefrontPage {
             throw new AssertionError("Price slider values are not available");
         }
         try {
-            System.out.println("####### Current price slider values: " + value);
             String[] values = value.replaceAll("[\\[\\]\"]", "").split(",");
             return Integer.parseInt(values[index].trim());
         } catch (Exception e) {
             throw new AssertionError("Failed to parse price slider values: " + value, e);
         }
     }
-
-
-
-
-    /////////////////////////////////////
 
     private void openMobileFiltersIfNeeded(String filterName) {
         if (viewportWidth() < BOOTSTRAP_LG) {
