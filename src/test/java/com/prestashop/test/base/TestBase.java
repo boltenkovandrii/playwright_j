@@ -86,8 +86,10 @@ public class TestBase {
 
     private Path artifactDirectory(TestRunConfig run, int attempt) {
         try {
-            return Files.createDirectories(Path.of("build", "playwright-artifacts",
-                    run.browser(), run.profile().toString(), "attempt-" + attempt));
+            Path parent = Files.createDirectories(Path.of("build", "playwright-artifacts",
+                    run.browser(), run.profile().toString()));
+            return Files.createTempDirectory(parent, "attempt-" + attempt + "-");
+
         } catch (IOException e) {
             throw new IllegalStateException("Unable to create Playwright artifact directory", e);
         }
