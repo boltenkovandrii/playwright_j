@@ -12,13 +12,13 @@ Start the local PrestaShop AUT first, then use the Gradle wrapper. Playwright su
 
 # A browser set and a profile set (runs their valid Cartesian product)
 .\gradlew.bat test --tests "com.prestashop.test.tests.*" `
-  -DpwBrowsers=chromium,webkit `
-  -DpwProfiles=desktop_1920x1200,mobile,tablet_landscape
+  -Dbrowsers="chromium,webkit" `
+  -Dprofiles="desktop_1920x1200,mobile,tablet_landscape"
 
 # Firefox on both desktop profiles, headed
 .\gradlew.bat test --tests "com.prestashop.test.tests.*" `
-  -DpwBrowsers=firefox `
-  -DpwProfiles=desktop_1920x1200,desktop_2560x1600 `
+  -Dbrowsers="firefox" `
+  -Dprofiles="desktop_1920x1200,desktop_2560x1600" `
   -Dheadless=false
 
 # Keep screenshots from every attempt, not only failed/retried attempts

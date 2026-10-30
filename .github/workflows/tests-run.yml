@@ -95,7 +95,7 @@ jobs:
 
       - name: Run Gradle tests
         run: |
-          ./gradlew -DuseGrid=true -Dbrowser=$BROWSER -Dthreads=$THREADS -DincludeTags=$TAGS -Ddownloads=Downloads clean test
+          ./gradlew -DuseGrid=true -Dbrowsers=$BROWSER -Dthreads=$THREADS -DincludeTags=$TAGS -Ddownloads=Downloads clean test
 
       - name: Tear down
         if: always()

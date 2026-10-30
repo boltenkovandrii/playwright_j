@@ -10,8 +10,8 @@ public final class PlaywrightSettings {
     }
 
     public static List<TestRunConfig> testRuns() {
-        List<String> browsers = values("pwBrowsers", "browsers", "chromium");
-        List<BrowserProfile> profiles = values("pwProfiles", "profiles", "desktop_1920x1200")
+        List<String> browsers = values("browsers", "chromium");
+        List<BrowserProfile> profiles = values("profiles", "desktop_1920x1200")
                 .stream()
                 .map(BrowserProfile::fromName)
                 .toList();
@@ -40,8 +40,8 @@ public final class PlaywrightSettings {
         return System.getProperty("baseUrlPrestaShop", "http://localhost:8090").replaceAll("/+$", "");
     }
 
-    private static List<String> values(String systemProperty, String legacyProperty, String defaultValue) {
-        String value = System.getProperty(systemProperty, System.getProperty(legacyProperty, defaultValue));
+    private static List<String> values(String systemProperty, String defaultValue) {
+        String value = System.getProperty(systemProperty, defaultValue);
         return Arrays.stream(value.split(","))
                 .map(String::trim)
                 .filter(item -> !item.isEmpty())
