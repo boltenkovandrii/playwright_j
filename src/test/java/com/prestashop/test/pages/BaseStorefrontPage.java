@@ -74,7 +74,7 @@ public class BaseStorefrontPage extends BasePage<BaseStorefrontPage> {
     }
 
     public BaseStorefrontPage signOut() {
-        if (viewportWidth() < BOOTSTRAP_LG) {
+        if (viewportWidth() < BOOTSTRAP_MD) {
             footer.signOut();
         } else {
             header.signOut();

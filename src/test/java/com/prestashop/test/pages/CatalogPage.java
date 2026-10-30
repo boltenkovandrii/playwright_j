@@ -146,7 +146,7 @@ public class CatalogPage extends BaseStorefrontPage {
     }
 
     public CatalogPage verifyActiveFilter(String text) {
-        if (viewportWidth() >= BOOTSTRAP_LG) {
+        if (viewportWidth() >= BOOTSTRAP_MD) {
             assertThat(activeFilters).isVisible();
             assertThat(activeFilters).containsText(text);
         }
@@ -233,7 +233,7 @@ public class CatalogPage extends BaseStorefrontPage {
     }
 
     private void openMobileFiltersIfNeeded(String filterName) {
-        if (viewportWidth() < BOOTSTRAP_LG) {
+        if (viewportWidth() < BOOTSTRAP_MD) {
             AllureArtifacts.screenshot(page, "Opening filters for mobile");
             page.getByTestId("search_filter_toggler").click();
             page.locator(".facet[data-name='" + filterName + "']").click();
@@ -241,7 +241,7 @@ public class CatalogPage extends BaseStorefrontPage {
     }
 
     private void closeMobileFiltersIfNeeded() {
-        if (viewportWidth() < BOOTSTRAP_LG) {
+        if (viewportWidth() < BOOTSTRAP_MD) {
             AllureArtifacts.screenshot(page, "Closing filters for mobile");
             page.getByTestId("search_filter_controls").locator("button").click();
         }

@@ -4,7 +4,7 @@ import com.microsoft.playwright.Page;
 
 public abstract class BasePage<T extends BasePage<T>> {
 
-    public static int BOOTSTRAP_LG = 992;
+    public static int BOOTSTRAP_MD = 768;
 
     protected final Page page;
 
