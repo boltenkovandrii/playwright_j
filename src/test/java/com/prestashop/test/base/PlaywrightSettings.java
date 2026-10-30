@@ -16,11 +16,15 @@ public final class PlaywrightSettings {
                 .map(BrowserProfile::fromName)
                 .toList();
 
-        return browsers.stream()
+        List<TestRunConfig> runs = browsers.stream()
                 .flatMap(browser -> profiles.stream()
                         .filter(profile -> supports(browser, profile))
                         .map(profile -> new TestRunConfig(browser, profile)))
                 .toList();
+        if (runs.isEmpty()) {
+            throw new IllegalArgumentException("No supported browser/profile combinations: " + browsers + " / " + profiles);
+        }
+        return runs;
     }
 
     public static int retries() {
