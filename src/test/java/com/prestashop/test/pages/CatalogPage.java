@@ -206,7 +206,7 @@ public class CatalogPage extends BaseStorefrontPage {
         BoundingBox handleBox = handle.boundingBox();
 
         double step = trackBox.width / (maximum - minimum);
-        double x = handleBox.x + (increase ? step : -step);
+        double x = handleBox.x  + handleBox.width / 2 + (increase ? step : -step);
 
         // The drag operation triggers an AJAX update/re-render, so we wait for the response before proceeding.
         page.waitForResponse(response -> response.url().contains("Price-"),
