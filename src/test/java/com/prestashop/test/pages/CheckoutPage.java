@@ -181,9 +181,12 @@ public class CheckoutPage extends BaseStorefrontPage {
     public CheckoutPage selectShippingMethod(String name) {
         AllureArtifacts.screenshot(page, "Selecting shipping method");
         Locator option = deliveryOptions.filter(new Locator.FilterOptions().setHasText(name));
-        // Wait for the AJAX update before the following Continue action.
-        page.waitForResponse(response -> response.url().contains("action=selectDeliveryOption"),
-                () -> option.locator("input[type='radio']").check());
+        Locator radio = option.locator("input[type='radio']");
+        if (!radio.isChecked()) {
+            // Wait for the AJAX update before the following Continue action.
+            page.waitForResponse(response -> response.url().contains("action=selectDeliveryOption"),
+                    radio::check);
+        }
         shippingContinueButton.click();
         return this;
     }
