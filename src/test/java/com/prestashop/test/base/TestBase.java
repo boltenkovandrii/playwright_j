@@ -39,17 +39,14 @@ public class TestBase {
             try (Playwright playwright = Playwright.create()) {
                 playwright.selectors().setTestIdAttribute("id");
                 Browser browser = browser(playwright, run.browser());
-                BrowserContext context = browser.newContext(run.profile().contextOptions()
-                        .setRecordVideoDir(outputDirectory.resolve("video")));
-                context.tracing().start(new Tracing.StartOptions()
-                        .setScreenshots(true).setSnapshots(true).setSources(true));
+                BrowserContext context = browser.newContext(run.profile().contextOptions().setRecordVideoDir(outputDirectory.resolve("video")));
+                context.tracing().start(new Tracing.StartOptions().setScreenshots(true).setSnapshots(true).setSources(true));
                 Page page = context.newPage();
                 AllureArtifacts.setAttempt(retainArtifacts);
 
                 try {
                     scenario.execute(page);
-                    context.tracing().stop(new Tracing.StopOptions()
-                            .setPath(outputDirectory.resolve("trace.zip")));
+                    context.tracing().stop(new Tracing.StopOptions().setPath(outputDirectory.resolve("trace.zip")));
                     context.close();
                     browser.close();
                     if (retainArtifacts) {
@@ -59,19 +56,38 @@ public class TestBase {
                     }
                     return;
                 } catch (Throwable failure) {
+                    // Preserve the actual scenario failure.
                     finalFailure = failure;
-                    AllureArtifacts.failureScreenshot(page);
-                    context.tracing().stop(new Tracing.StopOptions()
-                            .setPath(outputDirectory.resolve("trace.zip")));
-                    context.close();
-                    browser.close();
-                    attachArtifacts(outputDirectory);
+                    // Diagnostics must never prevent another retry.
+                    runBestEffort("capture failure screenshot",  () -> AllureArtifacts.failureScreenshot(page));
+
+                    runBestEffort("save Playwright trace",
+                            () -> context.tracing().stop(new Tracing.StopOptions().setPath(outputDirectory.resolve("trace.zip")))
+                    );
+
+                    runBestEffort("attach failure artifacts",  () -> attachArtifacts(outputDirectory));
+
                 } finally {
                     AllureArtifacts.clearAttempt();
+
+                    // Cleanup is independent: one failure must not skip the next action.
+                    runBestEffort("close browser context", context::close);
+                    runBestEffort("close browser", browser::close);
                 }
             }
         }
         fail("Scenario failed for " + run + " after " + attempts + " attempt(s)", finalFailure);
+    }
+
+    private void runBestEffort(String operation, Runnable action) {
+        try {
+            action.run();
+        } catch (Throwable diagnosticFailure) {
+            System.err.printf(
+                    "Failed to %s: %s%n",
+                    operation,
+                    diagnosticFailure.getMessage());
+        }
     }
 
     private Browser browser(Playwright playwright, String browser) {
