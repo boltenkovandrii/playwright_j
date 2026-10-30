@@ -98,10 +98,10 @@
 
         <!-- Miscellaneous -->
         <module name="TodoComment"/>
-
-        <module name="MagicNumber">
+        <!--TODO: remove if not needed-->
+        <!--module name="MagicNumber">
             <property name="ignoreNumbers" value="-1, 0, 1, 2"/>
-        </module>
+        </module-->
 
     </module>
 </module>

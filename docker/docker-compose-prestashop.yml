@@ -1,0 +1,13 @@
+services:
+
+  prestashop:
+    image: prestashop/docker-internal-images:8
+
+    container_name: prestashop-test
+
+    ports:
+      - "8090:80"
+
+    environment:
+      PS_DOMAIN: localhost:8090
+      PS_ENABLE_SSL: 0

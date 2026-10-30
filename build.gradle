@@ -10,7 +10,7 @@ version = '1.0-SNAPSHOT'
 
 java {
     toolchain {
-        languageVersion.set(JavaLanguageVersion.of(17))
+        languageVersion.set(JavaLanguageVersion.of(25))
     }
 }
 
@@ -24,7 +24,7 @@ dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter-engine'
     testImplementation 'org.junit.jupiter:junit-jupiter-params'
 
-    testImplementation 'org.seleniumhq.selenium:selenium-java:4.50.0'
+    testImplementation 'com.microsoft.playwright:playwright:1.64.0'
 
     testImplementation 'org.assertj:assertj-core:3.27.7'
 
@@ -53,7 +53,7 @@ checkstyle {
 }
 
 pmd {
-    toolVersion = '6.55.0'
+    toolVersion = '7.28.0'
     consoleOutput = true
     ruleSetFiles = files('src/test/resources/pmd.ruleset.xml')
     ruleSets = []
@@ -76,7 +76,7 @@ test {
     systemProperties.put('junit.jupiter.execution.parallel.mode.default', 'same_thread')
     systemProperties.put('junit.jupiter.execution.parallel.mode.classes.default', 'concurrent')
     systemProperties.put('junit.jupiter.execution.parallel.config.strategy', 'custom')
-    systemProperties.put('junit.jupiter.execution.parallel.config.custom.class', 'com.andrii.test.base.ParallelExecutionStrategy')
+    systemProperties.put('junit.jupiter.execution.parallel.config.custom.class', 'com.prestashop.test.base.ParallelExecutionStrategy')
 
 
 }

@@ -1,0 +1,51 @@
+- paragraph: Get our latest news and special sales
+- button "Subscribe"
+- textbox "Get our latest news and special sales":
+  - /placeholder: Your email address
+- paragraph: You may unsubscribe at any moment. For that purpose, please find our contact info in the legal notice.
+- list
+- paragraph: Products
+- list:
+  - listitem:
+    - link "Prices drop":
+      - /url: /.*/en/prices-drop/
+  - listitem:
+    - link "New products":
+      - /url: /.*/en/new-products/
+  - listitem:
+    - link "Best sellers":
+      - /url: /.*/en/best-sellers/
+- paragraph: Our company
+- list:
+  - listitem:
+    - link "Delivery":
+      - /url: /.*/en/content/1-delivery/
+  - listitem:
+    - link "Legal Notice":
+      - /url: /.*/en/content/2-legal-notice/
+  - listitem:
+    - link "Terms and conditions of use":
+      - /url: /.*/en/content/3-terms-and-conditions-of-use/
+  - listitem:
+    - link "About us":
+      - /url: /.*/en/content/4-about-us/
+  - listitem:
+    - link "Secure payment":
+      - /url: /.*/en/content/5-secure-payment/
+  - listitem:
+    - link "Contact us":
+      - /url: /.*/en/contact-us/
+  - listitem:
+    - link "Sitemap":
+      - /url: /.*/en/sitemap/
+  - listitem:
+    - link "Stores":
+      - /url: /.*/en/stores/
+- paragraph: Store information
+- text: "PrestaShop France Email us:"
+- link "demo@prestashop.com":
+  - /url: mailto:demo@prestashop.com
+- paragraph
+- paragraph:
+  - link /.*Ecommerce software by PrestaShop.*/:
+    - /url: https://www.prestashop-project.org/

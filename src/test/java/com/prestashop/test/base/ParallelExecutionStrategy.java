@@ -1,0 +1,38 @@
+package com.prestashop.test.base;
+
+import org.junit.platform.engine.ConfigurationParameters;
+import org.junit.platform.engine.support.hierarchical.ParallelExecutionConfiguration;
+import org.junit.platform.engine.support.hierarchical.ParallelExecutionConfigurationStrategy;
+
+public class ParallelExecutionStrategy implements ParallelExecutionConfigurationStrategy {
+    private static final int KEEP_ALIVE_SECONDS = 30;
+    @Override
+    public ParallelExecutionConfiguration createConfiguration(ConfigurationParameters configurationParameters) {
+        return new ParallelExecutionConfiguration() {
+            @Override
+            public int getParallelism() {
+                return TestConfig.getConfiguration().getInt("threads", 1);
+            }
+
+            @Override
+            public int getMinimumRunnable() {
+                return 0;
+            }
+
+            @Override
+            public int getMaxPoolSize() {
+                return TestConfig.getConfiguration().getInt("threads", 1);
+            }
+
+            @Override
+            public int getCorePoolSize() {
+                return TestConfig.getConfiguration().getInt("threads", 1);
+            }
+
+            @Override
+            public int getKeepAliveSeconds() {
+                return KEEP_ALIVE_SECONDS;
+            }
+        };
+    }
+}

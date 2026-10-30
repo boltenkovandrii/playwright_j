@@ -1,0 +1,11 @@
+- paragraph: Ontvang ons laatste nieuws en aanbiedingen
+- button /(Oké)|(Abonneer)/
+- textbox "Ontvang ons laatste nieuws en aanbiedingen":
+  - /placeholder: Uw e-mailadres
+- paragraph: U kunt op elk gewenst moment weer uitschrijven. Hiervoor kunt u de contactgegevens gebruiken uit de algemene voorwaarden.
+- list
+- paragraph
+- paragraph:
+  - link /.*E-commerce-software van PrestaShop.*/:
+    - /url: https://www.prestashop-project.org/
+
