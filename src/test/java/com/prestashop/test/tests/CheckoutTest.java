@@ -13,7 +13,7 @@ import org.junit.jupiter.api.Test;
 class CheckoutTest extends TestBase {
 
     @Test
-    @DisplayName("CHK-01 — Guest checkout page structure and checkout flow")
+    @DisplayName("CHK-01 - Guest checkout page structure and checkout flow")
     void guestCheckout() {
         runScenario(page -> {
             CartPage cart = new HomePage(page, "en").open()

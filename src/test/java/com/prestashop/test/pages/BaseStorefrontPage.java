@@ -74,7 +74,7 @@ public class BaseStorefrontPage extends BasePage<BaseStorefrontPage> {
     }
 
     public BaseStorefrontPage signOut() {
-        if (viewportWidth() < BOOTSTRAP_LG) {
+        if (viewportWidth() < BOOTSTRAP_MD) {
             footer.signOut();
         } else {
             header.signOut();
@@ -92,7 +92,7 @@ public class BaseStorefrontPage extends BasePage<BaseStorefrontPage> {
         return new SearchResultsPage(page, locale).verifyLoaded();
     }
 
-   public LoginPage asLoginPage() {
+    public LoginPage asLoginPage() {
         return new LoginPage(page, locale).verifyLoaded();
     }
 
@@ -117,6 +117,7 @@ public class BaseStorefrontPage extends BasePage<BaseStorefrontPage> {
         header.verifyLoggedIn();
         return this;
     }
+
     public BaseStorefrontPage verifyNotLoggedIn() {
         header.verifyNotLoggedIn();
         return this;

@@ -17,7 +17,7 @@ import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.fail;
 
-public abstract class TestBase {
+public class TestBase {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TestBase.class);
 

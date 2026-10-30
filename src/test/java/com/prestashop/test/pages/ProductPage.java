@@ -252,6 +252,7 @@ public class ProductPage extends BaseStorefrontPage {
         return this;
     }
 
+    @Override
     public ProductPage verifyHeaderCartCount(int count) {
         header.verifyCartCount(count);
         return this;

@@ -9,7 +9,7 @@ import com.prestashop.test.pages.Texts;
 
 import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
 import static com.microsoft.playwright.options.AriaRole.LINK;
-import static com.prestashop.test.pages.BasePage.BOOTSTRAP_LG;
+import static com.prestashop.test.pages.BasePage.BOOTSTRAP_MD;
 
 public class Header {
 
@@ -49,7 +49,7 @@ public class Header {
     }
 
     public Header verifyCurrentLanguage(String locale) {
-        if (viewportWidth() < BOOTSTRAP_LG) {
+        if (viewportWidth() < BOOTSTRAP_MD) {
             openMobileMenu();
             assertThat(mobileLanguageSelector.locator("option:checked")).hasText(Texts.get(locale, "language"));
             closeMobileMenu();
@@ -68,7 +68,7 @@ public class Header {
         AllureArtifacts.screenshot(container, "Checking header structure");
         assertThat(container).isVisible();
         assertThat(searchInput).isVisible();
-        if (viewportWidth() < BOOTSTRAP_LG) {
+        if (viewportWidth() < BOOTSTRAP_MD) {
             assertThat(menuButton).isVisible();
             assertThat(mobileCart).isVisible();
             assertThat(desktopCart).isHidden();
@@ -89,7 +89,7 @@ public class Header {
             return this;
         }
         String language = Texts.get(targetLocale, "language");
-        if (viewportWidth() < BOOTSTRAP_LG) {
+        if (viewportWidth() < BOOTSTRAP_MD) {
             openMobileMenu();
             mobileLanguageSelector.selectOption(new SelectOption().setLabel(language));
         } else {
@@ -102,7 +102,7 @@ public class Header {
 
     public Header clickCategory(String name) {
         Locator categoryLinks;
-        if (viewportWidth() < BOOTSTRAP_LG) {
+        if (viewportWidth() < BOOTSTRAP_MD) {
             openMobileMenu();
             categoryLinks = mobileMenu.locator(".category > a");
         } else {
@@ -113,7 +113,7 @@ public class Header {
     }
 
     public Header verifyCartCount(int expectedCount) {
-        Locator count = viewportWidth() < BOOTSTRAP_LG ? mobileCartProductsCount : desktopCartProductsCount;
+        Locator count = viewportWidth() < BOOTSTRAP_MD ? mobileCartProductsCount : desktopCartProductsCount;
         assertThat(count).isVisible();
         assertThat(count).hasText("(" + expectedCount + ")");
         return this;
@@ -171,7 +171,7 @@ public class Header {
     }
 
     private Locator activeUserInfo() {
-        return viewportWidth() < BOOTSTRAP_LG
+        return viewportWidth() < BOOTSTRAP_MD
                 ? mobileUserInfo
                 : desktopUserInfo;
     }

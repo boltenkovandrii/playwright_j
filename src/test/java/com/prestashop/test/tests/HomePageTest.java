@@ -23,7 +23,7 @@ class HomePageTest extends TestBase {
     void featuredProductsDisplayed() {
         runScenario(page -> new HomePage(page, "en")
                 .open()
-                .featuredProducts()
+                .getFeaturedProducts()
                 .checkStructure());
     }
 

@@ -8,7 +8,7 @@ import com.prestashop.test.pages.Texts;
 
 import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
 import static com.microsoft.playwright.options.AriaRole.LINK;
-import static com.prestashop.test.pages.BasePage.BOOTSTRAP_LG;
+import static com.prestashop.test.pages.BasePage.BOOTSTRAP_MD;
 
 public class Footer {
 
@@ -28,15 +28,17 @@ public class Footer {
 
     public Footer checkStructure() {
         AllureArtifacts.screenshot(container, "Checking footer structure");
-        // Actual links in the footer could depend on the fact if user is logged in. So snapshots perform only partial (but still substantial) assertion to not make it overcomplicated.
-        // Account-related footer content is occasionally returned in English after a locale switch in CI. Keeping the structural assertion focused on stable, locale-independent footer sections.
-        String snapshot = viewportWidth() < BOOTSTRAP_LG ? "footer_compact_simplified" : "footer_simplified";
+        // Actual links in the footer could depend on the fact if user is logged in.
+        // So snapshots perform only partial (but still substantial) assertion to not make it overcomplicated.
+        // Account-related footer content is occasionally returned in English after a locale switch in CI.
+        // Keeping the structural assertion focused on stable, locale-independent footer sections.
+        String snapshot = viewportWidth() < BOOTSTRAP_MD ? "footer_compact_simplified" : "footer_simplified";
         assertThat(container).matchesAriaSnapshot(AriaSnapshots.load(snapshot, locale));
         return this;
     }
 
     public Footer signOut() {
-        if (viewportWidth() < BOOTSTRAP_LG) {
+        if (viewportWidth() < BOOTSTRAP_MD) {
             accountInfos.click();
         }
         signOutLink.click();

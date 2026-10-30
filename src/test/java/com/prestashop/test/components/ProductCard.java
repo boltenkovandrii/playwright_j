@@ -17,11 +17,11 @@ public class ProductCard {
         price = container.locator(".price");
     }
 
-    public String name() {
+    public String getName() {
         return productLink.textContent().strip();
     }
 
-    public double price() {
+    public double getPrice() {
         String text = price.textContent();
         return Double.parseDouble(text.replaceAll("[^\\d,.]", "").replace(',', '.'));
     }

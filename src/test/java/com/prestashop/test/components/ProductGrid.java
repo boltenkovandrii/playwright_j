@@ -40,11 +40,11 @@ public class ProductGrid {
     }
 
     public List<String> names() {
-        return cards.all().stream().map(card -> new ProductCard(card).name()).toList();
+        return cards.all().stream().map(card -> new ProductCard(card).getName()).toList();
     }
 
     public List<Double> prices() {
-        return cards.all().stream().map(card -> new ProductCard(card).price()).toList();
+        return cards.all().stream().map(card -> new ProductCard(card).getPrice()).toList();
     }
 
     public ProductGrid verifyNamesContain(String term) {

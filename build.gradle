@@ -53,7 +53,7 @@ checkstyle {
 }
 
 pmd {
-    toolVersion = '6.55.0'
+    toolVersion = '7.28.0'
     consoleOutput = true
     ruleSetFiles = files('src/test/resources/pmd.ruleset.xml')
     ruleSets = []

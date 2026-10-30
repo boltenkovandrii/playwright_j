@@ -23,8 +23,6 @@ public class RegistrationPage extends BaseStorefrontPage {
     private final Locator privacyCheckbox;
     private final Locator psgdprCheckbox;
     private final Locator submitButton;
-    private final Locator errorAlert;
-    private final Locator fieldErrors;
     private final Locator errorMessage;
 
     public RegistrationPage(Page page, String locale) {
@@ -42,8 +40,6 @@ public class RegistrationPage extends BaseStorefrontPage {
         privacyCheckbox = page.locator("input[name='customer_privacy']");
         psgdprCheckbox = page.locator("input[name='psgdpr']");
         submitButton = page.getByRole(BUTTON, new Page.GetByRoleOptions().setName(Texts.get(locale, "save")));
-        errorAlert = page.getByTestId("notifications").locator(".alert-danger");
-        fieldErrors = page.locator(".form-group.has-error");
         errorMessage = page.locator(".alert-danger");
     }
 

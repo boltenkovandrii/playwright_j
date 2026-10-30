@@ -42,7 +42,7 @@ public class HomePage extends BaseStorefrontPage {
         return this;
     }
 
-    public ProductGrid featuredProducts() {
+    public ProductGrid getFeaturedProducts() {
         return featuredProducts;
     }
 

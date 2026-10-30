@@ -52,6 +52,6 @@ public final class PlaywrightSettings {
         if (!List.of("chromium", "firefox", "webkit").contains(browser)) {
             throw new IllegalArgumentException("Unsupported Playwright browser: " + browser);
         }
-        return !browser.equals("firefox") || profile.isDesktop();
+        return !"firefox".equals(browser) || profile.isDesktop();
     }
 }
