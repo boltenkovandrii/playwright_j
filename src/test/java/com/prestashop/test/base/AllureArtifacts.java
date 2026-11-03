@@ -30,12 +30,18 @@ public final class AllureArtifacts {
         if (attempt != null && (attempt.retainArtifacts || PlaywrightSettings.screenshotsEnabled())) {
             attachPng(page.screenshot(new Page.ScreenshotOptions().setFullPage(true)), name);
         }
+        else {
+            Allure.step(name);
+        }
     }
 
     public static void screenshot(Locator locator, String name) {
         Attempt attempt = ATTEMPT.get();
         if (attempt != null && (attempt.retainArtifacts || PlaywrightSettings.screenshotsEnabled())) {
             attachPng(locator.screenshot(), name);
+        }
+        else{
+            Allure.step(name);
         }
     }
 
