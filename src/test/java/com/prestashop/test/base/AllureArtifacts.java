@@ -17,11 +17,11 @@ public final class AllureArtifacts {
     private AllureArtifacts() {
     }
 
-    static void setAttempt(boolean retainArtifacts) {
+    public static void setAttempt(boolean retainArtifacts) {
         ATTEMPT.set(new Attempt(retainArtifacts));
     }
 
-    static void clearAttempt() {
+    public static void clearAttempt() {
         ATTEMPT.remove();
     }
 
@@ -52,7 +52,6 @@ public final class AllureArtifacts {
     static void attachFile(Path path, String name, String type) {
         try {
             Allure.attachment(name, type, Files.newInputStream(path), AttachmentOptions.withFileExtension(fileExtension(path)));
-
         } catch (IOException e) {
             throw new IllegalStateException("Unable to attach " + path, e);
         }
@@ -68,6 +67,5 @@ public final class AllureArtifacts {
         return index >= 0 ? name.substring(index) : "";
     }
 
-    private record Attempt(boolean retainArtifacts) {
-    }
+    private record Attempt(boolean retainArtifacts) {}
 }

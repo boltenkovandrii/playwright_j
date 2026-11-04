@@ -2,6 +2,7 @@ package com.prestashop.test.base2;
 
 import com.microsoft.playwright.Page;
 
+import com.prestashop.test.base.AllureArtifacts;
 import com.prestashop.test.base.TestRunConfig;
 
 import org.junit.jupiter.api.extension.AfterEachCallback;
@@ -29,9 +30,9 @@ public final class BrowserInvocationExtension implements
 
     @Override
     public void beforeEach(ExtensionContext context) {
-        testFailure = null;
-
-        session = BrowserSession.start(run, 1);
+        int currentAttempt = RetryAttemptTracker.nextAttempt(context, run);
+        AllureArtifacts.setAttempt(currentAttempt > 1);
+        session = BrowserSession.start(run, currentAttempt);
     }
 
     @Override
@@ -73,11 +74,11 @@ public final class BrowserInvocationExtension implements
 
     @Override
     public void afterEach(ExtensionContext context) {
-        if (session == null) {
-            return;
-        }
-
         try {
+            if (session == null) {
+                return;
+            }
+
             if (testFailure == null) {
                 session.finishPassed();
             } else {
@@ -85,6 +86,7 @@ public final class BrowserInvocationExtension implements
             }
         } finally {
             session = null;
+            AllureArtifacts.clearAttempt();
         }
     }
 }

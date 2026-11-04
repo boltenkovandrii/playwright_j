@@ -61,6 +61,10 @@ pmd {
 }
 
 test {
+    doFirst {
+        systemProperty 'retryTrackerRunId', UUID.randomUUID().toString()
+    }
+
     retry {
         maxRetries = Integer.parseInt(System.getProperty("retries", "1"))
     }

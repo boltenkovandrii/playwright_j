@@ -22,13 +22,7 @@ public final class BrowserSession implements AutoCloseable {
 
     private boolean closed;
 
-    private BrowserSession(
-            Playwright playwright,
-            Browser browser,
-            BrowserContext context,
-            Page page,
-            Path outputDirectory) {
-
+    private BrowserSession(Playwright playwright, Browser browser, BrowserContext context, Page page, Path outputDirectory) {
         this.playwright = playwright;
         this.browser = browser;
         this.context = context;
@@ -49,20 +43,12 @@ public final class BrowserSession implements AutoCloseable {
 
             browser = launchBrowser(playwright, run.browser());
 
-            context = browser.newContext(
-                    run.profile().contextOptions()
-                            .setRecordVideoDir(outputDirectory.resolve("video")));
-
-            context.tracing().start(
-                    new Tracing.StartOptions()
-                            .setScreenshots(true)
-                            .setSnapshots(true)
-                            .setSources(true));
+            context = browser.newContext(run.profile().contextOptions().setRecordVideoDir(outputDirectory.resolve("video")));
+            context.tracing().start(new Tracing.StartOptions().setScreenshots(true).setSnapshots(true).setSources(true));
 
             Page page = context.newPage();
 
-            return new BrowserSession(
-                    playwright, browser, context, page, outputDirectory);
+            return new BrowserSession(playwright, browser, context, page, outputDirectory);
 
         } catch (Throwable failure) {
             closeQuietly(context);
