@@ -28,8 +28,7 @@ public final class PlaywrightSettings {
     }
 
     public static int retries() {
-        return Integer.parseInt(System.getProperty("pwRetries",
-                System.getProperty("retries", "1")));
+        return Integer.parseInt(System.getProperty("retries",  System.getProperty("retries", "1")));
     }
 
     public static boolean screenshotsEnabled() {
