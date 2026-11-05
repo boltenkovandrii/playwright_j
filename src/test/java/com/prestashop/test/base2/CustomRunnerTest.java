@@ -12,6 +12,6 @@ import java.lang.annotation.Target;
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 @TestTemplate
-@ExtendWith(BrowserMatrixExtension.class)
-public @interface BrowserMatrixTest {
+@ExtendWith(CustomRunnerExtension.class)
+public @interface CustomRunnerTest {
 }

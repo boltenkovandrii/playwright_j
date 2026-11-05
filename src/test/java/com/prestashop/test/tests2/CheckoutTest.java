@@ -1,8 +1,7 @@
 package com.prestashop.test.tests2;
 
 import com.microsoft.playwright.Page;
-import com.prestashop.test.base.TestRunConfig;
-import com.prestashop.test.base2.BrowserMatrixTest;
+import com.prestashop.test.base2.CustomRunnerTest;
 import com.prestashop.test.pages.CartPage;
 import com.prestashop.test.pages.CheckoutPage;
 import com.prestashop.test.pages.HomePage;
@@ -18,9 +17,9 @@ import static org.junit.jupiter.api.Assertions.fail;
 @DisplayName("PrestaShop storefront - Checkout")
 class CheckoutTest  {
 
-    @BrowserMatrixTest
+    @CustomRunnerTest
     @DisplayName("CHK-01 - Guest checkout page structure and checkout flow")
-    void guestCheckout(TestRunConfig run, Page page) {
+    void guestCheckout(Page page) {
         CartPage cart = new HomePage(page, "en").open()
                 .openCategory("Clothes")
                 .openProductByName("Hummingbird printed t-shirt")

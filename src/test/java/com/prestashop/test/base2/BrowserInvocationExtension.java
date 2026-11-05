@@ -44,17 +44,13 @@ public final class BrowserInvocationExtension implements
     @Override
     public boolean supportsParameter(ParameterContext parameterContext,  ExtensionContext extensionContext) {
         Class<?> type = parameterContext.getParameter().getType();
-        return type == TestRunConfig.class || type == Page.class;
+        return type == Page.class;
     }
 
     @Override
     public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {
 
         Class<?> type = parameterContext.getParameter().getType();
-
-        if (type == TestRunConfig.class) {
-            return run;
-        }
 
         if (type == Page.class && session != null) {
             return session.page();

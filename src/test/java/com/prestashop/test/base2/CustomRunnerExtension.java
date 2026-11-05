@@ -11,12 +11,12 @@ import org.junit.jupiter.api.extension.TestTemplateInvocationContextProvider;
 import java.util.List;
 import java.util.stream.Stream;
 
-public class BrowserMatrixExtension implements TestTemplateInvocationContextProvider {
+public class CustomRunnerExtension implements TestTemplateInvocationContextProvider {
 
     @Override
     public boolean supportsTestTemplate(ExtensionContext context) {
         return context.getTestMethod()
-                .map(method -> method.isAnnotationPresent(BrowserMatrixTest.class))
+                .map(method -> method.isAnnotationPresent(CustomRunnerTest.class))
                 .orElse(false);
     }
 
