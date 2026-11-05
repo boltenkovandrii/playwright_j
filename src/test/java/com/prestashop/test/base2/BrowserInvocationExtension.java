@@ -33,9 +33,9 @@ public final class BrowserInvocationExtension implements
 
     @Override
     public void beforeEach(ExtensionContext context) {
-        if (RetryAttemptTracker.hasPassed(context, run)) {
-            throw new TestAbortedException("Configuration already passed in a previous attempt: " + run);
-        }
+//        if (RetryAttemptTracker.hasPassed(context, run)) {
+//            throw new TestAbortedException("Configuration already passed in a previous attempt: " + run);
+//        }
         int currentAttempt = RetryAttemptTracker.nextAttempt(context, run);
         AllureArtifacts.setAttempt(currentAttempt > 1);
         session = BrowserSession.start(run, currentAttempt);
