@@ -143,9 +143,7 @@ public final class BrowserSession implements AutoCloseable {
     }
 
     private static Browser launchBrowser(Playwright playwright, String name) {
-        BrowserType.LaunchOptions options =
-                new BrowserType.LaunchOptions()
-                        .setHeadless(PlaywrightSettings.headless());
+        BrowserType.LaunchOptions options = new BrowserType.LaunchOptions().setHeadless(PlaywrightSettings.headless());
 
         return switch (name) {
             case "chromium" -> playwright.chromium().launch(options);
@@ -158,17 +156,10 @@ public final class BrowserSession implements AutoCloseable {
 
     private static Path createOutputDirectory(TestRunConfig run, int attempt) {
         try {
-            Path parent = Files.createDirectories(
-                    Path.of("build", "playwright-artifacts",
-                            run.browser(), run.profile().toString()));
-
-            return Files.createTempDirectory(
-                    parent,
-                    "attempt-" + attempt + "-" + UUID.randomUUID() + "-");
-
+            Path parent = Files.createDirectories(Path.of("build", "playwright-artifacts", run.browser(), run.profile().toString()));
+            return Files.createTempDirectory(parent, "attempt-" + attempt + "-" + UUID.randomUUID() + "-");
         } catch (IOException e) {
-            throw new IllegalStateException(
-                    "Unable to create artifact directory", e);
+            throw new IllegalStateException("Unable to create artifact directory", e);
         }
     }
 

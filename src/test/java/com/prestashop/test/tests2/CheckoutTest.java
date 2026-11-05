@@ -9,6 +9,10 @@ import com.prestashop.test.pages.HomePage;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 
+import java.util.Random;
+
+import static org.junit.jupiter.api.Assertions.fail;
+
 
 @Tag("regression")
 @DisplayName("PrestaShop storefront - Checkout")
@@ -35,6 +39,13 @@ class CheckoutTest  {
                 .checkPaymentStructure()
                 .selectPaymentMethod("Pay by Cash on Delivery")
                 .acceptTerms();
+
+
+        Random random = new Random();
+        int i = random.nextInt(5);
+        if (i == 0) {
+            fail("Failing test to check retry mechanism: " + i);
+        }
 
         checkout.placeOrder()
                 .checkStructure()

@@ -12,12 +12,15 @@ import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.extension.ParameterResolutionException;
 import org.junit.jupiter.api.extension.ParameterResolver;
 import org.junit.jupiter.api.extension.TestExecutionExceptionHandler;
+import org.junit.jupiter.api.extension.TestWatcher;
+import org.opentest4j.TestAbortedException;
 
 public final class BrowserInvocationExtension implements
         ParameterResolver,
         BeforeEachCallback,
         AfterEachCallback,
-        TestExecutionExceptionHandler {
+        TestExecutionExceptionHandler,
+        TestWatcher {
 
     private final TestRunConfig run;
 
@@ -30,24 +33,22 @@ public final class BrowserInvocationExtension implements
 
     @Override
     public void beforeEach(ExtensionContext context) {
+        if (RetryAttemptTracker.hasPassed(context, run)) {
+            throw new TestAbortedException("Configuration already passed in a previous attempt: " + run);
+        }
         int currentAttempt = RetryAttemptTracker.nextAttempt(context, run);
         AllureArtifacts.setAttempt(currentAttempt > 1);
         session = BrowserSession.start(run, currentAttempt);
     }
 
     @Override
-    public boolean supportsParameter(
-            ParameterContext parameterContext,
-            ExtensionContext extensionContext) {
-
+    public boolean supportsParameter(ParameterContext parameterContext,  ExtensionContext extensionContext) {
         Class<?> type = parameterContext.getParameter().getType();
         return type == TestRunConfig.class || type == Page.class;
     }
 
     @Override
-    public Object resolveParameter(
-            ParameterContext parameterContext,
-            ExtensionContext extensionContext) {
+    public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {
 
         Class<?> type = parameterContext.getParameter().getType();
 
@@ -59,14 +60,11 @@ public final class BrowserInvocationExtension implements
             return session.page();
         }
 
-        throw new ParameterResolutionException(
-                "Unable to resolve parameter: " + type.getName());
+        throw new ParameterResolutionException("Unable to resolve parameter: " + type.getName());
     }
 
     @Override
-    public void handleTestExecutionException(
-            ExtensionContext context,
-            Throwable throwable) throws Throwable {
+    public void handleTestExecutionException(ExtensionContext context, Throwable throwable) throws Throwable {
 
         testFailure = throwable;
         throw throwable;
@@ -88,5 +86,10 @@ public final class BrowserInvocationExtension implements
             session = null;
             AllureArtifacts.clearAttempt();
         }
+    }
+
+    @Override
+    public void testSuccessful(ExtensionContext context) {
+        RetryAttemptTracker.markPassed(context, run);
     }
 }
