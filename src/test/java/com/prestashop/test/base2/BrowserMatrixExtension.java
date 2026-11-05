@@ -25,6 +25,7 @@ public class BrowserMatrixExtension implements TestTemplateInvocationContextProv
     public Stream<TestTemplateInvocationContext> provideTestTemplateInvocationContexts(ExtensionContext context) {
         return PlaywrightSettings.testRuns()
                 .stream()
+                .filter(run -> !RetryAttemptTracker.hasPassed(context, run))
                 .map(BrowserInvocation::new);
     }
 

@@ -42,7 +42,7 @@ class CheckoutTest  {
 
 
         Random random = new Random();
-        int i = random.nextInt(5);
+        int i = random.nextInt(2);
         if (i == 0) {
             fail("Failing test to check retry mechanism: " + i);
         }

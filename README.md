@@ -1,4 +1,5 @@
-# Playwright Java tests - Docker and reporting
+# (WORK IN PROGRESS) Playwright Java tests - Docker and reporting
+
 
 The PrestaShop browser tests in `com.prestashop.test` are Playwright Java tests migrated from the companion Python suite. Existing Selenium/Wikipedia tests remain temporarily while their infrastructure is retired.
 

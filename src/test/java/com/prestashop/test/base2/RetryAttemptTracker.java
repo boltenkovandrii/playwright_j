@@ -49,7 +49,7 @@ public final class RetryAttemptTracker {
         if (runId == null || runId.isBlank()) {
             return null;
         }
-        String testId = context.getUniqueId() + "|" + run.browser() + "|" + run.profile();
+        String testId = context.getRequiredTestClass().getName() + "|" + context.getRequiredTestMethod().toGenericString() + "|" + run.browser() + "|" + run.profile();
         String testKey = sha256(testId);
         return Path.of("build","retry-state", runId, testKey);
     }

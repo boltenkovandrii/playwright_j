@@ -66,7 +66,7 @@ test {
     }
 
     retry {
-        maxRetries = Integer.parseInt(System.getProperty("retries", "1"))
+        maxRetries = Integer.parseInt(System.getProperty("retries", "2"))
     }
 
     testLogging.showStandardStreams = true //to see standard output in tests
