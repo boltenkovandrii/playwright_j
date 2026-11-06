@@ -1,6 +1,12 @@
 package com.prestashop.test.base2;
 
-import com.microsoft.playwright.*;
+
+import com.microsoft.playwright.Browser;
+import com.microsoft.playwright.BrowserContext;
+import com.microsoft.playwright.BrowserType;
+import com.microsoft.playwright.Page;
+import com.microsoft.playwright.Playwright;
+import com.microsoft.playwright.Tracing;
 import com.prestashop.test.base.PlaywrightSettings;
 import com.prestashop.test.base.TestRunConfig;
 import io.qameta.allure.Allure;
@@ -19,15 +25,17 @@ public final class BrowserSession implements AutoCloseable {
     private final BrowserContext context;
     private final Page page;
     private final Path outputDirectory;
+    private final int attempt;
 
     private boolean closed;
 
-    private BrowserSession(Playwright playwright, Browser browser, BrowserContext context, Page page, Path outputDirectory) {
+    private BrowserSession(Playwright playwright, Browser browser, BrowserContext context, Page page, Path outputDirectory, int attempt) {
         this.playwright = playwright;
         this.browser = browser;
         this.context = context;
         this.page = page;
         this.outputDirectory = outputDirectory;
+        this.attempt = attempt;
     }
 
     public static BrowserSession start(TestRunConfig run, int attempt) {
@@ -48,7 +56,7 @@ public final class BrowserSession implements AutoCloseable {
 
             Page page = context.newPage();
 
-            return new BrowserSession(playwright, browser, context, page, outputDirectory);
+            return new BrowserSession(playwright, browser, context, page, outputDirectory, attempt);
 
         } catch (Throwable failure) {
             closeQuietly(context);
@@ -65,7 +73,12 @@ public final class BrowserSession implements AutoCloseable {
     public void finishPassed() {
         stopTrace(null);
         close();
-        deleteDirectory(outputDirectory);
+        // only delete the directory if this is the first attempt, for reruns - attaching video
+        if(attempt==1){
+            deleteDirectory(outputDirectory);
+        }else{
+            attachVideoIfPresent();
+        }
     }
 
     public void finishFailed() {

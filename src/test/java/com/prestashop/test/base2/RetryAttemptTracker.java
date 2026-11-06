@@ -1,5 +1,6 @@
 package com.prestashop.test.base2;
 
+import com.prestashop.test.base.TestConfig;
 import com.prestashop.test.base.TestRunConfig;
 import org.junit.jupiter.api.extension.ExtensionContext;
 
@@ -15,7 +16,7 @@ import java.util.HexFormat;
 public final class RetryAttemptTracker {
 
     private static final String RUN_ID_PROPERTY = "retryTrackerRunId";
-    private static final int MAX_ATTEMPTS = 10;
+    private static final int MAX_ATTEMPTS = TestConfig.getConfiguration().getInt("retries", 1)+1;
 
     private RetryAttemptTracker() {
     }
