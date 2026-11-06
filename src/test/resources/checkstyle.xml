@@ -76,6 +76,7 @@
 
         <module name="VisibilityModifier">
             <property name="protectedAllowed" value="true"/>
+            <property name="allowPublicFinalFields" value="true"/>
         </module>
 
         <!-- Braces and whitespace -->

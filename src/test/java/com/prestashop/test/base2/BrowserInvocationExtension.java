@@ -50,7 +50,7 @@ public final class BrowserInvocationExtension implements
         if (session == null) {
             throw new ParameterResolutionException("Browser session is not available");
         }
-        return session.page();
+        return session.getPage();
     }
 
     @Override
@@ -74,17 +74,14 @@ public final class BrowserInvocationExtension implements
     @Override
     public void afterEach(ExtensionContext context) {
         try {
-            if (session == null) {
-                return;
-            }
-
-            if (testFailed) {
-                session.finishFailed();
-            } else {
-                session.finishPassed();
+            if (session != null) {
+                if (testFailed) {
+                    session.finishFailed();
+                } else {
+                    session.finishPassed();
+                }
             }
         } finally {
-            session = null;
             AllureArtifacts.clearAttempt();
         }
     }

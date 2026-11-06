@@ -16,7 +16,7 @@ import java.util.HexFormat;
 public final class RetryAttemptTracker {
 
     private static final String RUN_ID_PROPERTY = "retryTrackerRunId";
-    private static final int MAX_ATTEMPTS = TestConfig.getConfiguration().getInt("retries", 1)+1;
+    private static final int MAX_ATTEMPTS = TestConfig.getConfiguration().getInt("retries", 1) + 1;
 
     private RetryAttemptTracker() {
     }
@@ -43,7 +43,8 @@ public final class RetryAttemptTracker {
                     attempt++;
                 }
             }
-            throw new IllegalStateException("Exceeded maximum retry attempts (" + MAX_ATTEMPTS + ") for test: " + context.getRequiredTestMethod().getName() + " with configuration: " + run);
+            throw new IllegalStateException("Exceeded maximum retry attempts (" + MAX_ATTEMPTS + ") for test: "
+                    + context.getRequiredTestMethod().getName() + " with configuration: " + run);
         } catch (IOException e) {
             throw new IllegalStateException("Unable to determine test retry attempt", e);
         }
@@ -54,9 +55,10 @@ public final class RetryAttemptTracker {
         if (runId == null || runId.isBlank()) {
             return null;
         }
-        String testId = context.getRequiredTestClass().getName() + "|" + context.getRequiredTestMethod().toGenericString() + "|" + run.browser() + "|" + run.profile();
+        String testId = context.getRequiredTestClass().getName() + "|" + context.getRequiredTestMethod().toGenericString() +
+                "|" + run.browser() + "|" + run.profile();
         String testKey = sha256(testId);
-        return Path.of("build","retry-state", runId, testKey);
+        return Path.of("build", "retry-state", runId, testKey);
     }
 
     public static boolean hasPassed(ExtensionContext context, TestRunConfig run) {

@@ -26,8 +26,7 @@ public final class AllureArtifacts {
         Attempt attempt = ATTEMPT.get();
         if (attempt != null && (attempt.retainArtifacts || PlaywrightSettings.screenshotsEnabled())) {
             attachPng(page.screenshot(new Page.ScreenshotOptions().setFullPage(true)), name);
-        }
-        else {
+        } else {
             Allure.step(name);
         }
     }
@@ -36,8 +35,7 @@ public final class AllureArtifacts {
         Attempt attempt = ATTEMPT.get();
         if (attempt != null && (attempt.retainArtifacts || PlaywrightSettings.screenshotsEnabled())) {
             attachPng(locator.screenshot(), name);
-        }
-        else{
+        } else {
             Allure.step(name);
         }
     }
@@ -46,5 +44,6 @@ public final class AllureArtifacts {
         Allure.attachment(name, "image/png", new ByteArrayInputStream(bytes), AttachmentOptions.withFileExtension(".png"));
     }
 
-    private record Attempt(boolean retainArtifacts) {}
+    private record Attempt(boolean retainArtifacts) {
+    }
 }

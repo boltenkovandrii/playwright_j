@@ -6,11 +6,14 @@ import com.microsoft.playwright.BrowserContext;
 import com.microsoft.playwright.BrowserType;
 import com.microsoft.playwright.Page;
 import com.microsoft.playwright.Playwright;
+import com.microsoft.playwright.PlaywrightException;
 import com.microsoft.playwright.Tracing;
 import com.prestashop.test.base.PlaywrightSettings;
 import com.prestashop.test.base.TestRunConfig;
 import io.qameta.allure.Allure;
 import io.qameta.allure.AttachmentOptions;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -19,6 +22,8 @@ import java.nio.file.Path;
 import java.util.UUID;
 
 public final class BrowserSession implements AutoCloseable {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(BrowserSession.class);
 
     private final Playwright playwright;
     private final Browser browser;
@@ -38,6 +43,7 @@ public final class BrowserSession implements AutoCloseable {
         this.attempt = attempt;
     }
 
+    @SuppressWarnings("PMD.AvoidCatchingGenericException")
     public static BrowserSession start(TestRunConfig run, int attempt) {
         Path outputDirectory = createOutputDirectory(run, attempt);
 
@@ -62,11 +68,12 @@ public final class BrowserSession implements AutoCloseable {
             closeQuietly(context);
             closeQuietly(browser);
             closeQuietly(playwright);
+            deleteDirectory(outputDirectory);
             throw failure;
         }
     }
 
-    public Page page() {
+    public Page getPage() {
         return page;
     }
 
@@ -74,9 +81,9 @@ public final class BrowserSession implements AutoCloseable {
         stopTrace(null);
         close();
         // only delete the directory if this is the first attempt, for reruns - attaching video
-        if(attempt==1){
+        if (attempt == 1) {
             deleteDirectory(outputDirectory);
-        }else{
+        } else {
             attachVideoIfPresent();
         }
     }
@@ -96,7 +103,7 @@ public final class BrowserSession implements AutoCloseable {
         try {
             byte[] screenshot = page.screenshot(new Page.ScreenshotOptions().setFullPage(true));
             Allure.attachment("Failure state", "image/png", new ByteArrayInputStream(screenshot), AttachmentOptions.withFileExtension(".png"));
-        } catch (Throwable failure) {
+        } catch (PlaywrightException failure) {
             logDiagnosticFailure("capture screenshot", failure);
         }
     }
@@ -111,7 +118,7 @@ public final class BrowserSession implements AutoCloseable {
 
             context.tracing().stop(options);
 
-        } catch (Throwable failure) {
+        } catch (PlaywrightException failure) {
             logDiagnosticFailure("stop tracing", failure);
         }
     }
@@ -121,7 +128,7 @@ public final class BrowserSession implements AutoCloseable {
             for (Path video : files.filter(Files::isRegularFile).toList()) {
                 attachFile(video, "Video - " + video.getFileName(), "video/webm");
             }
-        } catch (Throwable failure) {
+        } catch (IOException failure) {
             logDiagnosticFailure("attach video", failure);
         }
     }
@@ -137,7 +144,7 @@ public final class BrowserSession implements AutoCloseable {
     private static void attachFile(Path path, String name, String contentType) {
         try (var input = Files.newInputStream(path)) {
             Allure.attachment(name, contentType, input, AttachmentOptions.withFileExtension(extension(path)));
-        } catch (Throwable failure) {
+        } catch (IOException failure) {
             logDiagnosticFailure("attach " + path, failure);
         }
     }
@@ -200,6 +207,7 @@ public final class BrowserSession implements AutoCloseable {
         return index < 0 ? "" : name.substring(index);
     }
 
+    @SuppressWarnings("PMD.AvoidCatchingGenericException")
     private static void closeQuietly(AutoCloseable resource) {
         if (resource == null) {
             return;
@@ -207,12 +215,12 @@ public final class BrowserSession implements AutoCloseable {
 
         try {
             resource.close();
-        } catch (Throwable failure) {
+        } catch (Exception failure) {
             logDiagnosticFailure("close resource", failure);
         }
     }
 
     private static void logDiagnosticFailure(String operation, Throwable failure) {
-        System.err.printf("Unable to %s: %s%n", operation, failure);
+        LOGGER.error("Unable to {}: {}", operation, failure.toString(), failure);
     }
 }

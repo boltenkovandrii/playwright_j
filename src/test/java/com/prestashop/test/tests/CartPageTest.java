@@ -54,13 +54,13 @@ class CartPageTest {
 
     @CustomRunnerTest @DisplayName("CART-04 - Remove product from cart")
     void removeProduct(Page page) {
-    new HomePage(page, "en")
-            .open().openCategory("Clothes")
-            .openProductByName(T_SHIRT)
-            .addToCart()
-            .proceedToCart()
-            .removeProduct(new ProductSpec(T_SHIRT))
-            .checkEmptyStructure();
+        new HomePage(page, "en")
+                .open().openCategory("Clothes")
+                .openProductByName(T_SHIRT)
+                .addToCart()
+                .proceedToCart()
+                .removeProduct(new ProductSpec(T_SHIRT))
+                .checkEmptyStructure();
     }
 
     @CustomRunnerTest @DisplayName("CART-05 - Update product quantity in cart")
