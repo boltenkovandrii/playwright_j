@@ -1,7 +1,6 @@
 package com.prestashop.test.tests;
 
 import com.microsoft.playwright.Page;
-import com.prestashop.test.base.TestBase;
 import com.prestashop.test.base2.CustomRunnerTest;
 import com.prestashop.test.pages.AccountDashboardPage;
 import com.prestashop.test.pages.CartPage;
@@ -17,7 +16,7 @@ import org.junit.jupiter.api.Tag;
 
 @Tag("regression")
 @DisplayName("PrestaShop storefront - Localization")
-class LocalizationTest extends TestBase {
+class LocalizationTest {
 
     private static final String DEMO_EMAIL = "pub@prestashop.com";
     private static final String DEMO_PASSWORD = "123456789";

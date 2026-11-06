@@ -1,7 +1,6 @@
 package com.prestashop.test.tests;
 
 import com.microsoft.playwright.Page;
-import com.prestashop.test.base.TestBase;
 import com.prestashop.test.base2.CustomRunnerTest;
 import com.prestashop.test.pages.HomePage;
 import com.prestashop.test.pages.ProductPage;
@@ -12,7 +11,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @Tag("regression")
 @DisplayName("PrestaShop storefront - Product details")
-class ProductPageTest extends TestBase {
+class ProductPageTest {
     private static final String T_SHIRT = "Hummingbird printed t-shirt";
 
     @CustomRunnerTest

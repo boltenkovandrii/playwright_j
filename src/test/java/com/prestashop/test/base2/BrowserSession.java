@@ -149,8 +149,7 @@ public final class BrowserSession implements AutoCloseable {
             case "chromium" -> playwright.chromium().launch(options);
             case "firefox" -> playwright.firefox().launch(options);
             case "webkit" -> playwright.webkit().launch(options);
-            default -> throw new IllegalArgumentException(
-                    "Unsupported Playwright browser: " + name);
+            default -> throw new IllegalArgumentException("Unsupported Playwright browser: " + name);
         };
     }
 

@@ -1,7 +1,6 @@
 package com.prestashop.test.tests;
 
 import com.microsoft.playwright.Page;
-import com.prestashop.test.base.TestBase;
 import com.prestashop.test.base2.CustomRunnerTest;
 import com.prestashop.test.pages.HomePage;
 import com.prestashop.test.pages.SearchResultsPage;
@@ -10,7 +9,7 @@ import org.junit.jupiter.api.Tag;
 
 @Tag("regression")
 @DisplayName("PrestaShop storefront - Search")
-class SearchTest extends TestBase {
+class SearchTest {
 
     private static final String PRODUCT_NAME = "Hummingbird printed t-shirt";
 

@@ -1,7 +1,6 @@
 package com.prestashop.test.tests;
 
 import com.microsoft.playwright.Page;
-import com.prestashop.test.base.TestBase;
 import com.prestashop.test.base2.CustomRunnerTest;
 import com.prestashop.test.pages.CatalogPage;
 import com.prestashop.test.pages.HomePage;
@@ -14,7 +13,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @Tag("regression")
 @DisplayName("PrestaShop storefront - Navigation and catalog")
-class CatalogPageTest extends TestBase {
+class CatalogPageTest {
 
     @CustomRunnerTest
     @DisplayName("CAT-01 - Check catalog page structure")

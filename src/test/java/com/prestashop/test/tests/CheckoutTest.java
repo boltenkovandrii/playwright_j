@@ -1,7 +1,6 @@
 package com.prestashop.test.tests;
 
 import com.microsoft.playwright.Page;
-import com.prestashop.test.base.TestBase;
 import com.prestashop.test.base2.CustomRunnerTest;
 import com.prestashop.test.pages.CartPage;
 import com.prestashop.test.pages.CheckoutPage;
@@ -11,7 +10,7 @@ import org.junit.jupiter.api.Tag;
 
 @Tag("regression")
 @DisplayName("PrestaShop storefront - Checkout")
-class CheckoutTest extends TestBase {
+class CheckoutTest {
 
     @CustomRunnerTest
     @DisplayName("CHK-01 - Guest checkout page structure and checkout flow")

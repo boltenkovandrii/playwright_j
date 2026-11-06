@@ -1,7 +1,6 @@
 package com.prestashop.test.tests;
 
 import com.microsoft.playwright.Page;
-import com.prestashop.test.base.TestBase;
 import com.prestashop.test.base2.CustomRunnerTest;
 import com.prestashop.test.pages.CartPage;
 import com.prestashop.test.pages.HomePage;
@@ -12,7 +11,7 @@ import org.junit.jupiter.api.Tag;
 
 @Tag("regression")
 @DisplayName("PrestaShop storefront - Shopping cart")
-class CartPageTest extends TestBase {
+class CartPageTest {
     private static final String T_SHIRT = "Hummingbird printed t-shirt";
 
     @CustomRunnerTest @DisplayName("CART-01 - Check cart page structure")

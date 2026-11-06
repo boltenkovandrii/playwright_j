@@ -45,10 +45,6 @@ public final class AllureArtifacts {
         }
     }
 
-    static void failureScreenshot(Page page) {
-        attachPng(page.screenshot(new Page.ScreenshotOptions().setFullPage(true)), "Failure state");
-    }
-
     static void attachFile(Path path, String name, String type) {
         try {
             Allure.attachment(name, type, Files.newInputStream(path), AttachmentOptions.withFileExtension(fileExtension(path)));

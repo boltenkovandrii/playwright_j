@@ -1,7 +1,6 @@
 package com.prestashop.test.tests;
 
 import com.microsoft.playwright.Page;
-import com.prestashop.test.base.TestBase;
 import com.prestashop.test.base2.CustomRunnerTest;
 import com.prestashop.test.pages.HomePage;
 import org.junit.jupiter.api.DisplayName;
@@ -9,7 +8,7 @@ import org.junit.jupiter.api.Tag;
 
 @Tag("regression")
 @DisplayName("PrestaShop storefront - Homepage")
-class HomePageTest extends TestBase {
+class HomePageTest {
 
     @CustomRunnerTest
     @DisplayName("HOME-01 - Check home page structure")
