@@ -15,6 +15,7 @@ import java.util.HexFormat;
 public final class RetryAttemptTracker {
 
     private static final String RUN_ID_PROPERTY = "retryTrackerRunId";
+    private static final int MAX_ATTEMPTS = 10;
 
     private RetryAttemptTracker() {
     }
@@ -23,22 +24,25 @@ public final class RetryAttemptTracker {
 
         Path directory = stateDirectory(context, run); // Ensure the directory exists.
 
+        if (directory == null) {
+            return 1;
+        }
+
         try {
             Files.createDirectories(directory);
 
-            for (int attempt = 1; ; attempt++) {
-                Path marker = directory.resolve("attempt-" + attempt + ".started");
+            int attempt = 1;
 
+            while (attempt <= MAX_ATTEMPTS) {
+                Path marker = directory.resolve("attempt-" + attempt + ".started");
                 try {
                     Files.createFile(marker);
                     return attempt;
-
                 } catch (FileAlreadyExistsException ignored) {
-                    // This attempt number is already taken.
-                    // Try the next one.
+                    attempt++;
                 }
             }
-
+            throw new IllegalStateException("Exceeded maximum retry attempts (" + MAX_ATTEMPTS + ") for test: " + context.getRequiredTestMethod().getName() + " with configuration: " + run);
         } catch (IOException e) {
             throw new IllegalStateException("Unable to determine test retry attempt", e);
         }

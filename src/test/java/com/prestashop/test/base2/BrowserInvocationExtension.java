@@ -8,24 +8,25 @@ import com.prestashop.test.base.TestRunConfig;
 import org.junit.jupiter.api.extension.AfterEachCallback;
 import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
+import org.junit.jupiter.api.extension.LifecycleMethodExecutionExceptionHandler;
 import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.extension.ParameterResolutionException;
 import org.junit.jupiter.api.extension.ParameterResolver;
 import org.junit.jupiter.api.extension.TestExecutionExceptionHandler;
 import org.junit.jupiter.api.extension.TestWatcher;
-import org.opentest4j.TestAbortedException;
 
 public final class BrowserInvocationExtension implements
         ParameterResolver,
         BeforeEachCallback,
         AfterEachCallback,
         TestExecutionExceptionHandler,
+        LifecycleMethodExecutionExceptionHandler,
         TestWatcher {
 
     private final TestRunConfig run;
 
     private BrowserSession session;
-    private Throwable testFailure;
+    private boolean testFailed = false;
 
     public BrowserInvocationExtension(TestRunConfig run) {
         this.run = run;
@@ -33,9 +34,6 @@ public final class BrowserInvocationExtension implements
 
     @Override
     public void beforeEach(ExtensionContext context) {
-//        if (RetryAttemptTracker.hasPassed(context, run)) {
-//            throw new TestAbortedException("Configuration already passed in a previous attempt: " + run);
-//        }
         int currentAttempt = RetryAttemptTracker.nextAttempt(context, run);
         AllureArtifacts.setAttempt(currentAttempt > 1);
         session = BrowserSession.start(run, currentAttempt);
@@ -49,20 +47,27 @@ public final class BrowserInvocationExtension implements
 
     @Override
     public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {
-
-        Class<?> type = parameterContext.getParameter().getType();
-
-        if (type == Page.class && session != null) {
-            return session.page();
+        if (session == null) {
+            throw new ParameterResolutionException("Browser session is not available");
         }
-
-        throw new ParameterResolutionException("Unable to resolve parameter: " + type.getName());
+        return session.page();
     }
 
     @Override
     public void handleTestExecutionException(ExtensionContext context, Throwable throwable) throws Throwable {
+        testFailed = true;
+        throw throwable;
+    }
 
-        testFailure = throwable;
+    @Override
+    public void handleBeforeEachMethodExecutionException(ExtensionContext context, Throwable throwable) throws Throwable {
+        testFailed = true;
+        throw throwable;
+    }
+
+    @Override
+    public void handleAfterEachMethodExecutionException(ExtensionContext context, Throwable throwable) throws Throwable {
+        testFailed = true;
         throw throwable;
     }
 
@@ -73,10 +78,10 @@ public final class BrowserInvocationExtension implements
                 return;
             }
 
-            if (testFailure == null) {
-                session.finishPassed();
-            } else {
+            if (testFailed) {
                 session.finishFailed();
+            } else {
+                session.finishPassed();
             }
         } finally {
             session = null;

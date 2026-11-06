@@ -8,8 +8,7 @@ import com.prestashop.test.pages.HomePage;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 
-import java.util.Random;
-
+import static com.prestashop.test.tests2.StaticTestManager.chk1;
 import static org.junit.jupiter.api.Assertions.fail;
 
 
@@ -40,10 +39,9 @@ class CheckoutTest  {
                 .acceptTerms();
 
 
-        Random random = new Random();
-        int i = random.nextInt(2);
-        if (i == 0) {
-            fail("Failing test to check retry mechanism: " + i);
+        chk1++;
+        if (chk1 <2) {
+            fail("Failing test to check retry mechanism: " + chk1);
         }
 
         checkout.placeOrder()
