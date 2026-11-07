@@ -32,6 +32,7 @@ public class AccountDashboardPage extends BaseStorefrontPage {
     }
 
     @Override
+    @SuppressWarnings("checkstyle:MagicNumber")
     public AccountDashboardPage checkStructure() {
         AllureArtifacts.screenshot(page, "Checking account dashboard structure");
         super.checkStructure();

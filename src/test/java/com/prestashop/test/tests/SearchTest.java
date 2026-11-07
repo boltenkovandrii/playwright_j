@@ -26,6 +26,7 @@ class SearchTest {
 
     @CustomRunnerTest
     @DisplayName("SRCH-02 - Search by partial product name")
+    @SuppressWarnings("checkstyle:MagicNumber")
     void searchByPartialProductName(Page page) {
         new HomePage(page, "en")
                 .open()
@@ -37,6 +38,7 @@ class SearchTest {
 
     @CustomRunnerTest
     @DisplayName("SRCH-03 - Search with no matching results")
+    @SuppressWarnings("checkstyle:MagicNumber")
     void searchWithNoMatchingResults(Page page) {
         new HomePage(page, "en")
                 .open()
@@ -50,6 +52,7 @@ class SearchTest {
 
     @CustomRunnerTest
     @DisplayName("SRCH-04 - Search from catalog page")
+    @SuppressWarnings("checkstyle:MagicNumber")
     void searchFromCatalogPage(Page page) {
         new HomePage(page, "en")
                 .open()
@@ -62,6 +65,7 @@ class SearchTest {
 
     @CustomRunnerTest
     @DisplayName("SRCH-05 - Navigate through search pagination")
+    @SuppressWarnings("checkstyle:MagicNumber")
     void navigateSearchPagination( Page page) {
         // don't have enough products, so using workaround to check pagination
         HomePage home = new HomePage(page, "en").open();

@@ -14,6 +14,7 @@ class CheckoutTest {
 
     @CustomRunnerTest
     @DisplayName("CHK-01 - Guest checkout page structure and checkout flow")
+    @SuppressWarnings("checkstyle:MagicNumber")
     void guestCheckout(Page page) {
         CartPage cart = new HomePage(page, "en").open()
                 .openCategory("Clothes")

@@ -26,6 +26,7 @@ class ProductPageTest {
 
     @CustomRunnerTest
     @DisplayName("PDP-02 - View product information")
+    @SuppressWarnings("checkstyle:MagicNumber")
     void productInformation(Page page) {
         new HomePage(page, "en")
                 .open()
@@ -84,6 +85,7 @@ class ProductPageTest {
 
     @CustomRunnerTest
     @DisplayName("PDP-05 - Add product to cart")
+    @SuppressWarnings("checkstyle:MagicNumber")
     void addProductToCart(Page page) {
         new HomePage(page, "en")
                 .open()
@@ -97,6 +99,7 @@ class ProductPageTest {
 
     @CustomRunnerTest
     @DisplayName("PDP-06 - Continue shopping after adding a product")
+    @SuppressWarnings("checkstyle:MagicNumber")
     void continueShoppingAfterAdd(Page page) {
         ProductPage product = new HomePage(page, "en")
                 .open()
@@ -122,6 +125,7 @@ class ProductPageTest {
 
     @CustomRunnerTest
     @DisplayName("PDP-07 - Navigate to cart from confirmation dialog")
+    @SuppressWarnings("checkstyle:MagicNumber")
     void navigateToCartFromConfirmation(Page page) {
         new HomePage(page, "en")
                 .open()

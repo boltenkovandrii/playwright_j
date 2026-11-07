@@ -1,5 +1,6 @@
 package com.prestashop.test.pages;
 
+import com.microsoft.playwright.assertions.LocatorAssertions;
 import com.prestashop.test.base.AllureArtifacts;
 import com.microsoft.playwright.options.BoundingBox;
 import com.prestashop.test.components.ProductGrid;
@@ -13,6 +14,9 @@ import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertTha
 import static com.microsoft.playwright.options.AriaRole.LINK;
 
 public class CatalogPage extends BaseStorefrontPage {
+
+    private static final int SLIDER_STEPS = 12;
+    private static final int SLIDER_MAX_CORRECTIONS = 10;
 
     private final ProductGrid productGrid;
     private final Locator heading;
@@ -118,8 +122,7 @@ public class CatalogPage extends BaseStorefrontPage {
         // PrestaShop's pagination uses a resultsPerPage URL workaround. In headed mode some viewports
         // occasionally need a second click before navigation takes effect, so retry only if needed.
         try {
-            assertThat(currentPage).hasText(String.valueOf(pageNumber),
-                    new com.microsoft.playwright.assertions.LocatorAssertions.HasTextOptions().setTimeout(1000));
+            assertThat(currentPage).hasText(String.valueOf(pageNumber), new LocatorAssertions.HasTextOptions().setTimeout(TIMEOUT));
         } catch (AssertionError error) {
             AllureArtifacts.screenshot(page, "Retrying click for page number: " + pageNumber);
             pageList.getByRole(LINK,
@@ -172,7 +175,7 @@ public class CatalogPage extends BaseStorefrontPage {
         double x = trackBox.x + ((bounded - minimum) / (maximum - minimum)) * trackBox.width;
         handle.hover();
         page.mouse().down();
-        page.mouse().move(x, handleBox.y + handleBox.height / 2, new Mouse.MoveOptions().setSteps(12));
+        page.mouse().move(x, handleBox.y + handleBox.height / 2, new Mouse.MoveOptions().setSteps(SLIDER_STEPS));
         page.mouse().up();
     }
 
@@ -186,7 +189,7 @@ public class CatalogPage extends BaseStorefrontPage {
         int currentValue = getPriceSliderValue(index);
         int counter = 0;
         // Viewport-dependent drag precision can require one-pixel corrections.
-        while (getPriceSliderValue(index) != target && counter < 10) {
+        while (getPriceSliderValue(index) != target && counter < SLIDER_MAX_CORRECTIONS) {
             AllureArtifacts.screenshot(page, "Applying price filter iteration " + counter + " for index " + index + " with target " + target);
             counter++;
             boolean increase = currentValue < target;

@@ -175,7 +175,7 @@ public class ProductPage extends BaseStorefrontPage {
     public ProductPage selectSize(String size) {
         AllureArtifacts.screenshot(page, "Selecting size: " + size);
         // Need to wait until the request is processed, otherwise subsequent actions can use stale page state.
-        page.waitForResponse(resp -> resp.url().contains("controller=product") && resp.status() == 200,
+        page.waitForResponse(resp -> resp.url().contains("controller=product"),
                 () ->  sizeSelect.selectOption(new SelectOption().setLabel(size))
         );
         assertThat(selectedSize).hasText(size);

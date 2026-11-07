@@ -23,6 +23,7 @@ class CatalogPageTest {
 
     @CustomRunnerTest
     @DisplayName("CAT-02 - Browse products in a category")
+    @SuppressWarnings("checkstyle:MagicNumber")
     void browseProductsInCategory(Page page) {
         CatalogPage catalog = new HomePage(page, "en").open().openCategory("Accessories").checkResultCount(11);
         catalog.verifyCategoryName("Accessories");
@@ -53,6 +54,7 @@ class CatalogPageTest {
 
     @CustomRunnerTest
     @DisplayName("CAT-05 - Navigate through catalog pagination")
+    @SuppressWarnings("checkstyle:MagicNumber")
     void catalogPagination(Page page) {
         // don't have enough products, so using workaround to check pagination
         new HomePage(page, "en")
@@ -80,6 +82,7 @@ class CatalogPageTest {
 
     @CustomRunnerTest
     @DisplayName("CAT-07 - Filter products by price")
+    @SuppressWarnings("checkstyle:MagicNumber")
     void filterProductsByPrice(Page page) {
         new HomePage(page, "en")
                 .open()
@@ -92,6 +95,7 @@ class CatalogPageTest {
 
     @CustomRunnerTest
     @DisplayName("CAT-08 - Filter products by manufacturer")
+    @SuppressWarnings("checkstyle:MagicNumber")
     void filterProductsByManufacturer(Page page) {
         new HomePage(page, "en")
                 .open()

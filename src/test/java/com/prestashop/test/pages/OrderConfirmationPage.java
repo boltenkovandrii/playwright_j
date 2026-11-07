@@ -10,6 +10,8 @@ import static com.microsoft.playwright.options.AriaRole.HEADING;
 // This page is almost not localized. Existing scenarios use English summary labels.
 public class OrderConfirmationPage extends BaseStorefrontPage {
 
+    private static final double EPSILON = 0.01;
+
     private final Locator confirmationBlock;
     private final Locator confirmationHeading;
     private final Locator orderItems;
@@ -87,7 +89,7 @@ public class OrderConfirmationPage extends BaseStorefrontPage {
     private OrderConfirmationPage verifySummary(String label, double amount) {
         Locator row = orderSummaryTable.locator("tr").filter(new Locator.FilterOptions().setHasText(label));
         String text = row.locator("td").last().textContent().replace("€", "").replace("\u00A0", "").strip();
-        if (Math.abs(Double.parseDouble(text) - amount) >= 0.01) {
+        if (Math.abs(Double.parseDouble(text) - amount) >= EPSILON) {
             throw new AssertionError("Expected " + amount + " for " + label + " but was " + text);
         }
         return this;

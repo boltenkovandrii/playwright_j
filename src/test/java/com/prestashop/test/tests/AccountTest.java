@@ -50,6 +50,7 @@ class AccountTest {
 
     @CustomRunnerTest
     @DisplayName("ACCT-04 - Registration validation")
+    @SuppressWarnings("checkstyle:MagicNumber")
     void registrationValidation(Page page) {
         RegistrationPage registration = new HomePage(page, "en")
                 .open()
