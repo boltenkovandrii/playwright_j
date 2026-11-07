@@ -1,5 +1,6 @@
 package com.prestashop.test.pages;
 
+import com.microsoft.playwright.assertions.LocatorAssertions;
 import com.prestashop.test.base.AllureArtifacts;
 import com.prestashop.test.components.ProductGrid;
 import com.microsoft.playwright.Locator;
@@ -78,8 +79,7 @@ public class SearchResultsPage extends BaseStorefrontPage {
         // PrestaShop's pagination uses a resultsPerPage URL workaround. In headed mode some viewports
         // occasionally need a second click before navigation takes effect, so retry only if needed.
         try {
-            assertThat(currentPage).hasText(String.valueOf(pageNumber),
-                    new com.microsoft.playwright.assertions.LocatorAssertions.HasTextOptions().setTimeout(1000));
+            assertThat(currentPage).hasText(String.valueOf(pageNumber), new LocatorAssertions.HasTextOptions().setTimeout(TIMEOUT));
         } catch (AssertionError error) {
             AllureArtifacts.screenshot(page, "Retrying click for page number: " + pageNumber);
             pageList.getByRole(LINK,

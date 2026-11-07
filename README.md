@@ -1,4 +1,5 @@
-# Playwright Java tests - Docker and reporting
+# (WORK IN PROGRESS) Playwright Java tests - Docker and reporting
+
 
 The PrestaShop browser tests in `com.prestashop.test` are Playwright Java tests migrated from the companion Python suite. Existing Selenium/Wikipedia tests remain temporarily while their infrastructure is retired.
 
@@ -25,10 +26,10 @@ Start the local PrestaShop AUT first, then use the Gradle wrapper. Playwright su
 .\gradlew.bat test --tests "com.prestashop.test.tests.*" -DallureScreenshots=true
 
 # Disable test retries; failed attempts still retain a screenshot, video, and trace
-.\gradlew.bat test --tests "com.prestashop.test.tests.*" -DpwRetries=0
+.\gradlew.bat test --tests "com.prestashop.test.tests.*" -Dretries=0
 ```
 
-By default, successful first attempts discard screenshots, videos, and traces. Failed attempts and all retry attempts retain and attach these diagnostics to Allure. The retry count defaults to one (`-DpwRetries=1`).
+By default, successful first attempts discard screenshots, videos, and traces. Failed attempts and all retry attempts retain and attach these diagnostics to Allure. The retry count defaults to one (`-Dretries=1`).
 
 ---
 

@@ -6,22 +6,22 @@ import io.qameta.allure.Allure;
 import io.qameta.allure.AttachmentOptions;
 
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 
 public final class AllureArtifacts {
 
+    // Store attempt state per thread to prevent interference during parallel test execution.
+    // Each invocation sets its own state and removes it after execution,
+    // preventing state from leaking when worker threads are reused.
     private static final ThreadLocal<Attempt> ATTEMPT = new ThreadLocal<>();
 
     private AllureArtifacts() {
     }
 
-    static void setAttempt(boolean retainArtifacts) {
+    public static void setAttempt(boolean retainArtifacts) {
         ATTEMPT.set(new Attempt(retainArtifacts));
     }
 
-    static void clearAttempt() {
+    public static void clearAttempt() {
         ATTEMPT.remove();
     }
 
@@ -29,6 +29,8 @@ public final class AllureArtifacts {
         Attempt attempt = ATTEMPT.get();
         if (attempt != null && (attempt.retainArtifacts || PlaywrightSettings.screenshotsEnabled())) {
             attachPng(page.screenshot(new Page.ScreenshotOptions().setFullPage(true)), name);
+        } else {
+            Allure.step(name);
         }
     }
 
@@ -36,30 +38,13 @@ public final class AllureArtifacts {
         Attempt attempt = ATTEMPT.get();
         if (attempt != null && (attempt.retainArtifacts || PlaywrightSettings.screenshotsEnabled())) {
             attachPng(locator.screenshot(), name);
-        }
-    }
-
-    static void failureScreenshot(Page page) {
-        attachPng(page.screenshot(new Page.ScreenshotOptions().setFullPage(true)), "Failure state");
-    }
-
-    static void attachFile(Path path, String name, String type) {
-        try {
-            Allure.attachment(name, type, Files.newInputStream(path), AttachmentOptions.withFileExtension(fileExtension(path)));
-
-        } catch (IOException e) {
-            throw new IllegalStateException("Unable to attach " + path, e);
+        } else {
+            Allure.step(name);
         }
     }
 
     private static void attachPng(byte[] bytes, String name) {
         Allure.attachment(name, "image/png", new ByteArrayInputStream(bytes), AttachmentOptions.withFileExtension(".png"));
-    }
-
-    private static String fileExtension(Path path) {
-        String name = path.getFileName().toString();
-        int index = name.lastIndexOf('.');
-        return index >= 0 ? name.substring(index) : "";
     }
 
     private record Attempt(boolean retainArtifacts) {

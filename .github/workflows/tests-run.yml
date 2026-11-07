@@ -88,10 +88,9 @@ jobs:
         run: |
           chmod +x gradlew
 
-#      TODO: Uncomment the following step to run checkstyle and pmd checks
-#      - name: Run checkstyle and pmd checks
-#        run: |
-#          ./gradlew qualityCheck
+      - name: Run checkstyle and pmd checks
+        run: |
+          ./gradlew qualityCheck
 
       - name: Run Gradle tests
         run: |

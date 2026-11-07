@@ -1,11 +1,11 @@
 package com.prestashop.test.tests;
 
-import com.prestashop.test.base.TestBase;
+import com.microsoft.playwright.Page;
+import com.prestashop.test.base2.CustomRunnerTest;
 import com.prestashop.test.pages.CatalogPage;
 import com.prestashop.test.pages.HomePage;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
@@ -13,53 +13,51 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @Tag("regression")
 @DisplayName("PrestaShop storefront - Navigation and catalog")
-class CatalogPageTest extends TestBase {
+class CatalogPageTest {
 
-    @Test
+    @CustomRunnerTest
     @DisplayName("CAT-01 - Check catalog page structure")
-    void catalogPageStructure() {
-        runScenario(page -> new HomePage(page, "en").open().openCategory("Clothes").checkStructure());
+    void catalogPageStructure(Page page) {
+        new HomePage(page, "en").open().openCategory("Clothes").checkStructure();
     }
 
-    @Test
+    @CustomRunnerTest
     @DisplayName("CAT-02 - Browse products in a category")
-    void browseProductsInCategory() {
-        runScenario(page -> {
-            CatalogPage catalog = new HomePage(page, "en").open().openCategory("Accessories").checkResultCount(11);
-            catalog.verifyCategoryName("Accessories");
-            catalog.products().productAt(0).checkStructure();
-            catalog.products().productAt(1).checkStructure();
-            assertThat(catalog.products().names()).hasSizeGreaterThanOrEqualTo(2).doesNotHaveDuplicates();
-        });
+    @SuppressWarnings("checkstyle:MagicNumber")
+    void browseProductsInCategory(Page page) {
+        CatalogPage catalog = new HomePage(page, "en").open().openCategory("Accessories").checkResultCount(11);
+        catalog.verifyCategoryName("Accessories");
+        catalog.products().productAt(0).checkStructure();
+        catalog.products().productAt(1).checkStructure();
+        assertThat(catalog.products().names()).hasSizeGreaterThanOrEqualTo(2).doesNotHaveDuplicates();
     }
 
-    @Test
+    @CustomRunnerTest
     @DisplayName("CAT-03 - Open product details page")
-    void openProductDetailsPage() {
-        runScenario(page -> new HomePage(page, "en")
+    void openProductDetailsPage(Page page) {
+        new HomePage(page, "en")
                 .open()
                 .openCategory("Clothes")
                 .openProductByName("Hummingbird printed t-shirt")
                 .verifyProductName("Hummingbird printed t-shirt")
-                .checkStructure());
+                .checkStructure();
     }
 
-    @Test
+    @CustomRunnerTest
     @DisplayName("CAT-04 - Change product sorting")
-    void changeProductSorting() {
-        runScenario(page -> {
-            CatalogPage catalog = new HomePage(page, "en").open().openCategory("Accessories");
-            List<Double> initial = catalog.products().prices();
-            List<Double> sorted = catalog.sortBy("Price, high to low").products().prices();
-            assertThat(sorted).isNotEqualTo(initial).isSortedAccordingTo(java.util.Comparator.reverseOrder());
-        });
+    void changeProductSorting(Page page) {
+        CatalogPage catalog = new HomePage(page, "en").open().openCategory("Accessories");
+        List<Double> initial = catalog.products().prices();
+        List<Double> sorted = catalog.sortBy("Price, high to low").products().prices();
+        assertThat(sorted).isNotEqualTo(initial).isSortedAccordingTo(java.util.Comparator.reverseOrder());
     }
 
-    @Test
+    @CustomRunnerTest
     @DisplayName("CAT-05 - Navigate through catalog pagination")
-    void catalogPagination() {
+    @SuppressWarnings("checkstyle:MagicNumber")
+    void catalogPagination(Page page) {
         // don't have enough products, so using workaround to check pagination
-        runScenario(page -> new HomePage(page, "en")
+        new HomePage(page, "en")
                 .open()
                 .openCategory("Accessories")
                 .checkPaginationVisible(false)
@@ -68,41 +66,43 @@ class CatalogPageTest extends TestBase {
                 .checkPaginationVisible(true)
                 .goToPage(2)
                 .checkResultCount(3)
-                .checkPaginationVisible(true));
+                .checkPaginationVisible(true);
     }
 
-    @Test
+    @CustomRunnerTest
     @DisplayName("CAT-06 - Navigate using breadcrumbs")
-    void navigateUsingBreadcrumbs() {
-        runScenario(page -> new HomePage(page, "en")
+    void navigateUsingBreadcrumbs(Page page) {
+        new HomePage(page, "en")
                 .open()
                 .openCategory("Clothes")
                 .openProductByName("Hummingbird printed sweater")
                 .goToCategoryFromBreadcrumb("Clothes")
-                .verifyCategoryName("Clothes"));
+                .verifyCategoryName("Clothes");
     }
 
-    @Test
+    @CustomRunnerTest
     @DisplayName("CAT-07 - Filter products by price")
-    void filterProductsByPrice() {
-        runScenario(page -> new HomePage(page, "en")
+    @SuppressWarnings("checkstyle:MagicNumber")
+    void filterProductsByPrice(Page page) {
+        new HomePage(page, "en")
                 .open()
                 .openCategory("Accessories")
                 .checkResultCount(11)
                 .applyPriceFilter(22, 38)
                 .checkResultCount(3)
-                .verifyActiveFilter("Price"));
+                .verifyActiveFilter("Price");
     }
 
-    @Test
+    @CustomRunnerTest
     @DisplayName("CAT-08 - Filter products by manufacturer")
-    void filterProductsByManufacturer() {
-        runScenario(page -> new HomePage(page, "en")
+    @SuppressWarnings("checkstyle:MagicNumber")
+    void filterProductsByManufacturer(Page page) {
+        new HomePage(page, "en")
                 .open()
                 .openCategory("Accessories")
                 .checkResultCount(11)
                 .applyManufacturerFilter("Studio Design")
                 .checkResultCount(7)
-                .verifyActiveFilter("Studio Design"));
+                .verifyActiveFilter("Studio Design");
     }
 }

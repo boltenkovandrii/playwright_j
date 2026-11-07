@@ -3,6 +3,7 @@ plugins {
     id 'io.qameta.allure' version '4.3.0'
     id 'checkstyle'
     id 'pmd'
+    id 'org.gradle.test-retry' version '1.6.6'
 }
 
 group = 'com.andrii.test'
@@ -60,12 +61,20 @@ pmd {
 }
 
 test {
+    doFirst {
+        systemProperty 'retryTrackerRunId', UUID.randomUUID().toString()
+    }
+
+    retry {
+        maxRetries = Integer.parseInt(System.getProperty("retries", "1"))
+        failOnPassedAfterRetry = false
+    }
 
     testLogging.showStandardStreams = true //to see standard output in tests
 
     useJUnitPlatform(){
         includeEngines 'junit-jupiter'
-    //            includeTags 'current'
+        //            includeTags 'current'
         includeTags System.getProperty("includeTags") ? System.getProperty("includeTags") : 'regression'
         excludeTags 'WIP'
     }
@@ -77,8 +86,6 @@ test {
     systemProperties.put('junit.jupiter.execution.parallel.mode.classes.default', 'concurrent')
     systemProperties.put('junit.jupiter.execution.parallel.config.strategy', 'custom')
     systemProperties.put('junit.jupiter.execution.parallel.config.custom.class', 'com.prestashop.test.base.ParallelExecutionStrategy')
-
-
 }
 
 

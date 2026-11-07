@@ -76,6 +76,7 @@
 
         <module name="VisibilityModifier">
             <property name="protectedAllowed" value="true"/>
+            <property name="allowPublicFinalFields" value="true"/>
         </module>
 
         <!-- Braces and whitespace -->
@@ -95,13 +96,16 @@
         </module>
 
 
-
         <!-- Miscellaneous -->
         <module name="TodoComment"/>
-        <!--TODO: remove if not needed-->
-        <!--module name="MagicNumber">
-            <property name="ignoreNumbers" value="-1, 0, 1, 2"/>
-        </module-->
+        <module name="MagicNumber">
+            <property name="ignoreNumbers" value="-1, 0, 1, 2, 3"/>
+        </module>
+
+        <module name="SuppressWarningsHolder"/>
 
     </module>
+
+    <module name="SuppressWarningsFilter"/>
+
 </module>

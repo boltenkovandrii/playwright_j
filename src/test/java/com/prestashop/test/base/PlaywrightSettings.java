@@ -27,11 +27,6 @@ public final class PlaywrightSettings {
         return runs;
     }
 
-    public static int retries() {
-        return Integer.parseInt(System.getProperty("pwRetries",
-                System.getProperty("retries", "1")));
-    }
-
     public static boolean screenshotsEnabled() {
         return Boolean.parseBoolean(System.getProperty("allureScreenshots", "false"));
     }

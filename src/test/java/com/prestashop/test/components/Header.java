@@ -94,8 +94,7 @@ public class Header {
             mobileLanguageSelector.selectOption(new SelectOption().setLabel(language));
         } else {
             desktopLanguageSelector.click();
-            page.getByRole(LINK,
-                    new Page.GetByRoleOptions().setName(language).setExact(true)).click();
+            page.getByRole(LINK, new Page.GetByRoleOptions().setName(language).setExact(true)).click();
         }
         return this;
     }
