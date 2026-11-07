@@ -9,6 +9,9 @@ import java.io.ByteArrayInputStream;
 
 public final class AllureArtifacts {
 
+    // Store attempt state per thread to prevent interference during parallel test execution.
+    // Each invocation sets its own state and removes it after execution,
+    // preventing state from leaking when worker threads are reused.
     private static final ThreadLocal<Attempt> ATTEMPT = new ThreadLocal<>();
 
     private AllureArtifacts() {
