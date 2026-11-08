@@ -65,8 +65,15 @@ test {
         systemProperty 'retryTrackerRunId', UUID.randomUUID().toString()
     }
 
+    def config = new Properties()
+    file('src/test/resources/config.properties').withInputStream {config.load(it)}
+    def retryCount = providers.systemProperty('retryAttempts')
+            .orElse(config.getProperty('retryAttempts', '1'))
+            .get()
+            .toInteger()
+
     retry {
-        maxRetries = Integer.parseInt(System.getProperty("retries", "1"))
+        maxRetries = retryCount
         failOnPassedAfterRetry = false
     }
 

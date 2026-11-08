@@ -16,7 +16,7 @@ import java.util.HexFormat;
 public final class RetryAttemptTracker {
 
     private static final String RUN_ID_PROPERTY = "retryTrackerRunId";
-    private static final int MAX_ATTEMPTS = TestConfig.getConfiguration().getInt("retries", 1) + 1;
+    private static final int MAX_ATTEMPTS = TestConfig.getConfiguration().getInt("retryAttempts", 1) + 1;
 
     private RetryAttemptTracker() {
     }
