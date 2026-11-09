@@ -95,6 +95,14 @@ test {
     systemProperties.put('junit.jupiter.execution.parallel.config.custom.class', 'com.prestashop.test.base.ParallelExecutionStrategy')
 }
 
+tasks.register('installPlaywrightDeps', JavaExec) {
+    group = 'verification'
+    description = 'Install Linux dependencies required by Playwright browsers for CI.'
+
+    classpath = sourceSets.test.runtimeClasspath
+    mainClass = 'com.microsoft.playwright.CLI'
+    args 'install-deps'
+}
 
 tasks.named("test") {
     finalizedBy("allureReport")
