@@ -101,29 +101,39 @@ jobs:
         run: |
           docker compose down || true
 
-      - name: Set report directory
-        if: always()
-        id: set_report_dir
-        run: |
-          DATE=$(date -u +%Y%m%d_%H%M%S)
-          BRANCH_NAME="${{ github.ref_name }}"
-          SANITIZED_BRANCH=$(echo "$BRANCH_NAME" | sed 's#[/\\ ]#-#g' | sed 's/[^A-Za-z0-9._-]/-/g')
-          REPORT_DIR="${DATE}_${SANITIZED_BRANCH}"
-          echo "report_dir=${REPORT_DIR}" >> $GITHUB_OUTPUT
+#      - name: Set report directory
+#        if: always()
+#        id: set_report_dir
+#        run: |
+#          DATE=$(date -u +%Y%m%d_%H%M%S)
+#          BRANCH_NAME="${{ github.ref_name }}"
+#          SANITIZED_BRANCH=$(echo "$BRANCH_NAME" | sed 's#[/\\ ]#-#g' | sed 's/[^A-Za-z0-9._-]/-/g')
+#          REPORT_DIR="${DATE}_${SANITIZED_BRANCH}"
+#          echo "report_dir=${REPORT_DIR}" >> $GITHUB_OUTPUT
 
-      - name: Prepare public artifacts
-        if: always()
-        run: |
-          mkdir -p public/Downloads
-          mkdir -p public/${{ steps.set_report_dir.outputs.report_dir }}/allureReport
-          if [ -d build/reports/allure-report/allureReport ]; then cp -r build/reports/allure-report/allureReport/* public/${{ steps.set_report_dir.outputs.report_dir }}/allureReport/ || true; fi
-          if [ -d Downloads ]; then mkdir -p public/${{ steps.set_report_dir.outputs.report_dir }}/Downloads && cp -r Downloads/* public/${{ steps.set_report_dir.outputs.report_dir }}/Downloads/ || true; fi
-          tar -czf public-archives-${{ steps.set_report_dir.outputs.report_dir }}.tar.gz public/${{ steps.set_report_dir.outputs.report_dir }} || true
+#      - name: Prepare public artifacts
+#        if: always()
+#        run: |
+#          mkdir -p public/Downloads
+#          mkdir -p public/${{ steps.set_report_dir.outputs.report_dir }}/allureReport
+#          if [ -d build/reports/allure-report/allureReport ]; then cp -r build/reports/allure-report/allureReport/* public/${{ steps.set_report_dir.outputs.report_dir }}/allureReport/ || true; fi
+#          if [ -d Downloads ]; then mkdir -p public/${{ steps.set_report_dir.outputs.report_dir }}/Downloads && cp -r Downloads/* public/${{ steps.set_report_dir.outputs.report_dir }}/Downloads/ || true; fi
+#          tar -czf public-archives-${{ steps.set_report_dir.outputs.report_dir }}.tar.gz public/${{ steps.set_report_dir.outputs.report_dir }} || true
 
-      - name: Upload artifacts
+#      - name: Upload artifacts
+#        if: always()
+#        uses: actions/upload-artifact@v7
+#        with:
+#          name: public-artifacts
+#          path: public-archives-${{ steps.set_report_dir.outputs.report_dir }}.tar.gz
+#          retention-days: 3
+
+
+      - name: Upload Allure report
         if: always()
         uses: actions/upload-artifact@v7
         with:
-          name: public-artifacts
-          path: public-archives-${{ steps.set_report_dir.outputs.report_dir }}.tar.gz
+          name: allure-report
+          path: build/reports/allure-report/allureReport
           retention-days: 3
+          if-no-files-found: warn
