@@ -115,15 +115,7 @@ jobs:
       - name: Run Gradle tests
         shell: bash
         run: |
-          command=(
-            ./gradlew
-            clean
-            test
-            "-Dbrowsers=$BROWSERS"
-            "-Dprofiles=$PROFILES"
-            "-Dthreads=$THREADS"
-            "-DincludeTags=$TAGS"
-          )
+          command=(./gradlew clean test -Dbrowsers="$BROWSERS" -Dprofiles="$PROFILES" -Dthreads="$THREADS" -DincludeTags="$TAGS")
 
           echo "Running Gradle with:"
           printf '  %s\n' "${command[@]}"
