@@ -97,11 +97,11 @@ test {
 
 tasks.register('installPlaywrightDeps', JavaExec) {
     group = 'verification'
-    description = 'Install Linux dependencies required by Playwright browsers for CI.'
+    description = 'Install Linux dependencies required by Playwright webkit browser for CI.'
 
     classpath = sourceSets.test.runtimeClasspath
     mainClass = 'com.microsoft.playwright.CLI'
-    args 'install-deps'
+    args 'install-deps', 'webkit'
 }
 
 tasks.named("test") {
