@@ -7,22 +7,16 @@ on:
         description: 'Test tag to include'
         required: true
         default: 'regression'
-      browser:
-        description: 'Browser to use (chrome, firefox, edge)'
-        required: true
-        default: 'firefox'
-      browser-image-tag:
-        description: 'Tag of browser images (chrome, firefox, edge) to pull from ghcr'
-        required: true
-        default: 'latest'
+      browsers:
+        description: 'Comma or space-separated list of browsers. Available browsers: chromium, firefox, webkit. If empty, defaults applied.'
+        required: false
+      profiles:
+        description: 'Comma or space-separated list of profiles. Available profiles: tablet, mobile, desktop_2560x1600, desktop_1920x1200, mobile_landscape and tablet_landscape. If empty, defaults applied.'
+        required: false
       threads:
-        description: 'Number of parallel browser nodes to run'
+        description: 'Number of parallel threads to run'
         required: true
         default: '2'
-      hub-image-tag:
-        description: 'Tag of hub image to pull from ghcr'
-        required: true
-        default: 'latest'
 
   push:
     branches:
@@ -31,22 +25,20 @@ on:
 
   schedule:
     - cron: '3 4 1 * *' # run on the first of every month at 04:03 UTC
-#    - cron: '0 15 * * *' # test
 
 
 jobs:
 
   run-tests:
-    name: Bring up grid, run Gradle tests, collect reports
+    name: Run Gradle tests and collect reports
 
     runs-on: ubuntu-latest
 
     env:
-      BROWSER: ${{ github.event.inputs.browser || 'firefox' }}
+      BROWSERS: ${{ github.event.inputs.browsers || 'chrome' }}
+      PROFILES: ${{ github.event.inputs.profiles || 'desktop' }}
       THREADS: ${{ github.event.inputs.threads || 2 }}
       TAGS: ${{ github.event.inputs.tags || 'regression' }}
-      HUB_IMAGE_TAG: ${{ github.event.inputs['hub-image-tag'] || 'latest' }}
-      BROWSER_IMAGE_TAG: ${{ github.event.inputs['browser-image-tag'] || 'latest' }}
 
     steps:
       - uses: actions/checkout@v6
@@ -72,11 +64,6 @@ jobs:
           sudo apt-get update -y
           sudo apt-get install -y docker-compose
 
-      - name: Prepare Downloads dir
-        run: |
-          mkdir -p Downloads
-          chmod a+w Downloads
-
       - name: Start app
         env:
           REPO_OWNER: ${{ github.repository_owner }}
@@ -94,40 +81,12 @@ jobs:
 
       - name: Run Gradle tests
         run: |
-          ./gradlew -DuseGrid=true -Dbrowsers=$BROWSER -Dthreads=$THREADS -DincludeTags=$TAGS -Ddownloads=Downloads clean test
+          ./gradlew -Dbrowsers=$BROWSERS -Dprofiles=$PROFILES -Dthreads=$THREADS -DincludeTags=$TAGS clean test
 
       - name: Tear down
         if: always()
         run: |
           docker compose down || true
-
-#      - name: Set report directory
-#        if: always()
-#        id: set_report_dir
-#        run: |
-#          DATE=$(date -u +%Y%m%d_%H%M%S)
-#          BRANCH_NAME="${{ github.ref_name }}"
-#          SANITIZED_BRANCH=$(echo "$BRANCH_NAME" | sed 's#[/\\ ]#-#g' | sed 's/[^A-Za-z0-9._-]/-/g')
-#          REPORT_DIR="${DATE}_${SANITIZED_BRANCH}"
-#          echo "report_dir=${REPORT_DIR}" >> $GITHUB_OUTPUT
-
-#      - name: Prepare public artifacts
-#        if: always()
-#        run: |
-#          mkdir -p public/Downloads
-#          mkdir -p public/${{ steps.set_report_dir.outputs.report_dir }}/allureReport
-#          if [ -d build/reports/allure-report/allureReport ]; then cp -r build/reports/allure-report/allureReport/* public/${{ steps.set_report_dir.outputs.report_dir }}/allureReport/ || true; fi
-#          if [ -d Downloads ]; then mkdir -p public/${{ steps.set_report_dir.outputs.report_dir }}/Downloads && cp -r Downloads/* public/${{ steps.set_report_dir.outputs.report_dir }}/Downloads/ || true; fi
-#          tar -czf public-archives-${{ steps.set_report_dir.outputs.report_dir }}.tar.gz public/${{ steps.set_report_dir.outputs.report_dir }} || true
-
-#      - name: Upload artifacts
-#        if: always()
-#        uses: actions/upload-artifact@v7
-#        with:
-#          name: public-artifacts
-#          path: public-archives-${{ steps.set_report_dir.outputs.report_dir }}.tar.gz
-#          retention-days: 3
-
 
       - name: Upload Allure report
         if: always()
