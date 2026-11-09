@@ -1,4 +1,4 @@
-name: Run tests with Selenium Grid
+name: Run tests
 
 on:
   workflow_dispatch:
@@ -53,32 +53,38 @@ jobs:
         shell: bash
         run: |
           normalize_list() {
-            sed -E 's/[[:space:],]+/,/g; s/^,+//; s/,+$//'
+            printf '%s' "$1" |
+              tr ',[:space:]' '\n' |
+              awk 'NF {
+                if (count++) printf ","
+                printf "%s", $0
+              }'
           }
 
           if [[ "$EVENT_NAME" == "workflow_dispatch" ]]; then
-            BROWSERS="${INPUT_BROWSERS:-$DEFAULT_BROWSERS}"
-            PROFILES="${INPUT_PROFILES:-$DEFAULT_PROFILES}"
+            BROWSERS=$(normalize_list "$INPUT_BROWSERS")
+            PROFILES=$(normalize_list "$INPUT_PROFILES")
+
+            BROWSERS="${BROWSERS:-$DEFAULT_BROWSERS}"
+            PROFILES="${PROFILES:-$DEFAULT_PROFILES}"
+
           elif [[ "$EVENT_NAME" == "schedule" || "$REF_NAME" == "main" ]]; then
             BROWSERS="$FULL_BROWSERS"
             PROFILES="$FULL_PROFILES"
+
           else
             BROWSERS="$DEFAULT_BROWSERS"
             PROFILES="$DEFAULT_PROFILES"
           fi
 
-          echo "BROWSERS=$(printf '%s' "$BROWSERS" | normalize_list)" >> "$GITHUB_ENV"
-          echo "PROFILES=$(printf '%s' "$PROFILES" | normalize_list)" >> "$GITHUB_ENV"
+          echo "BROWSERS=$BROWSERS" >> "$GITHUB_ENV"
+          echo "PROFILES=$PROFILES" >> "$GITHUB_ENV"
+
+          echo "Resolved browsers: $BROWSERS"
+          echo "Resolved profiles: $PROFILES"
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v4
-
-      - name: Login to ghcr
-        uses: docker/login-action@v4
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Set up Java
         uses: actions/setup-java@v6
@@ -111,16 +117,17 @@ jobs:
         run: |
           command=(
             ./gradlew
+            clean
+            test
             "-Dbrowsers=$BROWSERS"
             "-Dprofiles=$PROFILES"
             "-Dthreads=$THREADS"
             "-DincludeTags=$TAGS"
-            clean
-            test
           )
-          printf 'Running:'
-          printf ' %q' "${command[@]}"
-          printf '\n'
+
+          echo "Running Gradle with:"
+          printf '  %s\n' "${command[@]}"
+
           "${command[@]}"
 
       - name: Tear down
