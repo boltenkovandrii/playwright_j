@@ -1,7 +1,7 @@
 package com.prestashop.test.tests;
 
 import com.microsoft.playwright.Page;
-import com.prestashop.test.base2.CustomRunnerTest;
+import com.prestashop.test.runner.CustomRunnerTest;
 import com.prestashop.test.pages.AccountDashboardPage;
 import com.prestashop.test.pages.HomePage;
 import com.prestashop.test.pages.LoginPage;

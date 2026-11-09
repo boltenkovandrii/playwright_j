@@ -1,4 +1,4 @@
-package com.prestashop.test.base2;
+package com.prestashop.test.runner;
 
 import com.prestashop.test.base.PlaywrightSettings;
 import com.prestashop.test.base.TestRunConfig;

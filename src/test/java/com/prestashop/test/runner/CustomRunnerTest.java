@@ -1,4 +1,4 @@
-package com.prestashop.test.base2;
+package com.prestashop.test.runner;
 
 
 import org.junit.jupiter.api.extension.ExtendWith;
