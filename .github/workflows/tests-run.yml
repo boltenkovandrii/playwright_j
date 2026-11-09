@@ -35,13 +35,40 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      BROWSERS: ${{ github.event.inputs.browsers || 'chromium' }}
-      PROFILES: ${{ github.event.inputs.profiles || 'desktop_1920x1200' }}
+      DEFAULT_BROWSERS: chromium
+      DEFAULT_PROFILES: desktop_1920x1200
+      FULL_BROWSERS: chromium,webkit,firefox
+      FULL_PROFILES: tablet,mobile,desktop_2560x1600,desktop_1920x1200,mobile_landscape,tablet_landscape
+      EVENT_NAME: ${{ github.event_name }}
+      REF_NAME: ${{ github.ref_name }}
+      INPUT_BROWSERS: ${{ github.event.inputs.browsers }}
+      INPUT_PROFILES: ${{ github.event.inputs.profiles }}
       THREADS: ${{ github.event.inputs.threads || 2 }}
       TAGS: ${{ github.event.inputs.tags || 'regression' }}
 
     steps:
       - uses: actions/checkout@v6
+
+      - name: Resolve test parameters
+        shell: bash
+        run: |
+          normalize_list() {
+            sed -E 's/[[:space:],]+/,/g; s/^,+//; s/,+$//'
+          }
+
+          if [[ "$EVENT_NAME" == "workflow_dispatch" ]]; then
+            BROWSERS="${INPUT_BROWSERS:-$DEFAULT_BROWSERS}"
+            PROFILES="${INPUT_PROFILES:-$DEFAULT_PROFILES}"
+          elif [[ "$EVENT_NAME" == "schedule" || "$REF_NAME" == "main" ]]; then
+            BROWSERS="$FULL_BROWSERS"
+            PROFILES="$FULL_PROFILES"
+          else
+            BROWSERS="$DEFAULT_BROWSERS"
+            PROFILES="$DEFAULT_PROFILES"
+          fi
+
+          echo "BROWSERS=$(printf '%s' "$BROWSERS" | normalize_list)" >> "$GITHUB_ENV"
+          echo "PROFILES=$(printf '%s' "$PROFILES" | normalize_list)" >> "$GITHUB_ENV"
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v4
@@ -80,8 +107,21 @@ jobs:
           ./gradlew qualityCheck
 
       - name: Run Gradle tests
+        shell: bash
         run: |
-          ./gradlew -Dbrowsers=$BROWSERS -Dprofiles=$PROFILES -Dthreads=$THREADS -DincludeTags=$TAGS clean test
+          command=(
+            ./gradlew
+            "-Dbrowsers=$BROWSERS"
+            "-Dprofiles=$PROFILES"
+            "-Dthreads=$THREADS"
+            "-DincludeTags=$TAGS"
+            clean
+            test
+          )
+          printf 'Running:'
+          printf ' %q' "${command[@]}"
+          printf '\n'
+          "${command[@]}"
 
       - name: Tear down
         if: always()
