@@ -31,13 +31,6 @@ Verify that a user can change the active storefront language through the languag
 - Known translated shared UI elements are displayed in the selected language.
 - After navigating to the Catalog page, the selected language remains active.
 
-**Coverage**
-
-- Language selector
-- Language switching
-- Immediate application of locale
-- Locale persistence across navigation
-
 ---
 
 
@@ -74,10 +67,6 @@ Verify that the selected storefront language remains active when navigating thro
 - Shared storefront elements remain translated after navigation.
 - No page unexpectedly falls back to English.
 - The language selection survives the normal storefront browsing flow.
-
-**Coverage**
-
-- Home → Catalog → Product → Cart → Checkout
 
 ---
 
@@ -116,18 +105,6 @@ Verify that the main storefront pages expose localized user-facing UI when a non
 - Representative page-specific labels are translated.
 - Shared elements such as header/navigation remain translated across pages.
 - No page in the covered set unexpectedly displays English fallback text for the verified labels.
-
-**Coverage**
-
-- Home
-- Account
-- Cart
-- Catalog
-- Checkout
-- Login
-- Product
-- Registration
-- Search
 
 
 

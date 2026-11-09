@@ -2,6 +2,7 @@ package com.prestashop.test.components;
 
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
+import com.microsoft.playwright.assertions.LocatorAssertions;
 import com.microsoft.playwright.options.SelectOption;
 import com.prestashop.test.base.AllureArtifacts;
 import com.prestashop.test.base.AriaSnapshots;
@@ -12,6 +13,8 @@ import static com.microsoft.playwright.options.AriaRole.LINK;
 import static com.prestashop.test.pages.BasePage.BOOTSTRAP_MD;
 
 public class Header {
+
+    private static final long LANGUAGE_SWITCH_TIMEOUT = 10000L;
 
     private final Page page;
     private final Locator container;
@@ -96,6 +99,10 @@ public class Header {
             desktopLanguageSelector.click();
             page.getByRole(LINK, new Page.GetByRoleOptions().setName(language).setExact(true)).click();
         }
+
+        //wait for the page to reload and search input has translated placeholder
+        assertThat(searchInput).hasAttribute("placeholder", Texts.get(targetLocale, "search"),
+                new LocatorAssertions.HasAttributeOptions().setTimeout(LANGUAGE_SWITCH_TIMEOUT));
         return this;
     }
 
