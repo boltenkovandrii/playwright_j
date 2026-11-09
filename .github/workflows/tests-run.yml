@@ -35,8 +35,8 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      BROWSERS: ${{ github.event.inputs.browsers || 'chrome' }}
-      PROFILES: ${{ github.event.inputs.profiles || 'desktop' }}
+      BROWSERS: ${{ github.event.inputs.browsers || 'chromium' }}
+      PROFILES: ${{ github.event.inputs.profiles || 'desktop_1920x1200' }}
       THREADS: ${{ github.event.inputs.threads || 2 }}
       TAGS: ${{ github.event.inputs.tags || 'regression' }}
 
