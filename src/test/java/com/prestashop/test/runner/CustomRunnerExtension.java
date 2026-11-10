@@ -1,4 +1,4 @@
-package com.prestashop.test.base2;
+package com.prestashop.test.runner;
 
 import com.prestashop.test.base.PlaywrightSettings;
 import com.prestashop.test.base.TestRunConfig;
@@ -25,7 +25,6 @@ public final class CustomRunnerExtension implements TestTemplateInvocationContex
     public Stream<TestTemplateInvocationContext> provideTestTemplateInvocationContexts(ExtensionContext context) {
         return PlaywrightSettings.testRuns()
                 .stream()
-                .filter(run -> !RetryAttemptTracker.hasPassed(context, run))
                 .map(BrowserInvocation::new);
     }
 

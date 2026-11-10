@@ -19,11 +19,6 @@ Verify that the storefront home page opens correctly and core layout blocks are 
 - The key home page blocks are visible.
 - Shared layout elements required by the page object structure check are present.
 
-**Coverage**
-
-- Home page core layout
-- Base storefront rendering
-
 ---
 
 ### HOME-02 - Check featured products block structure
@@ -46,11 +41,6 @@ Verify that the featured products section is displayed correctly on the home pag
 
 - The featured products section is visible.
 - Featured product cards are rendered according to the component structure checks.
-
-**Coverage**
-
-- Home page featured products section
-- Featured product card rendering
 
 ---
 
@@ -80,12 +70,6 @@ Verify that a user can open the Clothes category from the home page navigation a
 - Displayed results count is 2.
 - The catalog page structure is valid.
 
-**Coverage**
-
-- Main menu navigation
-- Home-to-catalog transition
-- Category identity and subcategory rendering
-
 **Notes**
 
 - This scenario is data-dependent and may fail if demo catalog structure changes.
@@ -114,12 +98,6 @@ Verify that a user can open a product details page from the featured products se
 - Product details page is displayed.
 - Product name is "Hummingbird printed t-shirt".
 - Product page structure is valid.
-
-**Coverage**
-
-- Featured products navigation
-- Home-to-product transition
-- Product identity verification
 
 **Notes**
 

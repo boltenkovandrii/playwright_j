@@ -1,7 +1,7 @@
 package com.prestashop.test.tests;
 
 import com.microsoft.playwright.Page;
-import com.prestashop.test.base2.CustomRunnerTest;
+import com.prestashop.test.runner.CustomRunnerTest;
 import com.prestashop.test.pages.AccountDashboardPage;
 import com.prestashop.test.pages.HomePage;
 import com.prestashop.test.pages.LoginPage;
@@ -19,7 +19,7 @@ class AccountTest {
     private static final String DEMO_PASSWORD = "123456789";
 
     @CustomRunnerTest
-    @DisplayName("ACCT-01 - Login page structure")
+    @DisplayName("ACCT-01 - Login page structure.")
     void loginPageStructures(Page page) {
         new HomePage(page, "en")
                 .open()
@@ -28,7 +28,7 @@ class AccountTest {
     }
 
     @CustomRunnerTest
-    @DisplayName("ACCT-02 - Registration page structure")
+    @DisplayName("ACCT-02 - Registration page structure.")
     void registrationPageStructures(Page page) {
         new HomePage(page, "en")
                 .open().openLoginPage()
@@ -37,7 +37,7 @@ class AccountTest {
     }
 
     @CustomRunnerTest
-    @DisplayName("ACCT-03 - Login validation")
+    @DisplayName("ACCT-03 - Login validation.")
     void loginValidation(Page page) {
         LoginPage login = new HomePage(page, "en").open().openLoginPage();
         // login with empty credentials
@@ -49,7 +49,7 @@ class AccountTest {
     }
 
     @CustomRunnerTest
-    @DisplayName("ACCT-04 - Registration validation")
+    @DisplayName("ACCT-04 - Registration validation.")
     @SuppressWarnings("checkstyle:MagicNumber")
     void registrationValidation(Page page) {
         RegistrationPage registration = new HomePage(page, "en")
@@ -90,7 +90,7 @@ class AccountTest {
     }
 
     @CustomRunnerTest
-    @DisplayName("ACCT-05 - Logout")
+    @DisplayName("ACCT-05 - Logout.")
     void loginAndLogout(Page page) {
         LoginPage login = new HomePage(page, "en").open().openLoginPage();
         // login with valid credentials

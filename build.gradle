@@ -41,6 +41,10 @@ allure {
     adapter {
         allureJavaVersion = "3.0.0"
     }
+    //custom report configuration file
+    report {
+        configFile.set(layout.projectDirectory.file("allurerc.json"))
+    }
 }
 
 
@@ -65,8 +69,15 @@ test {
         systemProperty 'retryTrackerRunId', UUID.randomUUID().toString()
     }
 
+    def config = new Properties()
+    file('src/test/resources/config.properties').withInputStream {config.load(it)}
+    def retryCount = providers.systemProperty('retryAttempts')
+            .orElse(config.getProperty('retryAttempts', '1'))
+            .get()
+            .toInteger()
+
     retry {
-        maxRetries = Integer.parseInt(System.getProperty("retries", "1"))
+        maxRetries = retryCount
         failOnPassedAfterRetry = false
     }
 
@@ -88,6 +99,14 @@ test {
     systemProperties.put('junit.jupiter.execution.parallel.config.custom.class', 'com.prestashop.test.base.ParallelExecutionStrategy')
 }
 
+tasks.register('installPlaywrightDeps', JavaExec) {
+    group = 'verification'
+    description = 'Install Linux dependencies required by Playwright webkit browser for CI.'
+
+    classpath = sourceSets.test.runtimeClasspath
+    mainClass = 'com.microsoft.playwright.CLI'
+    args 'install-deps', 'webkit'
+}
 
 tasks.named("test") {
     finalizedBy("allureReport")

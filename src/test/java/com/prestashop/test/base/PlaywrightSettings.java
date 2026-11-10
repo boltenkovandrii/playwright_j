@@ -28,19 +28,19 @@ public final class PlaywrightSettings {
     }
 
     public static boolean screenshotsEnabled() {
-        return Boolean.parseBoolean(System.getProperty("allureScreenshots", "false"));
+        return Boolean.parseBoolean(TestConfig.getConfiguration().getString("allureScreenshots", "false"));
     }
 
     public static boolean headless() {
-        return Boolean.parseBoolean(System.getProperty("headless", "true"));
+        return Boolean.parseBoolean(TestConfig.getConfiguration().getString("headless", "true"));
     }
 
     public static String baseUrl() {
-        return System.getProperty("baseUrlPrestaShop", "http://localhost:8090").replaceAll("/+$", "");
+        return TestConfig.getConfiguration().getString("baseUrlPrestaShop", "http://localhost:8090").replaceAll("/+$", "");
     }
 
     private static List<String> values(String systemProperty, String defaultValue) {
-        String value = System.getProperty(systemProperty, defaultValue);
+        String value = TestConfig.getConfiguration().getString(systemProperty, defaultValue);
         return Arrays.stream(value.split(","))
                 .map(String::trim)
                 .filter(item -> !item.isEmpty())

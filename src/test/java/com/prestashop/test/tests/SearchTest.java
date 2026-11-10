@@ -1,7 +1,7 @@
 package com.prestashop.test.tests;
 
 import com.microsoft.playwright.Page;
-import com.prestashop.test.base2.CustomRunnerTest;
+import com.prestashop.test.runner.CustomRunnerTest;
 import com.prestashop.test.pages.HomePage;
 import com.prestashop.test.pages.SearchResultsPage;
 import org.junit.jupiter.api.DisplayName;
@@ -14,7 +14,7 @@ class SearchTest {
     private static final String PRODUCT_NAME = "Hummingbird printed t-shirt";
 
     @CustomRunnerTest
-    @DisplayName("SRCH-01 - Search by full product name")
+    @DisplayName("SRCH-01 - Search by full product name.")
     void searchByFullProductName(Page page) {
         new HomePage(page, "en")
                 .open()
@@ -25,7 +25,7 @@ class SearchTest {
     }
 
     @CustomRunnerTest
-    @DisplayName("SRCH-02 - Search by partial product name")
+    @DisplayName("SRCH-02 - Search by partial product name.")
     @SuppressWarnings("checkstyle:MagicNumber")
     void searchByPartialProductName(Page page) {
         new HomePage(page, "en")
@@ -37,7 +37,7 @@ class SearchTest {
     }
 
     @CustomRunnerTest
-    @DisplayName("SRCH-03 - Search with no matching results")
+    @DisplayName("SRCH-03 - Search with no matching results.")
     @SuppressWarnings("checkstyle:MagicNumber")
     void searchWithNoMatchingResults(Page page) {
         new HomePage(page, "en")
@@ -51,7 +51,7 @@ class SearchTest {
     }
 
     @CustomRunnerTest
-    @DisplayName("SRCH-04 - Search from catalog page")
+    @DisplayName("SRCH-04 - Search from catalog page.")
     @SuppressWarnings("checkstyle:MagicNumber")
     void searchFromCatalogPage(Page page) {
         new HomePage(page, "en")
@@ -64,7 +64,7 @@ class SearchTest {
     }
 
     @CustomRunnerTest
-    @DisplayName("SRCH-05 - Navigate through search pagination")
+    @DisplayName("SRCH-05 - Navigate through search pagination.")
     @SuppressWarnings("checkstyle:MagicNumber")
     void navigateSearchPagination( Page page) {
         // don't have enough products, so using workaround to check pagination

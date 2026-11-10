@@ -36,13 +36,4 @@ Verify that a guest user can open the checkout flow and go through it without be
 - The page is usable for the guest checkout flow.
 - After placing the order, the order confirmation page is displayed with the correct information.
 
-**Coverage**
-
-- Cart-to-checkout navigation
-- Guest checkout flow
-- Checkout page core layout
-
-**Notes**
-
-- The exact section titles and arrangement may vary slightly by theme or PrestaShop version, but the guest checkout flow should remain understandable and actionable.
 

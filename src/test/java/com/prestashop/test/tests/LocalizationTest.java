@@ -1,7 +1,7 @@
 package com.prestashop.test.tests;
 
 import com.microsoft.playwright.Page;
-import com.prestashop.test.base2.CustomRunnerTest;
+import com.prestashop.test.runner.CustomRunnerTest;
 import com.prestashop.test.pages.AccountDashboardPage;
 import com.prestashop.test.pages.CartPage;
 import com.prestashop.test.pages.CatalogPage;
@@ -24,7 +24,7 @@ class LocalizationTest {
 
 
     @CustomRunnerTest
-    @DisplayName("LOCA-01 - Switch storefront language")
+    @DisplayName("LOCA-01 - Switch storefront language.")
     void switchStorefrontLanguage(Page page) {
         HomePage home = new HomePage(page, "en").open();
         home.verifyCurrentLanguage("en").verifySearchPlaceholder();
@@ -37,7 +37,7 @@ class LocalizationTest {
     }
 
     @CustomRunnerTest
-    @DisplayName("LOCA-02 - Preserve storefront language across core pages")
+    @DisplayName("LOCA-02 - Preserve storefront language across core pages.")
     void preserveStorefrontLanguageAcrossCorePages(Page page) {
         HomePage home = new HomePage(page, "en").open().switchLanguage("nl");
         home.verifyCurrentLanguage("nl");
@@ -56,7 +56,7 @@ class LocalizationTest {
     }
 
     @CustomRunnerTest
-    @DisplayName("LOCA-03 - Verify localization of core storefront pages")
+    @DisplayName("LOCA-03 - Verify localization of core storefront pages.")
     void verifyLocalizationOfCoreStorefrontPages(Page page) {
         HomePage home = new HomePage(page, "en").open().switchLanguage("nl");
         home.verifyCurrentLanguage("nl").verifySearchPlaceholder();

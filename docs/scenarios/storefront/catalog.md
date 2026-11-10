@@ -22,12 +22,6 @@ Verify that the catalog page opens correctly and key catalog blocks are displaye
 - The product list section is visible.
 - At least one product card is displayed.
 
-**Coverage**
-
-- Storefront navigation
-- Category landing page
-- Catalog core UI blocks
-
 ### CAT-02 - Browse products in a category
 
 **Purpose**
@@ -50,12 +44,6 @@ Verify that a user can browse products inside a category.
 - Product cards contain basic information (name and price).
 - User can access multiple products from the category page.
 
-**Coverage**
-
-- Catalog browsing
-- Product grid
-- Product card rendering
-
 ### CAT-03 - Open product details page
 
 **Purpose**
@@ -77,12 +65,6 @@ Verify that a user can open a product details page from the category listing.
 - Product details page is displayed.
 - Product title is visible.
 - Main purchase block (price/add to cart area) is present.
-
-**Coverage**
-
-- Product navigation
-- PDP opening
-- Category to PDP transition
 
 ### CAT-04 - Change product sorting
 
@@ -107,12 +89,6 @@ Verify that sorting options change the order of products on the catalog page.
 - Selected sorting option is applied.
 - Product order is updated accordingly.
 - Product list remains visible and interactive.
-
-**Coverage**
-
-- Catalog controls
-- Sorting behavior
-- Product ordering
 
 ### CAT-05 - Navigate through catalog pagination
 
@@ -144,12 +120,6 @@ Verify that a user can navigate between catalog pages using pagination controls.
 - The page counter or pagination indicators reflect the current page.
 - Results are properly scoped to the selected page.
 
-**Coverage**
-
-- Pagination
-- Catalog navigation
-- Multi-page product lists
-
 ### CAT-06 - Navigate using breadcrumbs
 
 **Purpose**
@@ -171,12 +141,6 @@ the breadcrumb navigation.
 
 - The Clothes category page is displayed.
 - The category contains products.
-
-**Coverage**
-
-- Storefront navigation
-- Breadcrumbs
-- Product to category navigation
 
 ### CAT-07 - Filter products by price
 
@@ -201,12 +165,6 @@ Verify that price filtering narrows product results according to selected range.
 - Displayed products match selected price constraints.
 - Active filter state is visible in the UI.
 
-**Coverage**
-
-- Faceted navigation
-- Price filtering
-- Result refinement
-
 ### CAT-08 - Filter products by manufacturer
 
 **Purpose**
@@ -229,9 +187,3 @@ Verify that manufacturer filtering narrows product results to selected brand(s).
 - Product list is updated after applying manufacturer filter.
 - Displayed products belong to selected manufacturer(s).
 - Active filter state is visible in the UI.
-
-**Coverage**
-
-- Faceted navigation
-- Manufacturer filtering
-- Result refinement

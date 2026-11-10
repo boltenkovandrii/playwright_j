@@ -1,7 +1,7 @@
 package com.prestashop.test.tests;
 
 import com.microsoft.playwright.Page;
-import com.prestashop.test.base2.CustomRunnerTest;
+import com.prestashop.test.runner.CustomRunnerTest;
 import com.prestashop.test.pages.CatalogPage;
 import com.prestashop.test.pages.HomePage;
 import org.junit.jupiter.api.DisplayName;
@@ -16,13 +16,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 class CatalogPageTest {
 
     @CustomRunnerTest
-    @DisplayName("CAT-01 - Check catalog page structure")
+    @DisplayName("CAT-01 - Check catalog page structure.")
     void catalogPageStructure(Page page) {
         new HomePage(page, "en").open().openCategory("Clothes").checkStructure();
     }
 
     @CustomRunnerTest
-    @DisplayName("CAT-02 - Browse products in a category")
+    @DisplayName("CAT-02 - Browse products in a category.")
     @SuppressWarnings("checkstyle:MagicNumber")
     void browseProductsInCategory(Page page) {
         CatalogPage catalog = new HomePage(page, "en").open().openCategory("Accessories").checkResultCount(11);
@@ -33,7 +33,7 @@ class CatalogPageTest {
     }
 
     @CustomRunnerTest
-    @DisplayName("CAT-03 - Open product details page")
+    @DisplayName("CAT-03 - Open product details page.")
     void openProductDetailsPage(Page page) {
         new HomePage(page, "en")
                 .open()
@@ -44,7 +44,7 @@ class CatalogPageTest {
     }
 
     @CustomRunnerTest
-    @DisplayName("CAT-04 - Change product sorting")
+    @DisplayName("CAT-04 - Change product sorting.")
     void changeProductSorting(Page page) {
         CatalogPage catalog = new HomePage(page, "en").open().openCategory("Accessories");
         List<Double> initial = catalog.products().prices();
@@ -53,7 +53,7 @@ class CatalogPageTest {
     }
 
     @CustomRunnerTest
-    @DisplayName("CAT-05 - Navigate through catalog pagination")
+    @DisplayName("CAT-05 - Navigate through catalog pagination.")
     @SuppressWarnings("checkstyle:MagicNumber")
     void catalogPagination(Page page) {
         // don't have enough products, so using workaround to check pagination
@@ -70,7 +70,7 @@ class CatalogPageTest {
     }
 
     @CustomRunnerTest
-    @DisplayName("CAT-06 - Navigate using breadcrumbs")
+    @DisplayName("CAT-06 - Navigate using breadcrumbs.")
     void navigateUsingBreadcrumbs(Page page) {
         new HomePage(page, "en")
                 .open()
@@ -81,7 +81,7 @@ class CatalogPageTest {
     }
 
     @CustomRunnerTest
-    @DisplayName("CAT-07 - Filter products by price")
+    @DisplayName("CAT-07 - Filter products by price.")
     @SuppressWarnings("checkstyle:MagicNumber")
     void filterProductsByPrice(Page page) {
         new HomePage(page, "en")
@@ -94,7 +94,7 @@ class CatalogPageTest {
     }
 
     @CustomRunnerTest
-    @DisplayName("CAT-08 - Filter products by manufacturer")
+    @DisplayName("CAT-08 - Filter products by manufacturer.")
     @SuppressWarnings("checkstyle:MagicNumber")
     void filterProductsByManufacturer(Page page) {
         new HomePage(page, "en")

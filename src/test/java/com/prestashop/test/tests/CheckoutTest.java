@@ -1,7 +1,7 @@
 package com.prestashop.test.tests;
 
 import com.microsoft.playwright.Page;
-import com.prestashop.test.base2.CustomRunnerTest;
+import com.prestashop.test.runner.CustomRunnerTest;
 import com.prestashop.test.pages.CartPage;
 import com.prestashop.test.pages.CheckoutPage;
 import com.prestashop.test.pages.HomePage;
@@ -13,7 +13,7 @@ import org.junit.jupiter.api.Tag;
 class CheckoutTest {
 
     @CustomRunnerTest
-    @DisplayName("CHK-01 - Guest checkout page structure and checkout flow")
+    @DisplayName("CHK-01 - Guest checkout page structure and checkout flow.")
     @SuppressWarnings("checkstyle:MagicNumber")
     void guestCheckout(Page page) {
         CartPage cart = new HomePage(page, "en").open()

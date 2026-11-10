@@ -24,16 +24,6 @@ Verify that a user can find a product by entering its full name into the storefr
 - The matching product is present in the results list.
 - The product name is shown in the result card or result list.
 
-**Coverage**
-
-- Full-text product search
-- Search results rendering
-- Product discovery via search
-
-**Notes**
-
-- This scenario depends on the exact search behavior of the storefront and may be sensitive to indexing or catalog data changes.
-
 ---
 
 ### SRCH-02 - Search by partial product name
@@ -61,16 +51,6 @@ Verify that a user can find a product using a partial product name.
 - Search results are displayed.
 - Relevant products matching the partial term are included.
 - Search results remain usable for navigation to a product page.
-
-**Coverage**
-
-- Partial-text search
-- Search result relevance
-- Product discovery via keyword search
-
-**Notes**
-
-- This scenario is useful for validating search tolerance, but exact matching rules may vary by backend/search implementation.
 
 ---
 
@@ -101,16 +81,6 @@ Verify that the storefront handles a search query with no matches in a user-frie
 - The user can refine the query or start another search.
 - After refining the query to match a product, results are displayed as expected.
 
-**Coverage**
-
-- Empty search results state
-- Search validation behavior
-- User feedback for no matches
-
-**Notes**
-
-- The exact no-results message may differ by localization and storefront theme.
-
 ---
 
 ### SRCH-04 - Search from catalog page
@@ -139,16 +109,6 @@ Verify that a user can start a search while browsing a catalog page and receive 
 - Search results are displayed.
 - Relevant products are returned.
 - The search flow works from within the catalog browsing context.
-
-**Coverage**
-
-- Search entry from catalog pages
-- Shared header/search usability
-- Cross-page storefront navigation
-
-**Notes**
-
-- This scenario helps verify that search is available consistently across storefront pages, not only on the home page.
 
 ---
 
@@ -181,13 +141,6 @@ Verify that a user can navigate through multiple pages of search results when th
 - Navigating to another page displays the correct set of results for that page.
 - The page counter or pagination indicators reflect the current page.
 - Results are properly scoped to the selected page.
-
-**Coverage**
-
-- Search result pagination
-- Multi-page result navigation
-- Pagination visibility logic
-- Per-page result configuration
 
 **Notes**
 

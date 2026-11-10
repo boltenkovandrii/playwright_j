@@ -24,11 +24,6 @@ Verify that the cart page opens correctly after adding a product and core cart U
 - Cart page is displayed.
 - Core cart structure is present (cart list, totals/summary area, checkout-related controls).
 
-**Coverage**
-
-- Category -> PDP -> cart navigation
-- Cart page core layout
-
 ---
 
 ### CART-02 - Add single product to cart
@@ -56,11 +51,6 @@ Verify that adding one product creates a single cart line with quantity 1.
 - Cart contains one product line.
 - The product line for "Hummingbird printed t-shirt" has quantity 1.
 
-**Coverage**
-
-- Add-to-cart basic path
-- Cart item/quantity verification
-
 ---
 
 ### CART-03 - Add multiple quantities from Product Page
@@ -87,11 +77,6 @@ Verify that changing quantity on the product page affects quantity added to cart
 - Cart contains one product line.
 - The product line quantity is 3.
 
-**Coverage**
-
-- PDP quantity control -> cart transfer
-- Cart quantity persistence
-
 ---
 
 ### CART-04 - Remove product from cart
@@ -116,11 +101,6 @@ Verify that a user can remove an item and the cart becomes empty.
 
 - Product line is removed from cart.
 - Empty cart structure/message is shown.
-
-**Coverage**
-
-- Cart line removal
-- Empty cart state
 
 ---
 
@@ -149,11 +129,6 @@ Verify that quantity updates in cart recalculate subtotal and total.
 
 - Product quantity changes from 1 to 2.
 - Cart subtotal and total are recalculated to expected values.
-
-**Coverage**
-
-- Quantity update on cart page
-- Total recalculation
 
 **Notes**
 
@@ -185,15 +160,6 @@ Verify that using "Continue shopping" from cart returns the user to shopping flo
 - User exits cart and returns to browsing context.
 - Header cart count equals 1 after first add, and increments to 2 after second add.
 
-**Coverage**
-
-- Post-cart navigation
-- Cart badge persistence
-
-**Notes**
-
-- Current automated coverage validates cart count persistence. A stricter destination assertion (URL/page identity) is a useful future extension.
-
 ---
 
 ### CART-07 - Verify cart totals for multiple variants
@@ -224,12 +190,6 @@ Verify that cart totals and line quantities are correct when adding multiple var
 - Quantities match configured values (2 and 3).
 - Subtotal and total match expected values.
 
-**Coverage**
-
-- Variant handling in cart
-- Multi-line totals validation
-- Continue shopping flow between adds
-
-**Notes**
+- **Notes**
 
 - This scenario is intentionally data-dependent due to fixed expected totals in implementation; it may fail after catalog or tax changes without functional regression.

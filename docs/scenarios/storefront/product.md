@@ -25,16 +25,6 @@ Verify that the product details page opens correctly and all key UI blocks are p
 - The "Add to Cart" button is visible.
 - The header and footer are present.
 
-**Coverage**
-
-- Product details page core layout
-- Navigation from catalog to PDP
-- Global page structure (header, footer)
-
-**Notes**
-
-- Profile dimension is relevant: header layout and product layout differ between desktop and mobile viewports.
-
 ---
 
 ### PDP-02 - View product information
@@ -65,16 +55,6 @@ Verify that a user can read all key product information on the product details p
 - Price is visible.
 - "Description" tab opens and shows text content.
 - "Product Details" tab opens and shows specification content.
-
-**Coverage**
-
-- Product description
-- Product tabs
-- Price display
-
-**Notes**
-
-- Tabbed content requires JavaScript. This scenario may be fragile if tab content is loaded asynchronously or changes with product data updates.
 
 ---
 
@@ -110,15 +90,6 @@ Verify that a user can change the product quantity before adding to cart.
 - After decreasing, the field reflects the corrected value.
 - The quantity field does not accept values below the minimum (1).
 
-**Coverage**
-
-- Quantity input interaction
-- Input validation (minimum quantity)
-
-**Notes**
-
-- Boundary behavior: entering 0 or a negative value should either be rejected or reset to the minimum. Whether this happens via validation or only on form submission should be verified against the live app during implementation.
-
 ---
 
 ### PDP-04 - Select product combination
@@ -148,17 +119,6 @@ Verify that a user can select a different size and color combination and the pag
 - Selecting a new color updates the selected state in the color control.
 - The page does not lose the product context (title, add-to-cart button remain visible).
 
-**Coverage**
-
-- Product variant selection
-- Size and color combination controls
-- Page stability after variant change
-
-**Notes**
-
-- Combination changes update the URL fragment and may trigger an image reload. These side effects are worth asserting during implementation if the page object supports them.
-- Selecting an unavailable combination (if any) may disable the add-to-cart button - worth noting as a boundary case.
-
 ---
 
 ### PDP-05 - Add product to cart
@@ -185,17 +145,6 @@ Verify that a user can add a product to the cart and receive a visual confirmati
 - The modal shows the product name that was added.
 - The modal shows the cart total and subtotal.
 - The cart item count in the header updates to reflect the added item.
-
-**Coverage**
-
-- Add to cart flow
-- Cart confirmation modal
-- Cart counter update
-
-**Notes**
-
-- The cart modal is rendered by JavaScript after the add-to-cart request. It is not in the page source on initial load. This makes it a potential source of timing-related flakiness.
-- If the product has required combinations (size/color), they must be selected before adding - the default pre-selected values should satisfy this on the "Hummingbird printed t-shirt".
 
 ---
 
@@ -226,12 +175,6 @@ Verify that a user can dismiss the cart confirmation dialog and continue browsin
 - The cart item count in the header reflects the added item.
 - New items could be added to a cart after dismissing the modal.
 
-**Coverage**
-
-- Post-add-to-cart flow: continue shopping path
-- Modal dismissal behavior
-- Page state after modal close
-
 ---
 
 ### PDP-07 - Navigate to cart from the confirmation dialog
@@ -258,15 +201,4 @@ Verify that a user can proceed from the cart confirmation dialog directly to the
 - The cart page shows the product that was added.
 - The product name and price are visible in the cart.
 - Cart totals are displayed.
-
-**Coverage**
-
-- Post-add-to-cart flow: checkout path
-- Cart modal navigation
-- Cart page content verification
-
-**Notes**
-
-- This scenario is a natural extension of PDP-06. Both PDP-07 and PDP-08 depend on the cart modal (PDP-06 precondition), so they can share setup steps with PDP-06 during implementation if the fixture supports it.
-- The cart page structure is already verified by the existing `CartPage.check_structure()` method.
 

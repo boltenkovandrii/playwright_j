@@ -1,7 +1,7 @@
 package com.prestashop.test.tests;
 
 import com.microsoft.playwright.Page;
-import com.prestashop.test.base2.CustomRunnerTest;
+import com.prestashop.test.runner.CustomRunnerTest;
 import com.prestashop.test.pages.HomePage;
 import com.prestashop.test.pages.ProductPage;
 import org.junit.jupiter.api.DisplayName;
@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Tag;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @Tag("regression")
-@DisplayName("PrestaShop storefront - Product details")
+@DisplayName("PrestaShop storefront - Product details.")
 class ProductPageTest {
     private static final String T_SHIRT = "Hummingbird printed t-shirt";
 
@@ -25,7 +25,7 @@ class ProductPageTest {
     }
 
     @CustomRunnerTest
-    @DisplayName("PDP-02 - View product information")
+    @DisplayName("PDP-02 - View product information.")
     @SuppressWarnings("checkstyle:MagicNumber")
     void productInformation(Page page) {
         new HomePage(page, "en")
@@ -44,7 +44,7 @@ class ProductPageTest {
     }
 
     @CustomRunnerTest
-    @DisplayName("PDP-03 - Change product quantity")
+    @DisplayName("PDP-03 - Change product quantity.")
     void changeProductQuantity(Page page) {
         ProductPage product = new HomePage(page, "en")
                 .open()
@@ -65,7 +65,7 @@ class ProductPageTest {
     }
 
     @CustomRunnerTest
-    @DisplayName("PDP-04 - Select product combination")
+    @DisplayName("PDP-04 - Select product combination.")
     void selectProductCombination(Page page) {
         ProductPage product = new HomePage(page, "en").open().openCategory("Clothes").openProductByName(T_SHIRT);
         product.verifySizeOptions("S", "M", "L", "XL")
@@ -84,7 +84,7 @@ class ProductPageTest {
     }
 
     @CustomRunnerTest
-    @DisplayName("PDP-05 - Add product to cart")
+    @DisplayName("PDP-05 - Add product to cart.")
     @SuppressWarnings("checkstyle:MagicNumber")
     void addProductToCart(Page page) {
         new HomePage(page, "en")
@@ -98,7 +98,7 @@ class ProductPageTest {
     }
 
     @CustomRunnerTest
-    @DisplayName("PDP-06 - Continue shopping after adding a product")
+    @DisplayName("PDP-06 - Continue shopping after adding a product.")
     @SuppressWarnings("checkstyle:MagicNumber")
     void continueShoppingAfterAdd(Page page) {
         ProductPage product = new HomePage(page, "en")
@@ -124,7 +124,7 @@ class ProductPageTest {
     }
 
     @CustomRunnerTest
-    @DisplayName("PDP-07 - Navigate to cart from confirmation dialog")
+    @DisplayName("PDP-07 - Navigate to cart from confirmation dialog.")
     @SuppressWarnings("checkstyle:MagicNumber")
     void navigateToCartFromConfirmation(Page page) {
         new HomePage(page, "en")

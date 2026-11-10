@@ -25,16 +25,6 @@ Verify that the login page opens correctly and all key UI elements are present.
 - A link to the registration page is present.
 - The header and footer are present.
 
-**Coverage**
-
-- Login page layout
-- Core authentication UI elements
-- Navigation to the login page
-
-**Notes**
-
-- Profile dimension is relevant: the header layout may differ between desktop and mobile viewports.
-
 ---
 
 ### ACCT-02 - Registration page structure
@@ -62,16 +52,6 @@ Verify that the account registration page opens correctly and all key UI element
 - Input fields for first name, last name, email, password and birthday are present as well as social title radio buttons and checkboxes for offers\privacy policy\newsletter\data privacy.
 - A submit button to create the account is visible.
 - The header and footer are present.
-
-**Coverage**
-
-- Registration page layout
-- Core registration form UI elements
-- Navigation to the registration page
-
-**Notes**
-
-- The exact set of registration fields may depend on the PrestaShop configuration and theme.
 
 ---
 
@@ -109,13 +89,6 @@ Verify that the login form correctly handles invalid credentials and allows a su
 - Using valid credentials successfully logs in and redirects to the home page.
 - User can navigate to the authenticated pages - i.e. account dashboard.
 - After login, the account menu or header reflects the logged-in state (e.g., customer name is visible).
-
-**Coverage**
-
-- Login form validation (empty fields)
-- Authentication error handling (wrong credentials)
-- Successful login flow
-- Post-login page state
 
 **Notes**
 
@@ -159,19 +132,6 @@ Verify that the registration form correctly validates required fields and input 
 - Submitting valid unique data creates the account and redirects to the home page.
 - User can navigate to the authenticated pages - i.e. account dashboard.
 
-**Coverage**
-
-- Registration form validation (empty fields, invalid format)
-- Duplicate email detection
-- Password complexity validation
-- Successful account creation flow
-
-**Notes**
-
-- Successful registration creates a real account. To keep the environment clean, consider using a disposable or randomised email pattern during implementation.
-- The exact password complexity rules depend on the PrestaShop shop configuration.
-- This scenario is potentially brittle if run repeatedly with the same test data; uniqueness of email must be managed per test run.
-
 ---
 
 ### ACCT-05 - Logout
@@ -201,14 +161,4 @@ Verify that a logged-in user can successfully sign out and is returned to an una
 - The sign-in link is visible again in the header or account menu.
 - Navigating directly to the account dashboard URL redirects the user to the login page (access is protected).
 
-**Coverage**
-
-- Logout flow
-- Post-logout page state and header update
-- Protected page access after logout
-
-**Notes**
-
-- The redirect target after logout may be the home page or login page depending on the PrestaShop configuration.
-- Step 5–6 (accessing a protected page after logout) is a useful security boundary check and a good demonstration of Playwright's navigation and redirect assertion capabilities.
 
