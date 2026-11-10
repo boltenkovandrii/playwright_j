@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Tag;
 class HomePageTest {
 
     @CustomRunnerTest
-    @DisplayName("HOME-01 - Check home page structure")
+    @DisplayName("HOME-01 - Check home page structure.")
     void homePageStructure(Page page) {
         new HomePage(page, "en")
                 .open()
@@ -19,7 +19,7 @@ class HomePageTest {
     }
 
     @CustomRunnerTest
-    @DisplayName("HOME-02 - Check featured products block structure")
+    @DisplayName("HOME-02 - Check featured products block structure.")
     void featuredProductsDisplayed(Page page) {
         new HomePage(page, "en")
                 .open()
@@ -28,7 +28,7 @@ class HomePageTest {
     }
 
     @CustomRunnerTest
-    @DisplayName("HOME-03 - Navigate to category from main menu")
+    @DisplayName("HOME-03 - Navigate to category from main menu.")
     void navigateToCategoryFromMainMenu(Page page) {
         new HomePage(page, "en")
                 .open()
@@ -40,7 +40,7 @@ class HomePageTest {
     }
 
     @CustomRunnerTest
-    @DisplayName("HOME-04 - Open featured product details page")
+    @DisplayName("HOME-04 - Open featured product details page.")
     void navigateToFeaturedProduct(Page page) {
         new HomePage(page, "en")
                 .open()

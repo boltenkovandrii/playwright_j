@@ -5,6 +5,8 @@ import com.microsoft.playwright.Page;
 import com.prestashop.test.base.AllureArtifacts;
 import com.prestashop.test.base.TestRunConfig;
 
+import io.qameta.allure.Allure;
+import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.extension.AfterEachCallback;
 import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
@@ -34,6 +36,16 @@ public final class BrowserInvocationExtension implements
 
     @Override
     public void beforeEach(ExtensionContext context) {
+        // Add labels for custom Allure reporting
+        Allure.label("browser", run.browser());
+        Allure.label("profile", run.profile().name());
+        Allure.label("displayName", context.getParent().map(ExtensionContext::getDisplayName).orElse(context.getDisplayName()));
+
+        if (RetryAttemptTracker.hasPassed(context, run)) {
+            // will be displayed as skipped in the report, but will not be executed
+            Assumptions.abort("Already passed in a previous attempt: " + run);
+        }
+
         int currentAttempt = RetryAttemptTracker.nextAttempt(context, run);
         AllureArtifacts.setAttempt(currentAttempt > 1);
         session = BrowserSession.start(run, currentAttempt);

@@ -15,7 +15,7 @@ class CartPageTest {
     private static final String T_SHIRT = "Hummingbird printed t-shirt";
 
     @CustomRunnerTest
-    @DisplayName("CART-01 - Check cart page structure")
+    @DisplayName("CART-01 - Check cart page structure.")
     void cartPageStructure(Page page) {
         new HomePage(page, "en")
                 .open()
@@ -27,7 +27,7 @@ class CartPageTest {
     }
 
     @CustomRunnerTest
-    @DisplayName("CART-02 - Add single product to cart")
+    @DisplayName("CART-02 - Add single product to cart.")
     void addSingleProduct(Page page) {
         new HomePage(page, "en")
                 .open()
@@ -40,7 +40,7 @@ class CartPageTest {
     }
 
     @CustomRunnerTest
-    @DisplayName("CART-03 - Add multiple quantities from product page")
+    @DisplayName("CART-03 - Add multiple quantities from product page.")
     void addMultipleQuantities(Page page) {
         ProductPage product = new HomePage(page, "en")
                 .open()
@@ -56,7 +56,7 @@ class CartPageTest {
     }
 
     @CustomRunnerTest
-    @DisplayName("CART-04 - Remove product from cart")
+    @DisplayName("CART-04 - Remove product from cart.")
     void removeProduct(Page page) {
         new HomePage(page, "en")
                 .open().openCategory("Clothes")
@@ -68,7 +68,7 @@ class CartPageTest {
     }
 
     @CustomRunnerTest
-    @DisplayName("CART-05 - Update product quantity in cart")
+    @DisplayName("CART-05 - Update product quantity in cart.")
     @SuppressWarnings("checkstyle:MagicNumber")
     void updateProductQuantity(Page page) {
         ProductSpec product = new ProductSpec(T_SHIRT);
@@ -88,7 +88,7 @@ class CartPageTest {
     }
 
     @CustomRunnerTest
-    @DisplayName("CART-06 - Continue shopping from cart")
+    @DisplayName("CART-06 - Continue shopping from cart.")
     void continueShopping(Page page) {
         ProductPage product = new HomePage(page, "en")
                 .open()
@@ -109,7 +109,7 @@ class CartPageTest {
     }
 
     @CustomRunnerTest
-    @DisplayName("CART-07 - Verify cart totals for multiple variants")
+    @DisplayName("CART-07 - Verify cart totals for multiple variants.")
     @SuppressWarnings("checkstyle:MagicNumber")
     void cartTotalsForVariants(Page page) {
         ProductPage product = new HomePage(page, "en")

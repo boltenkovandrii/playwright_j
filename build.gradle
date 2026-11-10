@@ -41,6 +41,10 @@ allure {
     adapter {
         allureJavaVersion = "3.0.0"
     }
+    //custom report configuration file
+    report {
+        configFile.set(layout.projectDirectory.file("allurerc.json"))
+    }
 }
 
 

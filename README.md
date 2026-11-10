@@ -38,6 +38,7 @@ The suite exercises core storefront journeys such as navigation, catalog browsin
 │       └── pmd.ruleset.xml
 ├── build.gradle
 ├── gradlew
+├── allurerc.json
 └── gradlew.bat
 ```
 
