@@ -7,6 +7,8 @@ import com.microsoft.playwright.Page;
 import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
 import static com.microsoft.playwright.options.AriaRole.BUTTON;
 import static com.microsoft.playwright.options.AriaRole.HEADING;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class RegistrationPage extends BaseStorefrontPage {
 
@@ -97,19 +99,25 @@ public class RegistrationPage extends BaseStorefrontPage {
 
     public RegistrationPage verifyFirstNameError() {
         // Do not check the message itself: it is browser-dependent, not PrestaShop functionality.
-        assertThat(firstNameInput).hasJSProperty("validity.valid", false);
+        Boolean validityState = (Boolean) firstNameInput.evaluate("element => !element.validity.valid");
+        assertNotNull(validityState, "First name input validity state should not be null");
+        assertTrue(validityState);
         return this;
     }
 
     public RegistrationPage verifyEmailError() {
         // Do not check the message itself: it is browser-dependent, not PrestaShop functionality.
-        assertThat(emailInput).hasJSProperty("validity.valid", false);
+        Boolean validityState = (Boolean) emailInput.evaluate("element => !element.validity.valid");
+        assertNotNull(validityState, "Email input validity state should not be null");
+        assertTrue(validityState);
         return this;
     }
 
     public RegistrationPage verifyPasswordError() {
         // Do not check the message itself: it is browser-dependent, not PrestaShop functionality.
-        assertThat(passwordInput).hasJSProperty("validity.valid", false);
+        Boolean validityState = (Boolean) passwordInput.evaluate("element => !element.validity.valid");
+        assertNotNull(validityState, "Password input validity state should not be null");
+        assertTrue(validityState);
         return this;
     }
 
