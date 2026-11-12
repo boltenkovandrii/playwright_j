@@ -74,18 +74,24 @@ public class CartPage extends BaseStorefrontPage {
     }
 
     public CartPage verifyProductPrice(String name, double price) {
-        assertThat(item(new ProductSpec(name)).locator(".current-price .price")).hasText("€" + price);
+        Locator productItem = items(new ProductSpec(name));
+        assertThat(productItem).hasCount(1);
+        assertThat(productItem.locator(".current-price .price")).hasText("€" + price);
         return this;
     }
 
     public CartPage verifyProductQuantity(ProductSpec product, int quantity) {
-        assertThat(item(product).locator("input.js-cart-line-product-quantity")).hasValue(String.valueOf(quantity));
+        Locator productItem = items(product);
+        assertThat(productItem).hasCount(1);
+        assertThat(productItem.locator("input.js-cart-line-product-quantity")).hasValue(String.valueOf(quantity));
         return this;
     }
 
     public CartPage setProductQuantity(ProductSpec product, int quantity) {
         AllureArtifacts.screenshot(page, "Updating quantity for " + product + " to " + quantity);
-        Locator input = item(product).locator("input.js-cart-line-product-quantity");
+        Locator productItem = items(product);
+        assertThat(productItem).hasCount(1);
+        Locator input = productItem.locator("input.js-cart-line-product-quantity");
         input.fill(String.valueOf(quantity));
         input.press("Tab");
         assertThat(input).hasValue(String.valueOf(quantity));
@@ -94,8 +100,10 @@ public class CartPage extends BaseStorefrontPage {
 
     public CartPage removeProduct(ProductSpec product) {
         AllureArtifacts.screenshot(page, "Removing product from cart: " + product);
-        item(product).locator(".remove-from-cart").click();
-        assertThat(item(product)).hasCount(0);
+        Locator productItem = items(product);
+        assertThat(productItem).hasCount(1);
+        productItem.locator(".remove-from-cart").click();
+        assertThat(items(product)).hasCount(0);
         return this;
     }
 
@@ -129,13 +137,14 @@ public class CartPage extends BaseStorefrontPage {
         return this;
     }
 
-    private Locator item(ProductSpec product) {
+    private Locator items(ProductSpec product) {
         Locator candidates = cartItems.filter(new Locator.FilterOptions().setHasText(product.name()));
+
         for (var attribute : product.attributes().entrySet()) {
-            candidates = candidates.filter(new Locator.FilterOptions()
-                    .setHas(page.locator("." + attribute.getKey() + " .value")
-                            .filter(new Locator.FilterOptions().setHasText(attribute.getValue()))));
+            Locator attributeValue = page.locator("." + attribute.getKey() + " .value").filter(new Locator.FilterOptions().setHasText(attribute.getValue()));
+            candidates = candidates.filter(new Locator.FilterOptions().setHas(attributeValue));
         }
-        return candidates.first();
+
+        return candidates;
     }
 }
