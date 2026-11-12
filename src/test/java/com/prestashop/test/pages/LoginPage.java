@@ -77,7 +77,7 @@ public class LoginPage extends BaseStorefrontPage {
         // Do not check the message itself: it is browser-dependent, not PrestaShop functionality.
         Boolean validityState = (Boolean) emailInput.evaluate("element => !element.validity.valid");
         assertNotNull(validityState, "Email input validity state should not be null");
-        assertTrue(validityState);
+        assertTrue(validityState, "No message about invalid email");
         return this;
     }
 

@@ -106,16 +106,13 @@ jobs:
           sudo apt-get install -y docker-compose
 
       - name: Start app
-#        env:
-#          REPO_OWNER: ${{ github.repository_owner }}
-#          REPO_NAME: ${{ github.event.repository.name }}
         run: |
           docker compose -f docker/docker-compose-prestashop.yml up -d      
 
       - name: Wait for PrestaShop
         run: |
           for i in {1..60}; do
-          if curl --fail --silent http://localhost:8080/ > /dev/null; then
+          if curl --fail --silent http://localhost:8090/ > /dev/null; then
            echo "PrestaShop is ready"
            exit 0
           fi
@@ -130,10 +127,9 @@ jobs:
         run: |
           chmod +x gradlew
 
-      # TODO: uncomment
-#      - name: Run checkstyle and pmd checks
-#        run: |
-#          ./gradlew qualityCheck
+      - name: Run checkstyle and pmd checks
+        run: |
+          ./gradlew qualityCheck
 
       - name: Install Playwright system dependencies
         run: ./gradlew installPlaywrightDeps

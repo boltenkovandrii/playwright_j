@@ -101,7 +101,7 @@ public class RegistrationPage extends BaseStorefrontPage {
         // Do not check the message itself: it is browser-dependent, not PrestaShop functionality.
         Boolean validityState = (Boolean) firstNameInput.evaluate("element => !element.validity.valid");
         assertNotNull(validityState, "First name input validity state should not be null");
-        assertTrue(validityState);
+        assertTrue(validityState, "No message about invalid first name");
         return this;
     }
 
@@ -109,7 +109,7 @@ public class RegistrationPage extends BaseStorefrontPage {
         // Do not check the message itself: it is browser-dependent, not PrestaShop functionality.
         Boolean validityState = (Boolean) emailInput.evaluate("element => !element.validity.valid");
         assertNotNull(validityState, "Email input validity state should not be null");
-        assertTrue(validityState);
+        assertTrue(validityState, "No message about invalid email");
         return this;
     }
 
@@ -117,7 +117,7 @@ public class RegistrationPage extends BaseStorefrontPage {
         // Do not check the message itself: it is browser-dependent, not PrestaShop functionality.
         Boolean validityState = (Boolean) passwordInput.evaluate("element => !element.validity.valid");
         assertNotNull(validityState, "Password input validity state should not be null");
-        assertTrue(validityState);
+        assertTrue(validityState, "No message about invalid password");
         return this;
     }
 
