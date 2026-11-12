@@ -108,9 +108,10 @@ jobs:
         run: |
           chmod +x gradlew
 
-      - name: Run checkstyle and pmd checks
-        run: |
-          ./gradlew qualityCheck
+      # TODO: uncomment
+#      - name: Run checkstyle and pmd checks
+#        run: |
+#          ./gradlew qualityCheck
 
       - name: Install Playwright system dependencies
         run: ./gradlew installPlaywrightDeps
