@@ -106,11 +106,25 @@ jobs:
           sudo apt-get install -y docker-compose
 
       - name: Start app
-        env:
-          REPO_OWNER: ${{ github.repository_owner }}
-          REPO_NAME: ${{ github.event.repository.name }}
+#        env:
+#          REPO_OWNER: ${{ github.repository_owner }}
+#          REPO_NAME: ${{ github.event.repository.name }}
         run: |
           docker compose -f docker/docker-compose-prestashop.yml up -d      
+
+      - name: Wait for PrestaShop
+        run: |
+          for i in {1..60}; do
+          if curl --fail --silent http://localhost:8080/ > /dev/null; then
+           echo "PrestaShop is ready"
+           exit 0
+          fi
+          sleep 5
+          done
+          
+          echo "PrestaShop did not become ready"
+          docker compose -f docker/docker-compose-prestashop.yml logs
+          exit 1
 
       - name: Set up Gradle wrapper permissions
         run: |
