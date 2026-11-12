@@ -128,7 +128,6 @@ jobs:
       - name: Tear down
         if: always()
         run: |
-#          docker compose down || true
           docker compose -f docker/docker-compose-prestashop.yml down
 
       - name: Upload Allure report
