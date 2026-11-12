@@ -192,7 +192,7 @@ public class ProductPage extends BaseStorefrontPage {
         if (!option.isChecked()) {
             AllureArtifacts.screenshot(page, "Selecting color: " + color);
             String original = imageSource();
-            option.check(new Locator.CheckOptions().setForce(true));
+            option.check();
             assertThat(option).isChecked();
             assertThat(coverImage).not().hasAttribute("src", original);
         } else {
