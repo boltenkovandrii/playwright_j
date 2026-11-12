@@ -18,10 +18,18 @@ on:
         required: true
         default: '2'
 
+  # Having both 'push' and 'pull_request' is probably excessive but for a sample project it is ok.
+  # Commit to existing PR will trigger both events, but the PR event will run on a temporary commit based on main and current branch, so both have value.
+  # Runs on current branch
   push:
     branches:
       - main
       - "feature/**"
+
+  # Runs on temporary commit based on main and current branch - actually testing results after the merge.
+  pull_request:
+    branches:
+      - main
 
   schedule:
     - cron: '3 4 1 * *' # run on the first of every month at 04:03 UTC
@@ -98,11 +106,22 @@ jobs:
           sudo apt-get install -y docker-compose
 
       - name: Start app
-        env:
-          REPO_OWNER: ${{ github.repository_owner }}
-          REPO_NAME: ${{ github.event.repository.name }}
         run: |
           docker compose -f docker/docker-compose-prestashop.yml up -d      
+
+      - name: Wait for PrestaShop
+        run: |
+          for i in {1..60}; do
+          if curl --fail --silent http://localhost:8090/ > /dev/null; then
+           echo "PrestaShop is ready"
+           exit 0
+          fi
+          sleep 5
+          done
+          
+          echo "PrestaShop did not become ready"
+          docker compose -f docker/docker-compose-prestashop.yml logs
+          exit 1
 
       - name: Set up Gradle wrapper permissions
         run: |
@@ -128,7 +147,7 @@ jobs:
       - name: Tear down
         if: always()
         run: |
-          docker compose down || true
+          docker compose -f docker/docker-compose-prestashop.yml down
 
       - name: Upload Allure report
         if: always()

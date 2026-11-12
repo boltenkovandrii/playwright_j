@@ -10,6 +10,7 @@ import java.util.regex.Pattern;
 import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
 import static com.microsoft.playwright.options.AriaRole.BUTTON;
 import static com.microsoft.playwright.options.AriaRole.HEADING;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class CheckoutPage extends BaseStorefrontPage {
 
@@ -57,14 +58,10 @@ public class CheckoutPage extends BaseStorefrontPage {
         addressesStep = page.getByTestId("checkout-addresses-step");
         shippingStep = page.getByTestId("checkout-delivery-step");
         paymentStep = page.getByTestId("checkout-payment-step");
-        personalInfoHeading = page.getByRole(HEADING,
-                new Page.GetByRoleOptions().setName(Texts.get(locale, "checkoutPersonalInformation")));
-        addressesHeading = page.getByRole(HEADING,
-                new Page.GetByRoleOptions().setName(Texts.get(locale, "checkoutAddresses")));
-        shippingHeading = page.getByRole(HEADING,
-                new Page.GetByRoleOptions().setName(Texts.get(locale, "checkoutShipping")));
-        paymentHeading = page.getByRole(HEADING,
-                new Page.GetByRoleOptions().setName(Texts.get(locale, "checkoutPayment")));
+        personalInfoHeading = page.getByRole(HEADING, new Page.GetByRoleOptions().setName(Texts.get(locale, "checkoutPersonalInformation")));
+        addressesHeading = page.getByRole(HEADING, new Page.GetByRoleOptions().setName(Texts.get(locale, "checkoutAddresses")));
+        shippingHeading = page.getByRole(HEADING, new Page.GetByRoleOptions().setName(Texts.get(locale, "checkoutShipping")));
+        paymentHeading = page.getByRole(HEADING, new Page.GetByRoleOptions().setName(Texts.get(locale, "checkoutPayment")));
         personalInfoForm = personalInfoStep.getByTestId("customer-form");
         firstNameInput = personalInfoForm.getByTestId("field-firstname");
         lastNameInput = personalInfoForm.getByTestId("field-lastname");
@@ -231,7 +228,8 @@ public class CheckoutPage extends BaseStorefrontPage {
 
     @Override
     public CheckoutPage verifyCurrentLanguage(String expectedLocale) {
-        // Do not call super: checkout has no language selector in its header.
+        // Do not call super: checkout has no language selector in its header. So just checking that the page locale matches the expected locale.
+        assertEquals(locale, expectedLocale, "Checkout page locale does not match expected locale");
         assertThat(personalInfoHeading).isVisible();
         assertThat(addressesHeading).isVisible();
         assertThat(shippingHeading).isVisible();

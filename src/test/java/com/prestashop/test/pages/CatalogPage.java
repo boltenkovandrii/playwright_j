@@ -30,8 +30,7 @@ public class CatalogPage extends BaseStorefrontPage {
         heading = page.getByTestId("js-product-list-header");
         activeFilters = page.getByTestId("js-active-search-filters");
         pageList = page.locator("nav.pagination ul.page-list");
-        brandsHeader = page.getByRole(LINK,
-                new Page.GetByRoleOptions().setName(Texts.get(locale, "brands")));
+        brandsHeader = page.getByRole(LINK, new Page.GetByRoleOptions().setName(Texts.get(locale, "brands")));
     }
 
     @Override
@@ -195,6 +194,10 @@ public class CatalogPage extends BaseStorefrontPage {
             boolean increase = currentValue < target;
             movePriceHandlerOneStep(index, increase);
             currentValue = getPriceSliderValue(index);
+        }
+
+        if (getPriceSliderValue(index) != target) {
+            throw new AssertionError("Failed to set price slider to target value: " + target);
         }
     }
 

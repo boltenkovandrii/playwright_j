@@ -4,6 +4,8 @@ import com.prestashop.test.base.AllureArtifacts;
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
 
+import java.util.regex.Pattern;
+
 import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
 import static com.microsoft.playwright.options.AriaRole.HEADING;
 
@@ -55,7 +57,7 @@ public class OrderConfirmationPage extends BaseStorefrontPage {
     }
 
     public OrderConfirmationPage verifyOrderReferencePresent() {
-        assertThat(orderReference).containsText("Order reference:");
+        assertThat(orderReference).containsText(new Pattern[] {Pattern.compile("Order reference: [A-Z]{9}")});
         return this;
     }
 

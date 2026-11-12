@@ -8,6 +8,8 @@ import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertTha
 import static com.microsoft.playwright.options.AriaRole.BUTTON;
 import static com.microsoft.playwright.options.AriaRole.HEADING;
 import static com.microsoft.playwright.options.AriaRole.LINK;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class LoginPage extends BaseStorefrontPage {
 
@@ -73,7 +75,9 @@ public class LoginPage extends BaseStorefrontPage {
 
     public LoginPage verifyEmailError() {
         // Do not check the message itself: it is browser-dependent, not PrestaShop functionality.
-        assertThat(emailInput).hasJSProperty("validity.valid", false);
+        Boolean validityState = (Boolean) emailInput.evaluate("element => !element.validity.valid");
+        assertNotNull(validityState, "Email input validity state should not be null");
+        assertTrue(validityState, "No message about invalid email");
         return this;
     }
 

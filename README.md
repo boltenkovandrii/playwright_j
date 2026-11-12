@@ -132,7 +132,7 @@ Failed attempts retain and attach a full-page screenshot, Playwright trace, and 
 
 ## CI
 
-`.github/workflows/tests-run.yml` runs on pushes to `main` and `feature/**`, on a monthly schedule, and on manual dispatch. The workflow:
+`.github/workflows/tests-run.yml` runs on PR to main, on pushes to `main` and `feature/**`, on a monthly schedule, and on manual dispatch. The workflow:
 
 1. Resolves the browser and profile matrix.
 2. Starts the PrestaShop container.
@@ -141,7 +141,7 @@ Failed attempts retain and attach a full-page screenshot, Playwright trace, and 
 5. Runs the Gradle test suite.
 6. Uploads the Allure report artifact even when an earlier step fails.
 
-Manual workflow dispatch accepts the test tag, browsers, profiles, and thread count. Pushes to `main` and scheduled runs execute the full browser/profile coverage; feature-branch pushes use the default Chromium desktop configuration.
+Manual workflow dispatch accepts the test tag, browsers, profiles, and thread count. Pushes to `main` and scheduled runs execute the full browser/profile coverage; feature-branch pushes and PR commits use the default Chromium desktop configuration.
 
 ## Scenario documentation
 
