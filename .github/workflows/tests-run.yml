@@ -18,10 +18,18 @@ on:
         required: true
         default: '2'
 
+  # Having both 'push' and 'pull_request' is probably excessive but for a sample project it is ok.
+  # Commit to existing PR will trigger both events, but the PR event will run on a temporary commit based on main and current branch, so both have value.
+  # Runs on current branch
   push:
     branches:
       - main
       - "feature/**"
+
+  # Runs on temporary commit based on main and current branch - actually testing results after the merge.
+  pull_request:
+    branches:
+      - main
 
   schedule:
     - cron: '3 4 1 * *' # run on the first of every month at 04:03 UTC
