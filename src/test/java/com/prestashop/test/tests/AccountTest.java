@@ -1,24 +1,25 @@
 package com.prestashop.test.tests;
 
 import com.microsoft.playwright.Page;
-import com.prestashop.test.runner.CustomRunnerTest;
+import com.prestashop.test.base.BaseTest;
 import com.prestashop.test.pages.AccountDashboardPage;
 import com.prestashop.test.pages.HomePage;
 import com.prestashop.test.pages.LoginPage;
 import com.prestashop.test.pages.RegistrationPage;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
 
 import java.util.UUID;
 
 @Tag("regression")
 @DisplayName("PrestaShop storefront - Account and guest checkout")
-class AccountTest {
+class AccountTest extends BaseTest {
 
     private static final String DEMO_EMAIL = "pub@prestashop.com";
     private static final String DEMO_PASSWORD = "123456789";
 
-    @CustomRunnerTest
+    @Test
     @DisplayName("ACCT-01 - Login page structure.")
     void loginPageStructures(Page page) {
         new HomePage(page, "en")
@@ -27,7 +28,7 @@ class AccountTest {
                 .checkStructure();
     }
 
-    @CustomRunnerTest
+    @Test
     @DisplayName("ACCT-02 - Registration page structure.")
     void registrationPageStructures(Page page) {
         new HomePage(page, "en")
@@ -36,7 +37,7 @@ class AccountTest {
                 .checkStructure();
     }
 
-    @CustomRunnerTest
+    @Test
     @DisplayName("ACCT-03 - Login validation.")
     void loginValidation(Page page) {
         LoginPage login = new HomePage(page, "en").open().openLoginPage();
@@ -48,7 +49,7 @@ class AccountTest {
         login.login(DEMO_EMAIL, DEMO_PASSWORD).openAccountPage().verifyLoggedIn();
     }
 
-    @CustomRunnerTest
+    @Test
     @DisplayName("ACCT-04 - Registration validation.")
     @SuppressWarnings("checkstyle:MagicNumber")
     void registrationValidation(Page page) {
@@ -89,7 +90,7 @@ class AccountTest {
                 .verifyLoggedIn();
     }
 
-    @CustomRunnerTest
+    @Test
     @DisplayName("ACCT-05 - Logout.")
     void loginAndLogout(Page page) {
         LoginPage login = new HomePage(page, "en").open().openLoginPage();

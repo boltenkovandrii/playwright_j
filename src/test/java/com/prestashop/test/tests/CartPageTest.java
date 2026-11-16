@@ -1,20 +1,21 @@
 package com.prestashop.test.tests;
 
 import com.microsoft.playwright.Page;
-import com.prestashop.test.runner.CustomRunnerTest;
+import com.prestashop.test.base.BaseTest;
 import com.prestashop.test.pages.CartPage;
 import com.prestashop.test.pages.HomePage;
 import com.prestashop.test.pages.ProductPage;
 import com.prestashop.test.pages.ProductSpec;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
 
 @Tag("regression")
 @DisplayName("PrestaShop storefront - Shopping cart")
-class CartPageTest {
+class CartPageTest extends BaseTest {
     private static final String T_SHIRT = "Hummingbird printed t-shirt";
 
-    @CustomRunnerTest
+    @Test
     @DisplayName("CART-01 - Check cart page structure.")
     void cartPageStructure(Page page) {
         new HomePage(page, "en")
@@ -26,7 +27,7 @@ class CartPageTest {
                 .checkStructure();
     }
 
-    @CustomRunnerTest
+    @Test
     @DisplayName("CART-02 - Add single product to cart.")
     void addSingleProduct(Page page) {
         new HomePage(page, "en")
@@ -39,7 +40,7 @@ class CartPageTest {
                 .verifyProductQuantity(new ProductSpec(T_SHIRT), 1);
     }
 
-    @CustomRunnerTest
+    @Test
     @DisplayName("CART-03 - Add multiple quantities from product page.")
     void addMultipleQuantities(Page page) {
         ProductPage product = new HomePage(page, "en")
@@ -55,7 +56,7 @@ class CartPageTest {
                 .verifyProductQuantity(new ProductSpec(T_SHIRT), 3);
     }
 
-    @CustomRunnerTest
+    @Test
     @DisplayName("CART-04 - Remove product from cart.")
     void removeProduct(Page page) {
         new HomePage(page, "en")
@@ -67,7 +68,7 @@ class CartPageTest {
                 .checkEmptyStructure();
     }
 
-    @CustomRunnerTest
+    @Test
     @DisplayName("CART-05 - Update product quantity in cart.")
     @SuppressWarnings("checkstyle:MagicNumber")
     void updateProductQuantity(Page page) {
@@ -87,7 +88,7 @@ class CartPageTest {
                 .verifyTotal(45.89);
     }
 
-    @CustomRunnerTest
+    @Test
     @DisplayName("CART-06 - Continue shopping from cart.")
     void continueShopping(Page page) {
         ProductPage product = new HomePage(page, "en")
@@ -108,7 +109,7 @@ class CartPageTest {
                 .verifyHeaderCartCount(2);
     }
 
-    @CustomRunnerTest
+    @Test
     @DisplayName("CART-07 - Verify cart totals for multiple variants.")
     @SuppressWarnings("checkstyle:MagicNumber")
     void cartTotalsForVariants(Page page) {

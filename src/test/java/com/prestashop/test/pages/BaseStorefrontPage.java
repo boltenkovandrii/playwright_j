@@ -1,7 +1,6 @@
 package com.prestashop.test.pages;
 
 import com.prestashop.test.base.AllureArtifacts;
-import com.prestashop.test.base.PlaywrightSettings;
 import com.prestashop.test.components.Footer;
 import com.prestashop.test.components.Header;
 import com.microsoft.playwright.Page;
@@ -106,7 +105,7 @@ public class BaseStorefrontPage extends BasePage<BaseStorefrontPage> {
 
     protected String localizedUrl(String path) {
         String normalized = path.replaceFirst("^/", "");
-        return PlaywrightSettings.baseUrl() + "/" + locale + "/" + normalized;
+        return baseUrl() + "/" + locale + "/" + normalized;
     }
 
     protected int viewportWidth() {

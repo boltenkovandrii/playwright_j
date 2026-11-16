@@ -1,19 +1,20 @@
 package com.prestashop.test.tests;
 
 import com.microsoft.playwright.Page;
-import com.prestashop.test.runner.CustomRunnerTest;
+import com.prestashop.test.base.BaseTest;
 import com.prestashop.test.pages.HomePage;
 import com.prestashop.test.pages.SearchResultsPage;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
 
 @Tag("regression")
 @DisplayName("PrestaShop storefront - Search")
-class SearchTest {
+class SearchTest extends BaseTest {
 
     private static final String PRODUCT_NAME = "Hummingbird printed t-shirt";
 
-    @CustomRunnerTest
+    @Test
     @DisplayName("SRCH-01 - Search by full product name.")
     void searchByFullProductName(Page page) {
         new HomePage(page, "en")
@@ -24,7 +25,7 @@ class SearchTest {
                 .checkResultCount(1);
     }
 
-    @CustomRunnerTest
+    @Test
     @DisplayName("SRCH-02 - Search by partial product name.")
     @SuppressWarnings("checkstyle:MagicNumber")
     void searchByPartialProductName(Page page) {
@@ -36,7 +37,7 @@ class SearchTest {
                 .checkResultCount(5);
     }
 
-    @CustomRunnerTest
+    @Test
     @DisplayName("SRCH-03 - Search with no matching results.")
     @SuppressWarnings("checkstyle:MagicNumber")
     void searchWithNoMatchingResults(Page page) {
@@ -50,7 +51,7 @@ class SearchTest {
                 .checkResultCount(5);
     }
 
-    @CustomRunnerTest
+    @Test
     @DisplayName("SRCH-04 - Search from catalog page.")
     @SuppressWarnings("checkstyle:MagicNumber")
     void searchFromCatalogPage(Page page) {
@@ -63,7 +64,7 @@ class SearchTest {
                 .checkResultCount(5);
     }
 
-    @CustomRunnerTest
+    @Test
     @DisplayName("SRCH-05 - Navigate through search pagination.")
     @SuppressWarnings("checkstyle:MagicNumber")
     void navigateSearchPagination( Page page) {

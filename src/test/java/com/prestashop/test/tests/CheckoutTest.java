@@ -1,18 +1,19 @@
 package com.prestashop.test.tests;
 
 import com.microsoft.playwright.Page;
-import com.prestashop.test.runner.CustomRunnerTest;
+import com.prestashop.test.base.BaseTest;
 import com.prestashop.test.pages.CartPage;
 import com.prestashop.test.pages.CheckoutPage;
 import com.prestashop.test.pages.HomePage;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
 
 @Tag("regression")
 @DisplayName("PrestaShop storefront - Checkout")
-class CheckoutTest {
+class CheckoutTest extends BaseTest {
 
-    @CustomRunnerTest
+    @Test
     @DisplayName("CHK-01 - Guest checkout page structure and checkout flow.")
     @SuppressWarnings("checkstyle:MagicNumber")
     void guestCheckout(Page page) {

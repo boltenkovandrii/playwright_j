@@ -227,7 +227,7 @@ public class CatalogPage extends BaseStorefrontPage {
     private int getPriceSliderValue(int index) {
         Locator facet = page.locator(".faceted-slider[data-slider-label='Price']");
         String value = facet.getAttribute("data-slider-values");
-        if (value == null) {
+        if (value == null || "null".equals(value)) {
             throw new AssertionError("Price slider values are not available");
         }
         try {

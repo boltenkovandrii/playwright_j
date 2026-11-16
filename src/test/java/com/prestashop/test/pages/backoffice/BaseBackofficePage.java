@@ -1,7 +1,6 @@
 package com.prestashop.test.pages.backoffice;
 
 import com.microsoft.playwright.Page;
-import com.prestashop.test.base.PlaywrightSettings;
 import com.prestashop.test.pages.BasePage;
 
 import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
@@ -13,7 +12,7 @@ public class BaseBackofficePage extends BasePage<BaseBackofficePage> {
     }
 
     public BaseBackofficePage open(String path) {
-        page.navigate(PlaywrightSettings.baseUrl() + "/admin-dev/" + path);
+        page.navigate(baseUrl() + "/admin-dev/" + path);
         return verifyLoaded();
     }
 
