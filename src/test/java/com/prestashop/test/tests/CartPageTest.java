@@ -10,6 +10,10 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
+import java.util.Random;
+
+import static org.junit.jupiter.api.Assertions.fail;
+
 @Tag("regression")
 @DisplayName("PrestaShop storefront - Shopping cart")
 class CartPageTest extends BaseTest {
@@ -47,6 +51,12 @@ class CartPageTest extends BaseTest {
                 .open()
                 .openCategory("Clothes")
                 .openProductByName(T_SHIRT);
+
+        Random r = new Random();
+        int i = r.nextInt(2);
+        if (i == 0) {
+            fail("Failing test to check retry mechanism");
+        }
 
         product.verifyHeaderCartCount(0)
                 .setQuantity(3)
