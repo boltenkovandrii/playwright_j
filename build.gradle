@@ -48,7 +48,6 @@ allure {
         dependsOnTests.set(false)
         //custom report configuration file
         configFile.set(layout.projectDirectory.file("allurerc.json"))
-//        configFile.set(layout.projectDirectory.file("allurerc.mjs"))
     }
 
 }
@@ -73,9 +72,6 @@ pmd {
 def retryRunId = providers.systemProperty('retryTrackerRunId').orElse(providers.provider { UUID.randomUUID().toString() })
 
 test {
-//    doFirst {
-//        systemProperty 'retryTrackerRunId', UUID.randomUUID().toString()
-//    }
 
     def config = new Properties()
     file('src/test/resources/config.properties').withInputStream {config.load(it)}
@@ -127,18 +123,6 @@ tasks.register('installPlaywrightDeps', JavaExec) {
     mainClass = 'com.microsoft.playwright.CLI'
     args 'install-deps'
 }
-
-/*
-tasks.register('installPlaywrightDeps', JavaExec) {
-    group = 'verification'
-    description = 'Install Linux dependencies required by Playwright webkit browser for CI.'
-
-    classpath = sourceSets.test.runtimeClasspath
-    mainClass = 'com.microsoft.playwright.CLI'
-    args 'install-deps', 'webkit'
-}
-
- */
 
 tasks.named("test") {
     finalizedBy("allureReport")
