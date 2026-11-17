@@ -1,0 +1,13 @@
+{
+  "plugins": {
+    "awesome": {
+      "options": {
+        "groupBy": [
+          "profile",
+          "suite",
+          "displayName"
+        ]
+      }
+    }
+  }
+}

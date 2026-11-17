@@ -36,7 +36,6 @@ dependencies {
 
 }
 
-//TODO: check if commented parts are needed
 allure {
     version = "3.16.1"
     adapter {
@@ -44,9 +43,13 @@ allure {
         resultsDir.set(layout.buildDirectory.dir("allure-results")) //
     }
 
-    report { //
-        dependsOnTests.set(false) //
-    }//
+
+    report {
+        dependsOnTests.set(false)
+        //custom report configuration file
+        configFile.set(layout.projectDirectory.file("allurerc.json"))
+    }
+
 }
 
 
