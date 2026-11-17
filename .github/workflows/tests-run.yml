@@ -3,20 +3,23 @@ name: Run tests
 on:
   workflow_dispatch:
     inputs:
-      tags:
-        description: 'Test tag to include'
-        required: true
-        default: 'regression'
-      browsers:
-        description: 'Comma or space-separated list of browsers. Available browsers: chromium, firefox, webkit. If empty, defaults applied.'
-        required: false
-      profiles:
-        description: 'Comma or space-separated list of profiles. Available profiles: tablet, mobile, desktop_2560x1600, desktop_1920x1200, mobile_landscape and tablet_landscape. If empty, defaults applied.'
-        required: false
       threads:
-        description: 'Number of parallel threads to run'
+        description: 'Number of parallel test threads'
         required: true
         default: '2'
+        type: number
+
+      tags:
+        description: 'JUnit tags to include'
+        required: true
+        default: 'regression'
+        type: string
+
+      profiles:
+        description: 'Comma-separated profile names. Use the exact names from config.properties.'
+        required: true
+        default: 'Desktop Chrome'
+        type: string
 
   # Having both 'push' and 'pull_request' is probably excessive but for a sample project it is ok.
   # Commit to existing PR will trigger both events, but the PR event will run on a temporary commit based on main and current branch, so both have value.
@@ -34,126 +37,274 @@ on:
   schedule:
     - cron: '3 4 1 * *' # run on the first of every month at 04:03 UTC
 
+permissions:
+  contents: read
 
 jobs:
 
-  run-tests:
-    name: Run Gradle tests and collect reports
-
+  # Resolve the profiles and other test settings.
+  resolve:
+    name: Resolve test parameters
     runs-on: ubuntu-latest
 
+    outputs:
+      profiles: ${{ steps.resolve.outputs.profiles }}
+      threads: ${{ steps.resolve.outputs.threads }}
+      tags: ${{ steps.resolve.outputs.tags }}
+
     env:
-      DEFAULT_BROWSERS: chromium
-      DEFAULT_PROFILES: desktop_1920x1200
-      FULL_BROWSERS: chromium,webkit,firefox
-      FULL_PROFILES: tablet,mobile,desktop_2560x1600,desktop_1920x1200,mobile_landscape,tablet_landscape
       EVENT_NAME: ${{ github.event_name }}
-      REF_NAME: ${{ github.ref_name }}
-      INPUT_BROWSERS: ${{ github.event.inputs.browsers }}
-      INPUT_PROFILES: ${{ github.event.inputs.profiles }}
-      THREADS: ${{ github.event.inputs.threads || 2 }}
-      TAGS: ${{ github.event.inputs.tags || 'regression' }}
+      MANUAL_PROFILES: ${{ inputs.profiles }}
+      MANUAL_THREADS: ${{ inputs.threads }}
+      MANUAL_TAGS: ${{ inputs.tags }}
 
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
 
-      - name: Resolve test parameters
+      - name: Resolve parameters
+        id: resolve
         shell: bash
         run: |
-          normalize_list() {
-            printf '%s' "$1" |
-              tr ',[:space:]' '\n' |
-              awk 'NF {
-                if (count++) printf ","
-                printf "%s", $0
-              }'
-          }
+          set -euo pipefail
 
-          if [[ "$EVENT_NAME" == "workflow_dispatch" ]]; then
-            BROWSERS=$(normalize_list "$INPUT_BROWSERS")
-            PROFILES=$(normalize_list "$INPUT_PROFILES")
+          available=$(sed -n 's/^availableProfiles=//p' \
+            src/test/resources/config.properties | tail -n 1)
 
-            BROWSERS="${BROWSERS:-$DEFAULT_BROWSERS}"
-            PROFILES="${PROFILES:-$DEFAULT_PROFILES}"
-
-          elif [[ "$EVENT_NAME" == "schedule" || "$REF_NAME" == "main" ]]; then
-            BROWSERS="$FULL_BROWSERS"
-            PROFILES="$FULL_PROFILES"
-
-          else
-            BROWSERS="$DEFAULT_BROWSERS"
-            PROFILES="$DEFAULT_PROFILES"
+          if [[ -z "$available" ]]; then
+            echo "availableProfiles is missing from config.properties"
+            exit 1
           fi
 
-          echo "BROWSERS=$BROWSERS" >> "$GITHUB_ENV"
-          echo "PROFILES=$PROFILES" >> "$GITHUB_ENV"
+          IFS='|' read -r -a all_profiles <<< "$available"
 
-          echo "Resolved browsers: $BROWSERS"
-          echo "Resolved profiles: $PROFILES"
+          case "$EVENT_NAME" in
+            push)
+              selected=("Desktop Chrome")
+              ;;
+            pull_request|schedule)
+              selected=("${all_profiles[@]}")
+              ;;
+            workflow_dispatch)
+              raw="${MANUAL_PROFILES:-Desktop Chrome}"
+              IFS=',' read -r -a requested <<< "$raw"
+              selected=()
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v4
+              for item in "${requested[@]}"; do
+                profile=$(printf '%s' "$item" |
+                  sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
+
+                [[ -z "$profile" ]] && continue
+
+                found=false
+                for available_profile in "${all_profiles[@]}"; do
+                  if [[ "$profile" == "$available_profile" ]]; then
+                    found=true
+                    break
+                  fi
+                done
+
+                if [[ "$found" != true ]]; then
+                  echo "Unsupported profile: $profile"
+                  echo "Available profiles: $available"
+                  exit 1
+                fi
+
+                duplicate=false
+                for existing in "${selected[@]}"; do
+                  if [[ "$profile" == "$existing" ]]; then
+                    duplicate=true
+                    break
+                  fi
+                done
+
+                if [[ "$duplicate" != true ]]; then
+                  selected+=("$profile")
+                fi
+              done
+
+              if [[ ${#selected[@]} -eq 0 ]]; then
+                echo "No profiles were selected"
+                exit 1
+              fi
+              ;;
+            *)
+              echo "Unsupported event: $EVENT_NAME"
+              exit 1
+              ;;
+          esac
+
+          threads="${MANUAL_THREADS:-2}"
+          tags="${MANUAL_TAGS:-regression}"
+
+          if [[ ! "$threads" =~ ^[1-9][0-9]*$ ]]; then
+            echo "Threads must be a positive integer: $threads"
+            exit 1
+          fi
+
+          profiles_json=$(printf '%s\n' "${selected[@]}" |
+            jq -R . | jq -sc .)
+
+          echo "profiles=$profiles_json" >> "$GITHUB_OUTPUT"
+          echo "threads=$threads" >> "$GITHUB_OUTPUT"
+          echo "tags=$tags" >> "$GITHUB_OUTPUT"
+
+          echo "Selected profiles:"
+          printf '  %s\n' "${selected[@]}"
+          echo "Threads: $threads"
+          echo "Tags: $tags"
+
+  # Run static analysis once.
+  quality:
+    name: Quality checks
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v7
 
       - name: Set up Java
         uses: actions/setup-java@v6
         with:
           distribution: temurin
           java-version: '25'
+          cache: gradle
 
-      - name: Install Docker Compose
+      - name: Run quality checks
         run: |
-          sudo apt-get update -y
-          sudo apt-get install -y docker-compose
+          chmod +x gradlew
+          ./gradlew qualityCheck
 
-      - name: Start app
+  # Run one test job for each selected profile.
+  test:
+    name: Tests - ${{ matrix.profile }}
+    runs-on: ubuntu-latest
+    needs:
+      - resolve
+      - quality
+
+    strategy:
+      fail-fast: false
+      max-parallel: 3
+      matrix:
+        profile: ${{ fromJSON(needs.resolve.outputs.profiles) }}
+
+    timeout-minutes: 90
+
+    env:
+      PROFILE: ${{ matrix.profile }}
+      THREADS: ${{ needs.resolve.outputs.threads }}
+      TAGS: ${{ needs.resolve.outputs.tags }}
+
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Set up Java
+        uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: '25'
+          cache: gradle
+
+      - name: Install Playwright browsers and dependencies
         run: |
-          docker compose -f docker/docker-compose-prestashop.yml up -d      
+          chmod +x gradlew
+          ./gradlew installPlaywrightBrowsers installPlaywrightDeps
+
+      - name: Start PrestaShop
+        run: |
+          docker compose -f docker/docker-compose-prestashop.yml up -d
 
       - name: Wait for PrestaShop
+        shell: bash
         run: |
           for i in {1..60}; do
-          if curl --fail --silent http://localhost:8090/ > /dev/null; then
-           echo "PrestaShop is ready"
-           exit 0
-          fi
-          sleep 5
+            if curl --fail --silent http://localhost:8090/ > /dev/null; then
+              echo "PrestaShop is ready"
+              exit 0
+            fi
+            sleep 5
           done
-          
+
           echo "PrestaShop did not become ready"
           docker compose -f docker/docker-compose-prestashop.yml logs
           exit 1
 
-      - name: Set up Gradle wrapper permissions
-        run: |
-          chmod +x gradlew
-
-      - name: Run checkstyle and pmd checks
-        run: |
-          ./gradlew qualityCheck
-
-      - name: Install Playwright system dependencies
-        run: ./gradlew installPlaywrightDeps
-
-      - name: Run Gradle tests
+      - name: Run tests
         shell: bash
         run: |
-          command=(./gradlew clean test -Dbrowsers="$BROWSERS" -Dprofiles="$PROFILES" -Dthreads="$THREADS" -DincludeTags="$TAGS")
+          profile_key=$(printf '%s' "$PROFILE" |
+            tr '[:upper:] ' '[:lower:]_' |
+            tr -cd 'a-z0-9_-')
 
-          echo "Running Gradle with:"
+          retry_run_id="${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}-${profile_key}"
+
+          command=(
+            ./gradlew clean test -x allureReport
+            "-Dprofile=$PROFILE"
+            "-Dthreads=$THREADS"
+            "-DincludeTags=$TAGS"
+            "-DretryTrackerRunId=$retry_run_id"
+          )
+
+          echo "Running tests:"
           printf '  %s\n' "${command[@]}"
 
           "${command[@]}"
 
-      - name: Tear down
+      - name: Stop PrestaShop
         if: always()
         run: |
           docker compose -f docker/docker-compose-prestashop.yml down
 
-      - name: Upload Allure report
+      - name: Upload Allure results
         if: always()
         uses: actions/upload-artifact@v7
         with:
-          name: allure-report
-          path: build/reports/allure-report/allureReport
+          name: allure-results-${{ strategy.job-index }}
+          path: build/allure-results
           retention-days: 3
+          if-no-files-found: warn
+
+  # Generate one report from all selected profiles.
+  report:
+    name: Generate combined Allure report
+    runs-on: ubuntu-latest
+
+    needs:
+      - resolve
+      - test
+
+    if: >-
+      always() &&
+      needs.resolve.result == 'success' &&
+      (needs.test.result == 'success' || needs.test.result == 'failure')
+
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Set up Java
+        uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: '25'
+          cache: gradle
+
+      - name: Download Allure results
+        uses: actions/download-artifact@v8
+        with:
+          pattern: allure-results-*
+          path: build/allure-results
+          merge-multiple: true
+
+      - name: Generate combined report
+        run: |
+          chmod +x gradlew
+          ./gradlew allureReport
+
+      - name: Upload combined Allure report
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: combined-allure-report
+          path: build/reports/allure-report/allureReport
+          retention-days: 7
           if-no-files-found: warn
