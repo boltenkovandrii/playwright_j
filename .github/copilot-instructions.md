@@ -12,9 +12,10 @@ Use the Gradle Wrapper and Java 25. On Windows, use `.\gradlew.bat`; on macOS an
 
 * Run the default regression suite: `.\gradlew.bat clean test`
 * Run static analysis: `.\gradlew.bat qualityCheck`
-* Run all storefront tests for selected browsers and profiles: `.\gradlew.bat test --tests "com.prestashop.test.tests.*" -Dbrowsers="chromium,webkit" -Dprofiles="desktop_1920x1200,mobile"`
+* Run all storefront tests for one profile: `.\gradlew.bat test --tests "com.prestashop.test.tests.*" -Dprofile="iPhone 13"`
 * Run one test class: `.\gradlew.bat test --tests "com.prestashop.test.tests.HomePageTest"`
 * Run headed tests: append `-Dheadless=false`
+* Set parallel test threads: append `-Dthreads=<count>`
 * Run against another storefront URL: append `-DbaseUrlPrestaShop=<url>`
 
 Start the application under test before local test runs:
@@ -35,9 +36,9 @@ Do not add handling that turns unexpected test, quality-check, or workflow failu
 
 ## Framework conventions
 
-* Test scenarios belong in `src/test/java/com/prestashop/test/tests`.
+* Test scenarios belong in `src/test/java/com/prestashop/test/tests` and extend `base.BaseTest`. `BaseTest` configures Playwright's JUnit integration with `@UsePlaywright(PlaywrightOptions.class)`; do not reintroduce the removed custom test runner.
 * Page Objects belong in `src/test/java/com/prestashop/test/pages`.
-* Shared configuration and browser/profile selection belong in `base`; lifecycle, retry, and artifact code belongs in `runner`. Reuse the existing lifecycle rather than creating parallel Playwright setup.
+* Shared configuration and parallel execution belong in `base`; Playwright profile options, retry tracking, and artifact diagnostics belong in `runner`. Reuse the existing Playwright JUnit integration and lifecycle rather than creating parallel setup.
 * Reusable UI fragments belong in `src/test/java/com/prestashop/test/components`.
 * Runtime defaults belong in `src/test/resources/config.properties`.
 * Business-level scenario documentation belongs in `docs/scenarios`.
@@ -46,9 +47,9 @@ Do not add handling that turns unexpected test, quality-check, or workflow failu
 
 ## Browser and application configuration
 
-* Supported browsers are `chromium`, `firefox`, and `webkit`.
-* Supported profiles are `desktop_2560x1600`, `desktop_1920x1200`, `mobile_landscape`, `mobile`, `tablet_landscape`, and `tablet`.
-* Firefox is restricted to desktop profiles because Playwright does not support Firefox mobile-device emulation.
+* `src/test/resources/config.properties` defines available profiles via `availableProfiles`. Each profile combines a browser with a device or context configuration; use the exact profile name with the singular `-Dprofile=<name>` property.
+* Available profiles are `Desktop Chrome`, `Desktop Firefox`, `Desktop Safari`, `iPhone 13`, `iPhone 13 landscape`, `iPad Mini`, `iPad Mini landscape`, `Desktop Chrome 2560x1600`, `Desktop Firefox 2560x1600`, `iPad Pro 11 Chromium`, and `iPad Pro 11 landscape Chromium`.
+* A local Gradle test run uses one profile. CI runs multiple profiles as separate matrix jobs.
 * The default local PrestaShop URL is `http://localhost:8090`; Docker Compose configuration is in `docker/docker-compose-prestashop.yml`.
 * Do not add browser driver binaries, machine-specific paths, or unsupported remote-browser configuration.
 
@@ -57,8 +58,9 @@ Do not add handling that turns unexpected test, quality-check, or workflow failu
 * Failed attempts retain and attach screenshots, videos, and traces to Allure. Successful first attempts discard these artifacts; successful retries retain video.
 * `-DallureScreenshots=true` attaches screenshots for all attempts. `-DretryAttempts=<count>` overrides the configured retry count.
 * The generated Allure report is at `build/reports/allure-report/allureReport/index.html`.
-* `.github/workflows/tests-run.yml` starts the PrestaShop container, runs Checkstyle and PMD, installs Linux WebKit dependencies, executes tests, and uploads the Allure report with `if: always()`.
-* Preserve the workflow's failure semantics: report upload must not hide a failed quality check or test run, and teardown/report collection should remain available after failures.
+* `.github/workflows/tests-run.yml` has four jobs: parameter resolution, quality checks, one test job per selected profile, and combined Allure report generation. Each test job installs Playwright browsers and dependencies, starts and stops PrestaShop, and uploads its raw Allure results. The report job merges results from the matrix and uploads a combined report when tests succeed or fail.
+* Pushes to `main` and `feature/**` use `Desktop Chrome`; pull requests to `main` and scheduled runs use all configured profiles. Manual dispatch accepts profile names, tags, and thread count.
+* Preserve the workflow's failure semantics: PrestaShop teardown and per-profile result uploads run with `if: always()`. The combined report is attempted when parameter resolution succeeds and test jobs succeed or fail; its artifact upload also runs with `if: always()`. Do not hide a failed quality check or test run.
 
 ## Change guidelines
 

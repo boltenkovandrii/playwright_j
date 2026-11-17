@@ -27,8 +27,8 @@ The suite exercises core storefront journeys such as navigation, catalog browsin
 ├── docs/scenarios/storefront/
 ├── src/test/
 │   ├── java/com/prestashop/test/
-│   │   ├── base/          # configuration and browser/profile settings
-│   │   ├── runner/        # test lifecycle, retries, and diagnostics
+│   │   ├── base/          # shared configuration and parallel execution
+│   │   ├── runner/        # Playwright options, retries, and artifact diagnostics
 │   │   ├── components/    # reusable storefront UI components
 │   │   ├── pages/         # Page Objects
 │   │   └── tests/         # storefront test scenarios
@@ -70,38 +70,41 @@ On macOS or Linux, use `./gradlew clean test`. Stop the local application when i
 docker compose -f docker\docker-compose-prestashop.yml down
 ```
 
-### Select browsers and profiles
+### Select a profile
 
-The default execution uses Chromium and the `desktop_1920x1200` profile. Supply comma-separated values to run the valid browser/profile combinations:
+Tests extend `BaseTest`, which configures Playwright's JUnit integration with `PlaywrightOptions`. A profile selects both the browser and device/context configuration, so a local Gradle test run accepts one profile at a time. The default profile is `Desktop Chrome`.
 
 ```powershell
-.\gradlew.bat test --tests "com.prestashop.test.tests.*" `
-  -Dbrowsers="chromium,webkit" `
-  -Dprofiles="desktop_1920x1200,mobile,tablet_landscape"
+.\gradlew.bat test --tests "com.prestashop.test.tests.*" -Dprofile="iPhone 13"
 ```
 
-Supported browsers are `chromium`, `firefox`, and `webkit`. Supported profiles are:
+Available profile names are defined by `availableProfiles` in `src/test/resources/config.properties`:
 
-* `desktop_2560x1600`
-* `desktop_1920x1200`
-* `mobile_landscape`
-* `mobile`
-* `tablet_landscape`
-* `tablet`
-
-Firefox supports desktop profiles only because Playwright does not support Firefox mobile-device emulation.
+* `Desktop Chrome`
+* `Desktop Firefox`
+* `Desktop Safari`
+* `iPhone 13`
+* `iPhone 13 landscape`
+* `iPad Mini`
+* `iPad Mini landscape`
+* `Desktop Chrome 2560x1600`
+* `Desktop Firefox 2560x1600`
+* `iPad Pro 11 Chromium`
+* `iPad Pro 11 landscape Chromium`
 
 Other useful options:
 
 ```powershell
-# Run Firefox in headed mode on both desktop profiles.
-.\gradlew.bat test --tests "com.prestashop.test.tests.*" `
-  -Dbrowsers="firefox" `
-  -Dprofiles="desktop_1920x1200,desktop_2560x1600" `
+# Run a single test class with a desktop Firefox profile in headed mode.
+.\gradlew.bat test --tests "com.prestashop.test.tests.HomePageTest" `
+  -Dprofile="Desktop Firefox" `
   -Dheadless=false
 
 # Override the storefront URL.
 .\gradlew.bat test -DbaseUrlPrestaShop="http://localhost:8090"
+
+# Set the number of parallel test threads.
+.\gradlew.bat test -Dthreads=2
 
 # Disable reruns.
 .\gradlew.bat test -DretryAttempts=0
@@ -132,16 +135,14 @@ Failed attempts retain and attach a full-page screenshot, Playwright trace, and 
 
 ## CI
 
-`.github/workflows/tests-run.yml` runs on PR to main, on pushes to `main` and `feature/**`, on a monthly schedule, and on manual dispatch. The workflow:
+`.github/workflows/tests-run.yml` runs on PRs to `main`, pushes to `main` and `feature/**`, on a monthly schedule, and on manual dispatch. It has four jobs:
 
-1. Resolves the browser and profile matrix.
-2. Starts the PrestaShop container.
-3. Runs Checkstyle and PMD.
-4. Installs the Linux dependencies required for Playwright WebKit.
-5. Runs the Gradle test suite.
-6. Uploads the Allure report artifact even when an earlier step fails.
+1. **Resolve test parameters** validates the selected profile names and resolves tags and thread count.
+2. **Quality checks** runs Checkstyle and PMD once.
+3. **Tests** runs one matrix job per selected profile, installing Playwright browsers and dependencies and starting PrestaShop for each job. Each invocation uses a single `-Dprofile`.
+4. **Generate combined Allure report** downloads and merges the per-profile Allure results, generates one report, and uploads it as an artifact.
 
-Manual workflow dispatch accepts the test tag, browsers, profiles, and thread count. Pushes to `main` and scheduled runs execute the full browser/profile coverage; feature-branch pushes and PR commits use the default Chromium desktop configuration.
+Manual workflow dispatch accepts comma-separated profile names, the test tag, and thread count. Pushes to `main` and `feature/**` use `Desktop Chrome`; pull requests and scheduled runs cover all profiles from `config.properties`. The combined report is generated when the test jobs succeed or fail, and the per-profile results and report are uploaded as artifacts.
 
 ## Scenario documentation
 
