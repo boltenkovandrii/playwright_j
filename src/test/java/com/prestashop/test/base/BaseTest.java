@@ -19,8 +19,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 
-@UsePlaywright(PlaywrightOptions.class)
 @ExtendWith(ArtifactWatcher.class)
+@UsePlaywright(PlaywrightOptions.class)
 public class BaseTest {
 
     @BeforeEach
@@ -52,14 +52,19 @@ public class BaseTest {
         context.tracing().start(new Tracing.StartOptions()
                 .setScreenshots(true)
                 .setSnapshots(true));
-
-
     }
 
 
     @AfterEach
     void tearDown(Page page, Playwright playwright, BrowserContext context, Browser browser, ExtensionContext extensionContext) {
         context.tracing().stop(new Tracing.StopOptions().setPath(ArtifactWatcher.getTracePath(extensionContext)));
+        if (extensionContext.getExecutionException().isPresent() && !page.isClosed()) {
+            try {
+                AllureArtifacts.attachPng(page.screenshot(new Page.ScreenshotOptions().setFullPage(true)), "Failure state");
+            } catch (com.microsoft.playwright.PlaywrightException failure) {
+                Allure.step("Unable to capture failure screenshot: " + failure.getMessage());
+            }
+        }
         page.close();
         AllureArtifacts.clearAttempt();
     }

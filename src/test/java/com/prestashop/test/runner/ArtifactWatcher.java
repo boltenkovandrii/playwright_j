@@ -41,6 +41,16 @@ public final class ArtifactWatcher implements TestWatcher, ParameterResolver {
 
         if (attempt != null && attempt > 1) {
             attachArtifacts(context);
+        } else {
+            //delete artifacts for successful first attempt
+            Path videoPath = context.getStore(NAMESPACE).get(VIDEO_PATH, Path.class);
+            Path tracePath = context.getStore(NAMESPACE).get(TRACE_PATH, Path.class);
+            if (videoPath != null) {
+                videoPath.toFile().delete();
+            }
+            if (tracePath != null) {
+                tracePath.toFile().delete();
+            }
         }
     }
 

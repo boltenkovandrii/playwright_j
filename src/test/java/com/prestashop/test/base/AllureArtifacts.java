@@ -64,7 +64,7 @@ public final class AllureArtifacts {
         }
     }
 
-    private static void attachPng(byte[] bytes, String name) {
+    public static void attachPng(byte[] bytes, String name) {
         Allure.attachment(name, "image/png", new ByteArrayInputStream(bytes), AttachmentOptions.withFileExtension(".png"));
     }
 
