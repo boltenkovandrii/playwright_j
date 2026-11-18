@@ -157,6 +157,7 @@ public class CatalogPage extends BaseStorefrontPage {
 
     private void dragPriceHandle(int index, double target) {
         Locator facet = page.locator(".faceted-slider[data-slider-label='Price']");
+        facet.scrollIntoViewIfNeeded(); //for some profiles we need to move slider into view before we can drag it
         double minimum = Double.parseDouble(facet.getAttribute("data-slider-min"));
         double maximum = Double.parseDouble(facet.getAttribute("data-slider-max"));
         if (maximum == minimum) {
