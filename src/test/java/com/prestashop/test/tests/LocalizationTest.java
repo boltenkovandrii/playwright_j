@@ -1,7 +1,7 @@
 package com.prestashop.test.tests;
 
 import com.microsoft.playwright.Page;
-import com.prestashop.test.runner.CustomRunnerTest;
+import com.prestashop.test.base.BaseTest;
 import com.prestashop.test.pages.AccountDashboardPage;
 import com.prestashop.test.pages.CartPage;
 import com.prestashop.test.pages.CatalogPage;
@@ -13,17 +13,18 @@ import com.prestashop.test.pages.RegistrationPage;
 import com.prestashop.test.pages.SearchResultsPage;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
 
 @Tag("regression")
 @DisplayName("PrestaShop storefront - Localization")
-class LocalizationTest {
+class LocalizationTest extends BaseTest {
 
     private static final String DEMO_EMAIL = "pub@prestashop.com";
     private static final String DEMO_PASSWORD = "123456789";
     private static final String PRODUCT_NAME = "Hummingbird printed t-shirt";
 
 
-    @CustomRunnerTest
+    @Test
     @DisplayName("LOCA-01 - Switch storefront language.")
     void switchStorefrontLanguage(Page page) {
         HomePage home = new HomePage(page, "en").open();
@@ -36,7 +37,7 @@ class LocalizationTest {
         catalog.verifyCurrentLanguage("nl");
     }
 
-    @CustomRunnerTest
+    @Test
     @DisplayName("LOCA-02 - Preserve storefront language across core pages.")
     void preserveStorefrontLanguageAcrossCorePages(Page page) {
         HomePage home = new HomePage(page, "en").open().switchLanguage("nl");
@@ -55,7 +56,7 @@ class LocalizationTest {
         checkout.verifyCurrentLanguage("nl");
     }
 
-    @CustomRunnerTest
+    @Test
     @DisplayName("LOCA-03 - Verify localization of core storefront pages.")
     void verifyLocalizationOfCoreStorefrontPages(Page page) {
         HomePage home = new HomePage(page, "en").open().switchLanguage("nl");

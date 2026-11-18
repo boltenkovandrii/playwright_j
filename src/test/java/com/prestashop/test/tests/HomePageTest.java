@@ -1,16 +1,17 @@
 package com.prestashop.test.tests;
 
 import com.microsoft.playwright.Page;
-import com.prestashop.test.runner.CustomRunnerTest;
+import com.prestashop.test.base.BaseTest;
 import com.prestashop.test.pages.HomePage;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
 
 @Tag("regression")
 @DisplayName("PrestaShop storefront - Homepage")
-class HomePageTest {
+class HomePageTest extends BaseTest {
 
-    @CustomRunnerTest
+    @Test
     @DisplayName("HOME-01 - Check home page structure.")
     void homePageStructure(Page page) {
         new HomePage(page, "en")
@@ -18,7 +19,7 @@ class HomePageTest {
                 .checkStructure();
     }
 
-    @CustomRunnerTest
+    @Test
     @DisplayName("HOME-02 - Check featured products block structure.")
     void featuredProductsDisplayed(Page page) {
         new HomePage(page, "en")
@@ -27,7 +28,7 @@ class HomePageTest {
                 .checkStructure();
     }
 
-    @CustomRunnerTest
+    @Test
     @DisplayName("HOME-03 - Navigate to category from main menu.")
     void navigateToCategoryFromMainMenu(Page page) {
         new HomePage(page, "en")
@@ -39,7 +40,7 @@ class HomePageTest {
                 .checkStructure();
     }
 
-    @CustomRunnerTest
+    @Test
     @DisplayName("HOME-04 - Open featured product details page.")
     void navigateToFeaturedProduct(Page page) {
         new HomePage(page, "en")

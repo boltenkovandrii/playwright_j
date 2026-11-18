@@ -1,6 +1,7 @@
 package com.prestashop.test.pages;
 
 import com.microsoft.playwright.Page;
+import com.prestashop.test.base.TestConfig;
 
 public abstract class BasePage<T extends BasePage<T>> {
 
@@ -15,4 +16,8 @@ public abstract class BasePage<T extends BasePage<T>> {
     }
 
     public abstract T verifyLoaded();
+
+    public static String baseUrl() {
+        return TestConfig.getConfiguration().getString("baseUrlPrestaShop", "http://localhost:8090").replaceAll("/+$", "");
+    }
 }

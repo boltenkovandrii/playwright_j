@@ -157,6 +157,7 @@ public class CatalogPage extends BaseStorefrontPage {
 
     private void dragPriceHandle(int index, double target) {
         Locator facet = page.locator(".faceted-slider[data-slider-label='Price']");
+        facet.scrollIntoViewIfNeeded(); //for some profiles we need to move slider into view before we can drag it
         double minimum = Double.parseDouble(facet.getAttribute("data-slider-min"));
         double maximum = Double.parseDouble(facet.getAttribute("data-slider-max"));
         if (maximum == minimum) {
@@ -227,7 +228,7 @@ public class CatalogPage extends BaseStorefrontPage {
     private int getPriceSliderValue(int index) {
         Locator facet = page.locator(".faceted-slider[data-slider-label='Price']");
         String value = facet.getAttribute("data-slider-values");
-        if (value == null) {
+        if (value == null || "null".equals(value)) {
             throw new AssertionError("Price slider values are not available");
         }
         try {

@@ -32,19 +32,24 @@ dependencies {
     testImplementation 'org.apache.commons:commons-configuration2:2.15.1'
     testImplementation 'commons-beanutils:commons-beanutils:1.11.0'
 
-    testImplementation 'ch.qos.logback:logback-classic:1.6.5'
+    testImplementation 'ch.qos.logback:logback-classic:1.6.6'
 
 }
 
 allure {
-    version = "3.16.1"
+    version = "3.33.0"
     adapter {
         allureJavaVersion = "3.0.0"
+        resultsDir.set(layout.buildDirectory.dir("allure-results")) //
     }
-    //custom report configuration file
+
+
     report {
+        dependsOnTests.set(false)
+        //custom report configuration file
         configFile.set(layout.projectDirectory.file("allurerc.json"))
     }
+
 }
 
 
@@ -64,10 +69,9 @@ pmd {
     ruleSets = []
 }
 
+def retryRunId = providers.systemProperty('retryTrackerRunId').orElse(providers.provider { UUID.randomUUID().toString() })
+
 test {
-    doFirst {
-        systemProperty 'retryTrackerRunId', UUID.randomUUID().toString()
-    }
 
     def config = new Properties()
     file('src/test/resources/config.properties').withInputStream {config.load(it)}
@@ -97,15 +101,27 @@ test {
     systemProperties.put('junit.jupiter.execution.parallel.mode.classes.default', 'concurrent')
     systemProperties.put('junit.jupiter.execution.parallel.config.strategy', 'custom')
     systemProperties.put('junit.jupiter.execution.parallel.config.custom.class', 'com.prestashop.test.base.ParallelExecutionStrategy')
+
+    systemProperty 'retryTrackerRunId', retryRunId.get()
+}
+
+
+tasks.register('installPlaywrightBrowsers', JavaExec) {
+    group = 'verification'
+    description = 'Installs Playwright browser binaries.'
+
+    classpath = sourceSets.test.runtimeClasspath
+    mainClass = 'com.microsoft.playwright.CLI'
+    args 'install'
 }
 
 tasks.register('installPlaywrightDeps', JavaExec) {
     group = 'verification'
-    description = 'Install Linux dependencies required by Playwright webkit browser for CI.'
+    description = 'Installs system dependencies for all Playwright browsers.'
 
     classpath = sourceSets.test.runtimeClasspath
     mainClass = 'com.microsoft.playwright.CLI'
-    args 'install-deps', 'webkit'
+    args 'install-deps'
 }
 
 tasks.named("test") {

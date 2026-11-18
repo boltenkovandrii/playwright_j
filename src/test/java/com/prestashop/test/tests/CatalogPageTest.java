@@ -1,11 +1,12 @@
 package com.prestashop.test.tests;
 
 import com.microsoft.playwright.Page;
-import com.prestashop.test.runner.CustomRunnerTest;
+import com.prestashop.test.base.BaseTest;
 import com.prestashop.test.pages.CatalogPage;
 import com.prestashop.test.pages.HomePage;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
@@ -13,15 +14,15 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @Tag("regression")
 @DisplayName("PrestaShop storefront - Navigation and catalog")
-class CatalogPageTest {
+class CatalogPageTest extends BaseTest {
 
-    @CustomRunnerTest
+    @Test
     @DisplayName("CAT-01 - Check catalog page structure.")
     void catalogPageStructure(Page page) {
         new HomePage(page, "en").open().openCategory("Clothes").checkStructure();
     }
 
-    @CustomRunnerTest
+    @Test
     @DisplayName("CAT-02 - Browse products in a category.")
     @SuppressWarnings("checkstyle:MagicNumber")
     void browseProductsInCategory(Page page) {
@@ -32,7 +33,7 @@ class CatalogPageTest {
         assertThat(catalog.products().names()).hasSizeGreaterThanOrEqualTo(2).doesNotHaveDuplicates();
     }
 
-    @CustomRunnerTest
+    @Test
     @DisplayName("CAT-03 - Open product details page.")
     void openProductDetailsPage(Page page) {
         new HomePage(page, "en")
@@ -43,7 +44,7 @@ class CatalogPageTest {
                 .checkStructure();
     }
 
-    @CustomRunnerTest
+    @Test
     @DisplayName("CAT-04 - Change product sorting.")
     void changeProductSorting(Page page) {
         CatalogPage catalog = new HomePage(page, "en").open().openCategory("Accessories");
@@ -52,7 +53,7 @@ class CatalogPageTest {
         assertThat(sorted).isNotEqualTo(initial).isSortedAccordingTo(java.util.Comparator.reverseOrder());
     }
 
-    @CustomRunnerTest
+    @Test
     @DisplayName("CAT-05 - Navigate through catalog pagination.")
     @SuppressWarnings("checkstyle:MagicNumber")
     void catalogPagination(Page page) {
@@ -69,7 +70,7 @@ class CatalogPageTest {
                 .checkPaginationVisible(true);
     }
 
-    @CustomRunnerTest
+    @Test
     @DisplayName("CAT-06 - Navigate using breadcrumbs.")
     void navigateUsingBreadcrumbs(Page page) {
         new HomePage(page, "en")
@@ -80,7 +81,7 @@ class CatalogPageTest {
                 .verifyCategoryName("Clothes");
     }
 
-    @CustomRunnerTest
+    @Test
     @DisplayName("CAT-07 - Filter products by price.")
     @SuppressWarnings("checkstyle:MagicNumber")
     void filterProductsByPrice(Page page) {
@@ -93,7 +94,7 @@ class CatalogPageTest {
                 .verifyActiveFilter("Price");
     }
 
-    @CustomRunnerTest
+    @Test
     @DisplayName("CAT-08 - Filter products by manufacturer.")
     @SuppressWarnings("checkstyle:MagicNumber")
     void filterProductsByManufacturer(Page page) {

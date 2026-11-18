@@ -1,13 +1,14 @@
 
 {
+  "dynamicEnvironments": {
+    "label": "profile"
+  },
   "plugins": {
     "awesome": {
       "options": {
         "groupBy": [
           "suite",
-          "displayName",
-          "profile",
-          "browser"
+          "displayName"
         ]
       }
     }
