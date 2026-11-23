@@ -1,8 +1,8 @@
 # PrestaShop Playwright Java tests
 
-Java UI tests for the PrestaShop demo storefront, built with Playwright, JUnit Jupiter, Gradle, Docker Compose, and Allure.
+Java UI tests for the PrestaShop demo application, built with Playwright, JUnit Jupiter, Gradle, Docker Compose, and Allure.
 
-The suite exercises core storefront journeys such as navigation, catalog browsing, product details, cart, checkout, account, search, and localization. It is intended as a maintainable browser-automation project rather than a complete test strategy for PrestaShop.
+The suite exercises core application journeys such as navigation, catalog browsing, product details, cart, checkout, account, search, and localization. It is intended as a maintainable browser-automation project rather than a complete test strategy for PrestaShop.
 
 ## Technology stack
 
@@ -29,9 +29,9 @@ The suite exercises core storefront journeys such as navigation, catalog browsin
 │   ├── java/com/prestashop/test/
 │   │   ├── base/          # shared configuration and parallel execution
 │   │   ├── runner/        # Playwright options, retries, and artifact diagnostics
-│   │   ├── components/    # reusable storefront UI components
+│   │   ├── components/    # reusable UI components
 │   │   ├── pages/         # Page Objects
-│   │   └── tests/         # storefront test scenarios
+│   │   └── tests/         # test scenarios
 │   └── resources/
 │       ├── config.properties
 │       ├── checkstyle.xml
