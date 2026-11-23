@@ -85,10 +85,15 @@
       "effect": "allow"
     },
 
-    // Require approval for Git commits
+    // Require approval for some Git commands
     {
       "action": "shell",
       "resource": "git commit *",
+      "effect": "ask"
+    },
+    {
+      "action": "shell",
+      "resource": "git add *",
       "effect": "ask"
     },
 
