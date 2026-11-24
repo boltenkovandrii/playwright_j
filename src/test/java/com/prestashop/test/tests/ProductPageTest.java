@@ -8,12 +8,12 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
+import static com.prestashop.test.data.TestData.PRODUCT_T_SHIRT;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @Tag("regression")
 @DisplayName("PrestaShop storefront - Product details.")
 class ProductPageTest extends BaseTest {
-    private static final String T_SHIRT = "Hummingbird printed t-shirt";
 
     @Test
     @DisplayName("PDP-01 - Check product page structure")
@@ -50,7 +50,7 @@ class ProductPageTest extends BaseTest {
         ProductPage product = new HomePage(page, "en")
                 .open()
                 .openCategory("Clothes")
-                .openProductByName(T_SHIRT);
+                .openProductByName(PRODUCT_T_SHIRT);
 
         product.verifyQuantity(1) //Check default quantity
                 .increaseQuantity() //Increase the quantity to 2 using arrows.
@@ -68,7 +68,7 @@ class ProductPageTest extends BaseTest {
     @Test
     @DisplayName("PDP-04 - Select product combination.")
     void selectProductCombination(Page page) {
-        ProductPage product = new HomePage(page, "en").open().openCategory("Clothes").openProductByName(T_SHIRT);
+        ProductPage product = new HomePage(page, "en").open().openCategory("Clothes").openProductByName(PRODUCT_T_SHIRT);
         product.verifySizeOptions("S", "M", "L", "XL")
                 .verifyColorOptionCount(2)
                 .verifySelectedSize("S")
@@ -91,10 +91,10 @@ class ProductPageTest extends BaseTest {
         new HomePage(page, "en")
                 .open()
                 .openCategory("Clothes")
-                .openProductByName(T_SHIRT)
+                .openProductByName(PRODUCT_T_SHIRT)
                 .setQuantity(2)
                 .addToCart()
-                .verifyAddToCartConfirmation(T_SHIRT, 2, 45.89, 45.89)
+                .verifyAddToCartConfirmation(PRODUCT_T_SHIRT, 2, 45.89, 45.89)
                 .verifyHeaderCartCount(2);
     }
 
@@ -105,21 +105,21 @@ class ProductPageTest extends BaseTest {
         ProductPage product = new HomePage(page, "en")
                 .open()
                 .openCategory("Clothes")
-                .openProductByName(T_SHIRT);
+                .openProductByName(PRODUCT_T_SHIRT);
 
         product.addToCart()
-                .verifyAddToCartConfirmation(T_SHIRT, 1, 22.94, 22.94)
+                .verifyAddToCartConfirmation(PRODUCT_T_SHIRT, 1, 22.94, 22.94)
                 .continueShopping()
                 .verifyAddToCartConfirmationClosed()
-                .verifyProductName(T_SHIRT)
+                .verifyProductName(PRODUCT_T_SHIRT)
                 .verifyProductContextVisible()
                 .verifyHeaderCartCount(1);
 
         product.addToCart()
-                .verifyAddToCartConfirmation(T_SHIRT, 2, 45.89, 45.89)
+                .verifyAddToCartConfirmation(PRODUCT_T_SHIRT, 2, 45.89, 45.89)
                 .continueShopping()
                 .verifyAddToCartConfirmationClosed()
-                .verifyProductName(T_SHIRT)
+                .verifyProductName(PRODUCT_T_SHIRT)
                 .verifyProductContextVisible()
                 .verifyHeaderCartCount(2);
     }
@@ -131,13 +131,13 @@ class ProductPageTest extends BaseTest {
         new HomePage(page, "en")
                 .open()
                 .openCategory("Clothes")
-                .openProductByName(T_SHIRT)
+                .openProductByName(PRODUCT_T_SHIRT)
                 .addToCart()
-                .verifyAddToCartConfirmation(T_SHIRT, 1, 22.94, 22.94)
+                .verifyAddToCartConfirmation(PRODUCT_T_SHIRT, 1, 22.94, 22.94)
                 .proceedToCart()
                 .verifyProductCount(1)
-                .verifyProductWithNamePresent(T_SHIRT, 1)
-                .verifyProductPrice(T_SHIRT, 22.94)
+                .verifyProductWithNamePresent(PRODUCT_T_SHIRT, 1)
+                .verifyProductPrice(PRODUCT_T_SHIRT, 22.94)
                 .verifyProductsSubtotal(22.94)
                 .verifyTotal(22.94);
     }

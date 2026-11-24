@@ -7,6 +7,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
+import static com.prestashop.test.data.TestData.PRODUCT_T_SHIRT;
+
 @Tag("regression")
 @DisplayName("PrestaShop storefront - Homepage")
 class HomePageTest extends BaseTest {
@@ -45,8 +47,8 @@ class HomePageTest extends BaseTest {
     void navigateToFeaturedProduct(Page page) {
         new HomePage(page, "en")
                 .open()
-                .openFeaturedProductByName("Hummingbird printed t-shirt")
-                .verifyProductName("Hummingbird printed t-shirt")
+                .openFeaturedProductByName(PRODUCT_T_SHIRT)
+                .verifyProductName(PRODUCT_T_SHIRT)
                 .checkStructure();
     }
 }

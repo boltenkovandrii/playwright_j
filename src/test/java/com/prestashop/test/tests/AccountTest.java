@@ -1,5 +1,8 @@
 package com.prestashop.test.tests;
 
+import static com.prestashop.test.data.TestData.DEMO_EMAIL;
+import static com.prestashop.test.data.TestData.DEMO_PASSWORD;
+
 import com.microsoft.playwright.Page;
 import com.prestashop.test.base.BaseTest;
 import com.prestashop.test.pages.AccountDashboardPage;
@@ -15,9 +18,6 @@ import java.util.UUID;
 @Tag("regression")
 @DisplayName("PrestaShop storefront - Account and guest checkout")
 class AccountTest extends BaseTest {
-
-    private static final String DEMO_EMAIL = "pub@prestashop.com";
-    private static final String DEMO_PASSWORD = "123456789";
 
     @Test
     @DisplayName("ACCT-01 - Login page structure.")
