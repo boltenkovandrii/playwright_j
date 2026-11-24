@@ -6,7 +6,7 @@ import com.microsoft.playwright.assertions.LocatorAssertions;
 import com.microsoft.playwright.options.SelectOption;
 import com.prestashop.test.base.AllureArtifacts;
 import com.prestashop.test.base.AriaSnapshots;
-import com.prestashop.test.pages.Texts;
+import com.prestashop.test.data.Texts;
 
 import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
 import static com.microsoft.playwright.options.AriaRole.LINK;

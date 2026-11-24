@@ -1,4 +1,4 @@
-package com.prestashop.test.pages;
+package com.prestashop.test.data;
 
 import java.util.Map;
 
