@@ -15,7 +15,10 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
-import static com.prestashop.test.data.TestData.*;
+import static com.prestashop.test.data.TestData.DEMO_EMAIL;
+import static com.prestashop.test.data.TestData.DEMO_PASSWORD;
+import static com.prestashop.test.data.TestData.PRODUCT_T_SHIRT;
+
 
 @Tag("regression")
 @DisplayName("PrestaShop storefront - Localization")
