@@ -24,7 +24,7 @@ The suite exercises core application journeys such as navigation, catalog browsi
 │   └── copilot-instructions.md
 ├── docker/
 │   └── docker-compose-prestashop.yml
-├── docs/scenarios/storefront/
+├── docs/scenarios/
 ├── src/test/
 │   ├── java/com/prestashop/test/
 │   │   ├── base/          # shared configuration and parallel execution
@@ -146,4 +146,24 @@ Manual workflow dispatch accepts comma-separated profile names, the test tag, an
 
 ## Scenario documentation
 
-Business-level descriptions of the storefront scenarios are in `docs/scenarios/storefront/`. Keep these documents aligned when adding or materially changing a test scenario.
+Business-level descriptions of the scenarios are in `docs/scenarios/`. Keep these documents aligned when adding or materially changing a test scenario.
+
+## Agentic setup with OpenCode and local models (WIP)
+
+Tools:
+- Ollama + local models (i.e qwen3.5:9b)
+- OpenCode
+- Idea's AI Chat
+- Microsoft Playwright MCP (requires Node.js)
+
+Files and destinations to look at:
+- .opencode/opencode.jsonc
+- C:\Users\<YourUsername>\.config\opencode\opencode.jsonc
+- C:\Users\<YourUsername>\.jetbrains\acp.json
+- Settings->AI->MCP Servers
+
+Commands (unstructured):
+- 'npx -y @playwright/mcp@latest --help' - After node Installation. Should add a package. Actually downloads on first usage.
+
+TODO:
+- Check if opencode config belongs to a project. Might be better to add sample like: opencode.example.jsonc

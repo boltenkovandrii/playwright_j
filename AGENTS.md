@@ -72,6 +72,7 @@ Do not add handling that turns unexpected test, quality-check, or workflow failu
 * Never claim a build, quality check, test run, Docker operation, or report publication passed unless it was run and verified.
 
 ## Git
+- Add newly generated .java, .md, .yml, and .properties files to the repository if appropriate (don't add temporary files), but never commit or push them.
 - Never commit or push unless explicitly requested.
 - Never change Git history or force-push to a shared branch unless explicitly requested.
 
