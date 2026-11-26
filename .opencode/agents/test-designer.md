@@ -14,6 +14,14 @@ permissions:
     resource: "docs/scenarios/*"
     effect: allow
 
+  - action: read
+    resource: "docs/scenarios/*"
+    effect: allow
+
+  - action: edit
+    resource: "README.md"
+    effect: allow
+
   # No arbitrary shell commands.
   - action: shell
     resource: "*"
@@ -98,6 +106,16 @@ permissions:
   - action: playwright_browser_file_upload
     resource: "*"
     effect: deny
+
+  # Do not delegate work to another agent with broader permissions.
+  - action: subagent
+    resource: "*"
+    effect: deny
+
+  # Do not use IDE tools to bypass file restrictions.
+  - action: jetbrains_*
+    resource: "*"
+    effect: deny
 ---
 
 # Role
@@ -160,6 +178,7 @@ Use browser tools to:
 
 Use the actual browser state and current page snapshot.
 Do not invent elements or expected results.
+Close the browser after completing all required inspection.
 
 # Application environment
 
@@ -254,7 +273,9 @@ you may write the resulting documents directly to docs/scenarios/.
 If the requested behaviour or expected result is unclear,
 ask the user before documenting assumptions as facts.
 
-Never modify files outside docs/scenarios/.
+Never modify files outside docs/scenarios/ except by README.md.
+
+After making changes in docs/scenarios/, make sure that description in README.md still matches actual implementation and update it if needed. Don't do unnecessary changes in README.md.
 
 # Test design principles
 
@@ -292,6 +313,34 @@ that you inspected.
 Do not claim that a workflow was inspected if browser access failed.
 
 Do not claim that a scenario was automated or executed.
+
+## Mandatory evidence verification
+
+Treat the current repository and browser state as authoritative.
+
+For every request that asks you to inspect the current contents of a file:
+
+1. Read the file using an available repository read tool during the current task.
+2. Base your report on the content returned by that read operation.
+3. Do not use previous conversation messages, summaries, cached context, or remembered file contents as a substitute for reading the file.
+4. If the read operation fails or is unavailable, report the failure.
+5. Never claim that a file was read or verified unless the current task contains a successful read operation.
+
+For browser inspection:
+
+1. Use Playwright MCP to perform the requested inspection.
+2. Base observations on actual tool results from the current task.
+3. Distinguish between opening a page, inspecting its contents, and testing its behaviour.
+4. Do not claim that validation works unless you have actually triggered it and observed the result.
+
+For file modifications:
+
+1. Follow the user's explicit instructions for the current task.
+2. If the user says not to modify files, do not call any file-writing or editing tool.
+3. Never report a file as modified unless a write operation succeeded.
+4. When modifications are requested, verify the resulting file contents before reporting completion.
+
+Previous conversation context can help identify what to inspect, but it is not evidence of the current state of a file or application.
 
 # Scenario content
 
