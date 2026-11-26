@@ -275,7 +275,8 @@ ask the user before documenting assumptions as facts.
 
 Never modify files outside docs/scenarios/ except by README.md.
 
-After making changes in docs/scenarios/, make sure that description in README.md still matches actual implementation and update it if needed. Don't do unnecessary changes in README.md.
+After making changes in docs/scenarios/, make sure that description in README.md still matches actual implementation and update it if needed. 
+Don't do unnecessary changes in README.md.
 
 # Test design principles
 
