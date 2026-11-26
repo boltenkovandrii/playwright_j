@@ -265,7 +265,9 @@ Before creating a new scenario:
 3. Check for duplicate or overlapping scenarios.
 4. Identify the business workflow and its importance.
 5. Explore the relevant workflow in the running AUT.
-6. Design the scenario based on observed behaviour.
+6. Do not invent requirements or expected results - 
+   base your observations on the actual application behaviour.
+7. Design the scenario based on observed behaviour.
 
 When the user explicitly asks you to create or update scenarios,
 you may write the resulting documents directly to docs/scenarios/.
