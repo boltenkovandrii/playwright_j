@@ -281,6 +281,12 @@ Never modify files outside docs/scenarios/ except by README.md.
 After making changes in docs/scenarios/, make sure that description in README.md still matches actual implementation and update it if needed. 
 Don't do unnecessary changes in README.md.
 
+## Test data
+
+Scenarios create customers, addresses and orders in the local Docker instance. Placing orders there is acceptable because the storefront runs locally: no real payment or fulfilment happens.
+
+Created records may accumulate between runs. Use unique, recognizable values, such as a `QA_SCENARIO_` prefix and randomized email addresses, so data from different runs does not interfere.
+
 # Test design principles
 
 Focus on meaningful E2E scenarios.

@@ -117,6 +117,12 @@ The `regression` tag is included by default and the `WIP` tag is excluded. Selec
 
 Runtime defaults are in `src/test/resources/config.properties`. System properties override those defaults.
 
+## Test data
+
+Scenarios create customers, addresses and orders in the local Docker instance. Placing orders there is acceptable because the storefront runs locally: no real payment or fulfilment happens.
+
+Created records may accumulate between runs. Use unique, recognizable values, such as a `QA_SCENARIO_` prefix and randomized email addresses, so data from different runs does not interfere.
+
 ## Quality checks and reports
 
 Run the configured static analysis checks:
