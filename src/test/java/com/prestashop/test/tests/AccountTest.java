@@ -84,7 +84,25 @@ class AccountTest extends BaseTest {
                 .asRegistrationPage()
                 .verifyErrorMessage("The email is already used, please choose another one or sign in");
 
-        // Valid input
+        // Enter a first name containing a disallowed character.
+        registration = registration.fillWith("Qa1", "Doe", uniqueEmail, "ValidPass123!", "01/01/1990")
+                .submit()
+                .asRegistrationPage()
+                .verifyFirstNameFormatError();
+
+        // Correct the first name and enter a last name containing a disallowed character.
+        registration = registration.fillWith("Jane", "Qa1", uniqueEmail, "ValidPass123!", "01/01/1990")
+                .submit()
+                .asRegistrationPage()
+                .verifyLastNameFormatError();
+
+        // Correct the last name, enter an invalid birthdate.
+        registration = registration.fillWith("Jane", "Doe", uniqueEmail, "ValidPass123!", "31/12/1990")
+                .submit()
+                .asRegistrationPage()
+                .verifyBirthdateFormatError();
+
+        // Fill in all fields with valid, unique data, check mandatory consent checkboxes and submit.
         registration.fillWith("Jane", "Doe", uniqueEmail, "ValidPass123!", "01/01/1990")
                 .submit()
                 .asHomePage()

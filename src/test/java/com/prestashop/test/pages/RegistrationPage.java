@@ -122,6 +122,24 @@ public class RegistrationPage extends BaseStorefrontPage {
         return this;
     }
 
+    public RegistrationPage verifyFirstNameFormatError() {
+        // Server-side field-level validation message rendered under the first name field.
+        assertThat(firstNameInput.locator("xpath=..").locator("li.alert-danger")).isVisible();
+        return this;
+    }
+
+    public RegistrationPage verifyLastNameFormatError() {
+        // Server-side field-level validation message rendered under the last name field.
+        assertThat(lastNameInput.locator("xpath=..").locator("li.alert-danger")).isVisible();
+        return this;
+    }
+
+    public RegistrationPage verifyBirthdateFormatError() {
+        // Server-side field-level validation message rendered under the birthdate field.
+        assertThat(birthdayInput.locator("xpath=..").locator("li.alert-danger")).isVisible();
+        return this;
+    }
+
     public RegistrationPage verifyErrorMessage(String message) {
         assertThat(errorMessage).isVisible();
         assertThat(errorMessage).hasText(message);

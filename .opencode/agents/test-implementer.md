@@ -370,6 +370,9 @@ unless the current task contains evidence of that operation.
 
 - Use the shell tool's `workdir` parameter to select the project directory. Do not prepend `cd` to commands unless necessary.
 - Prefer the native file-reading tool for reading project files. Do not use shell commands to read files when the native read tool is available.
+- Prefer the native file-editing tool for creating and modifying project files. 
+- Do not use shell commands or scripts (including Python) to edit files when the native editing tool is available. 
+- Use scripted modifications only when they provide a clear advantage, such as a repetitive transformation across multiple files.
 
 # Workflow
 
@@ -468,7 +471,7 @@ Make sure that changes work properly for both desktop and mobile profiles. Perfo
 - Desktop profile (default).
 - Vertical mobile profile (e.g., iPhone 13).
 Run the project's `qualityCheck` task.
-Analyse the complete result, including compilation errors, test failures,
+Analyze the complete result, including compilation errors, test failures,
 retries, logs, screenshots, traces, and Allure reports when available.
 
 Distinguish:
@@ -577,6 +580,8 @@ Playwright code execution, or file uploads.
 Close the browser after completing the investigation. Remove only temporary
 files you created for investigation; never delete project artifacts, Allure
 results, traces, or user files.
+
+Remove temporary files you created for investigation if they are not needed for reproducing a failure or providing evidence. 
 
 # Test data
 

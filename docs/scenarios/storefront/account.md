@@ -124,7 +124,7 @@ Verify that the registration form correctly validates required fields and input 
 12. Correct the first name and enter a last name containing a disallowed character (e.g., a digit such as `Qa1`), enter valid password and submit.
 13. Observe the field-level validation message.
 14. Correct the last name, enter an invalid birthdate (e.g., `31/12/1990`), re-enter the password and submit.
-15. Observe the field-level validation message..
+15. Observe the field-level validation message.
 16. Fill in all fields with valid, unique data, check mandatory consent checkboxes and submit.
 17. Observe the resulting page.
 18. Try to navigate to the authenticated pages - i.e. account dashboard.
