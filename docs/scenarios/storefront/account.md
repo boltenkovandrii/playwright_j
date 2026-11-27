@@ -49,7 +49,7 @@ Verify that the account registration page opens correctly and all key UI element
 
 - The registration page is displayed.
 - The page heading "Create an account" is visible.
-- Input fields for first name, last name, email, password and birthday are present as well as social title radio buttons and checkboxes for offers\privacy policy\newsletter\data privacy.
+- Input fields for first name, last name, email, password and birthdate are present as well as social title radio buttons and checkboxes for offers\privacy policy\newsletter\data privacy.
 - A submit button to create the account is visible.
 - The header and footer are present.
 
@@ -119,13 +119,13 @@ Verify that the registration form correctly validates required fields and input 
 7. Observe the validation messages.
 8. Enter an email address that is already registered (e.g., `pub@prestashop.com`), fill in remaining fields with valid data, and submit.
 9. Observe the error message.
-10. Fill in all fields with valid, unique data and submit.
+10. Fill in all fields with valid, unique data, check mandatory consent checkboxes and submit.
 11. Observe the resulting page.
 12. Try to navigate to the authenticated pages - i.e. account dashboard.
 
 **Expected result**
 
-- Submitting with empty fields shows required-field validation messages for each mandatory field.
+- Submitting with empty fields shows required-field validation messages for at least one mandatory field which is missing.
 - An invalid email format triggers an email validation error.
 - A password that does not meet the minimum requirements triggers a password validation error.
 - Using an already-registered email address shows an error indicating the account already exists.

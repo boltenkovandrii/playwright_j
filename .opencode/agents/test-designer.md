@@ -179,6 +179,7 @@ Use browser tools to:
 Use the actual browser state and current page snapshot.
 Do not invent elements or expected results.
 Close the browser after completing all required inspection.
+Clean Playwright MCP logs and temporary files i.e. snapshots after each inspection.
 
 # Application environment
 
