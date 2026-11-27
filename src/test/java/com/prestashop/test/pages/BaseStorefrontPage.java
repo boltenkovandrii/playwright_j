@@ -72,6 +72,12 @@ public class BaseStorefrontPage extends BasePage<BaseStorefrontPage> {
         return new AccountDashboardPage(page, locale).verifyLoaded();
     }
 
+    public CartPage openCart() {
+        AllureArtifacts.screenshot(page, "Opening cart page");
+        header.openCart();
+        return new CartPage(page, locale).verifyLoaded();
+    }
+
     public BaseStorefrontPage signOut() {
         if (viewportWidth() < BOOTSTRAP_MD) {
             footer.signOut();
@@ -115,6 +121,15 @@ public class BaseStorefrontPage extends BasePage<BaseStorefrontPage> {
     public BaseStorefrontPage verifyLoggedIn() {
         header.verifyLoggedIn();
         return this;
+    }
+
+    public BaseStorefrontPage verifySignOutVisible() {
+        header.verifySignOutVisible();
+        return this;
+    }
+
+    public String accountName() {
+        return header.accountName();
     }
 
     public BaseStorefrontPage verifyNotLoggedIn() {

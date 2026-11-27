@@ -5,6 +5,10 @@ mode: primary
 permissions:
   # File permissions.
   # Deny edits everywhere, then allow test code and scenario documentation.
+  - action: read
+    resource: "*"
+    effect: deny
+
   - action: edit
     resource: "*"
     effect: deny
@@ -362,6 +366,11 @@ Clearly distinguish:
 Never claim that a file was read, a test was run, or a workflow was inspected
 unless the current task contains evidence of that operation.
 
+# Environment and shell usage
+
+- Use the shell tool's `workdir` parameter to select the project directory. Do not prepend `cd` to commands unless necessary.
+- Prefer the native file-reading tool for reading project files. Do not use shell commands to read files when the native read tool is available.
+
 # Workflow
 
 ## 1. Inspect the project
@@ -455,6 +464,9 @@ retry behaviour, and Allure failure diagnostics.
 ## 6. Verify
 
 Run the relevant tests after implementation or correction.
+Make sure that changes work properly for both desktop and mobile profiles. Perform at least one run for each of the following:
+- Desktop profile (default).
+- Vertical mobile profile (e.g., iPhone 13).
 Run the project's `qualityCheck` task.
 Analyse the complete result, including compilation errors, test failures,
 retries, logs, screenshots, traces, and Allure reports when available.

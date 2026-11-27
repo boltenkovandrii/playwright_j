@@ -164,6 +164,21 @@ public class Header {
         return this;
     }
 
+    public Header openCart() {
+        AllureArtifacts.screenshot(page, "Opening cart from header");
+        activeCart().click();
+        return this;
+    }
+
+    public Header verifySignOutVisible() {
+        assertThat(activeUserInfo().locator(".logout")).isVisible();
+        return this;
+    }
+
+    private Locator activeCart() {
+        return viewportWidth() < BOOTSTRAP_MD ? mobileCart : desktopCart;
+    }
+
     private Header openMobileMenu() {
         menuButton.click();
         assertThat(mobileMenu).isVisible();

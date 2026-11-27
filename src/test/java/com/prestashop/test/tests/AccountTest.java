@@ -2,12 +2,14 @@ package com.prestashop.test.tests;
 
 import static com.prestashop.test.data.TestData.DEMO_EMAIL;
 import static com.prestashop.test.data.TestData.DEMO_PASSWORD;
+import static com.prestashop.test.data.TestData.PRODUCT_T_SHIRT;
 
 import com.microsoft.playwright.Page;
 import com.prestashop.test.base.BaseTest;
 import com.prestashop.test.pages.AccountDashboardPage;
 import com.prestashop.test.pages.HomePage;
 import com.prestashop.test.pages.LoginPage;
+import com.prestashop.test.pages.ProductPage;
 import com.prestashop.test.pages.RegistrationPage;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
@@ -109,6 +111,40 @@ class AccountTest extends BaseTest {
         account.navigateToAccountDashboardDirectly()
                 .asLoginPage()
                 .verifyNotLoggedIn();
+    }
+
+    @Test
+    @DisplayName("ACCT-06 - Registration keeps the shopping cart.")
+    @SuppressWarnings("checkstyle:MagicNumber")
+    void registrationKeepsShoppingCart(Page page) {
+        String uniqueEmail = "qa_scenario_acct06_" + UUID.randomUUID().toString().substring(0, 8) + "@example.com";
+
+        ProductPage product = new HomePage(page, "en")
+                .open()
+                .openCategory("Clothes")
+                .openProductByName(PRODUCT_T_SHIRT);
+
+        product.addToCart()
+                .proceedToCart()
+                .verifyProductCount(1)
+                .verifyProductWithNamePresent(PRODUCT_T_SHIRT, 1);
+
+        RegistrationPage registration = new HomePage(page, "en")
+                .open()
+                .openLoginPage()
+                .openRegistrationPage();
+
+        HomePage home = registration.fillWith("Jane", "Doe", uniqueEmail, "ValidPass123!", "01/01/1990")
+                .submit()
+                .asHomePage();
+
+        home.verifyHeaderCartCount(1)
+                .verifyLoggedIn();
+
+        home.openCart()
+                .verifyProductCount(1)
+                .verifyProductWithNamePresent(PRODUCT_T_SHIRT, 1)
+                .verifyProceedToCheckoutVisible();
     }
 
 }

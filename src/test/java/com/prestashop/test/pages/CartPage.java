@@ -67,6 +67,12 @@ public class CartPage extends BaseStorefrontPage {
         return this;
     }
 
+    public CartPage verifyProceedToCheckoutVisible() {
+        AllureArtifacts.screenshot(page, "Verifying checkout continuation from cart");
+        assertThat(proceedToCheckoutLink).isVisible();
+        return this;
+    }
+
     public CartPage verifyProductWithNamePresent(String name, int count) {
         Locator matches = productNames.filter(new Locator.FilterOptions().setHasText(name));
         assertThat(matches).hasCount(count);
