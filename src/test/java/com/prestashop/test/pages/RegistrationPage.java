@@ -83,7 +83,8 @@ public class RegistrationPage extends BaseStorefrontPage {
         return fillWith(firstName, lastName, email, password, birthday, true, true);
     }
 
-    public RegistrationPage fillWith(String firstName, String lastName, String email, String password, String birthday, boolean acceptPrivacy, boolean acceptTerms) {
+    public RegistrationPage fillWith(String firstName, String lastName, String email, String password, String birthday,
+                                     boolean acceptPrivacy, boolean acceptTerms) {
         AllureArtifacts.screenshot(page, "Submitting registration form with partial data");
         fillIfPresent(firstNameInput, firstName);
         fillIfPresent(lastNameInput, lastName);

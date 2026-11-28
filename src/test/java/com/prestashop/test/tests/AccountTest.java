@@ -7,7 +7,6 @@ import static com.prestashop.test.data.TestData.PRODUCT_T_SHIRT;
 import com.microsoft.playwright.Page;
 import com.prestashop.test.base.BaseTest;
 import com.prestashop.test.pages.AccountDashboardPage;
-import com.prestashop.test.pages.BasePage;
 import com.prestashop.test.pages.CartPage;
 import com.prestashop.test.pages.CheckoutPage;
 import com.prestashop.test.pages.HomePage;
@@ -203,12 +202,19 @@ class AccountTest extends BaseTest {
                 .verifyOrderReferencePresent();
         String orderReference = confirmation.getOrderReference();
 
-        page.navigate(BasePage.baseUrl() + "/en/?mylogout=");
-        new HomePage(page, "en").verifyLoaded();
+        AccountDashboardPage account = confirmation
+                .signOut()
+                .openLoginPage()
+                .verifyNotLoggedIn()
+                .asLoginPage()
+                .login(uniqueEmail, password)
+                .openAccountPage();
+//        page.navigate(BasePage.baseUrl() + "/en/?mylogout=");
+//        new HomePage(page, "en").verifyLoaded();
 
-        LoginPage login = new HomePage(page, "en").open().openLoginPage();
-        AccountDashboardPage account = login.login(uniqueEmail, password).openAccountPage();
-        account.verifyLoggedIn();
+//        LoginPage login = new HomePage(page, "en").open().openLoginPage();
+//        AccountDashboardPage account = login.login(uniqueEmail, password).openAccountPage();
+//        account.verifyLoggedIn();
 
         account.navigateToOrderHistoryDirectly()
                 .asOrderHistoryPage()
@@ -249,11 +255,11 @@ class AccountTest extends BaseTest {
         LoginPage login = new HomePage(page, "en").open().openLoginPage();
         login.login(DEMO_EMAIL, DEMO_PASSWORD).openAccountPage().verifyLoggedIn();
 
-        new HomePage(page, "en").navigateToRegistrationDirectly();
-
-        new AccountDashboardPage(page, "en")
+        login.navigateToRegistrationDirectly()
+                .asAccountDashboardPage()
                 .verifyLoaded()
                 .verifyLoggedIn();
+
     }
 
 }

@@ -89,7 +89,8 @@ class LocalizationTest extends BaseTest {
                 .open()
                 .switchLanguage("nl")
                 .openLoginPage()
-                .login(DEMO_EMAIL, DEMO_PASSWORD);
+                .login(DEMO_EMAIL, DEMO_PASSWORD)
+                .asHomePage();
         authenticatedHome.verifyCurrentLanguage("nl");
 
         AccountDashboardPage account = authenticatedHome.openAccountPage().checkStructure();
