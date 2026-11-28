@@ -285,7 +285,7 @@ Verify that the registration form is not submitted unless both consent checkboxe
 
 ---
 
-### ACCT-10 - Registration is unavailable to a signed-in customer
+### ACCT-09 - Registration is unavailable to a signed-in customer
 
 **Purpose**
 

@@ -154,22 +154,82 @@ Manual workflow dispatch accepts comma-separated profile names, the test tag, an
 
 Business-level descriptions of the scenarios are in `docs/scenarios/`. Keep these documents aligned when adding or materially changing a test scenario.
 
-## Agentic setup with OpenCode and local models (WIP)
+## Agentic development workflow
 
-Tools:
-- Ollama + local models (i.e qwen3.5:9b)
-- OpenCode
-- Idea's AI Chat
-- Microsoft Playwright MCP (requires Node.js)
+### Tools
+- **OpenCode** – AI coding agent.
+- **IntelliJ IDEA with AI Chat** – IDE and interface for interacting with OpenCode.
+- **Playwright MCP** – Browser automation tools for AI agents (requires Node.js 20+).
+- **Ollama (optional)** – Runs local models. Quality and performance depend heavily on the model and available hardware.
 
-Files and destinations to look at:
-- .opencode/opencode.jsonc
-- C:\Users\<YourUsername>\.config\opencode\opencode.jsonc
-- C:\Users\<YourUsername>\.jetbrains\acp.json
-- Settings->AI->MCP Servers
+### Setup
+1. Install Node.js 20+ and OpenCode.
+2. Configure Playwright MCP in the global OpenCode configuration (`~/.config/opencode/opencode.jsonc`).
+   Example for Windows:
+   ```jsonc
+   "mcp": {
+     "servers": {
+       "playwright": {
+         "type": "local",
+         "command": [
+           "C:\\Windows\\System32\\cmd.exe",
+           "/c",
+           "C:\\Program Files\\nodejs\\npx.cmd",
+           "-y",
+           "@playwright/mcp@latest"
+         ],
+         "environment": {
+           "PATH": "C:\\Program Files\\nodejs;{env:PATH}"
+         },
+         "codemode": false
+       }
+     }
+   },
+   ```
+   Adjust the paths if Node.js is installed elsewhere. A global npm installation of Playwright MCP is not required. The configuration uses `npx` to download and launch it when needed.
+3. Configure IntelliJ IDEA with AI Chat. Add OpenCode to `~/.jetbrains/acp.json`.
+   Example for Windows:
+   ```jsonc
+   {
+     "default_mcp_settings": {
+       "use_idea_mcp": true,
+       "use_custom_mcp": false
+     },
+     "agent_servers": {
+       "OpenCode": {
+         "command": "C:\\opencode\\opencode.exe",
+         "args": ["acp"]
+       }
+     }
+   }
+   ```
+   Adjust the OpenCode executable path. Add `--print-logs` to the arguments when troubleshooting ACP communication.
+4. Enable the IntelliJ IDEA MCP server in **Settings | Tools | AI Assistant | MCP Server** (the exact location may depend on the IDE version).
+5. Review the project OpenCode configuration in `.opencode/opencode.jsonc`. Pay particular attention to agent permissions and MCP tool access.
+6. (Optional) Install Ollama and configure a local model in OpenCode.
+   Example configuration:
+   ```jsonc
+   "model": "ollama/qwen3.5:9b",
+   "providers": {
+     "ollama": {
+       "models": {
+         "qwen3.5:9b": {
+           "limit": {
+             "context": 32768,
+             "output": 8192
+           }
+         }
+       }
+     }
+   },
+   ```
+   This is an example, not a recommended configuration for all systems. Adjust the model name, context and output limits to match the selected model and available hardware. Large context and output limits can increase memory requirements and reduce performance.
+7. Restart OpenCode and verify the MCP connection:
+   ```bash
+   opencode mcp list
+   ```
 
-Commands (unstructured):
-- 'npx -y @playwright/mcp@latest --help' - After node Installation. Should add a package. Actually downloads on first usage.
-
-TODO:
-- Check if opencode config belongs to a project. Might be better to add sample like: opencode.example.jsonc
+### Agents
+The project contains two specialized agents:
+- **test-designer** – Explores the running AUT and creates or updates test scenarios in `docs/scenarios/`. It can also review existing scenarios and identify differences between documented and observed application behaviour.
+- **test-implementer** – Implements and maintains Java Playwright tests based on the scenarios. It runs tests, analyses results, identifies discrepancies between scenarios, tests and actual AUT behaviour, and reports proposed corrections.
