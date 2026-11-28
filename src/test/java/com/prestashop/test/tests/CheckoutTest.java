@@ -9,6 +9,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
+import static com.prestashop.test.data.TestData.PRODUCT_T_SHIRT;
+
 @Tag("regression")
 @DisplayName("PrestaShop storefront - Checkout")
 class CheckoutTest extends BaseTest {
@@ -19,7 +21,7 @@ class CheckoutTest extends BaseTest {
     void guestCheckout(Page page) {
         CartPage cart = new HomePage(page, "en").open()
                 .openCategory("Clothes")
-                .openProductByName("Hummingbird printed t-shirt")
+                .openProductByName(PRODUCT_T_SHIRT)
                 .addToCart()
                 .proceedToCart();
 
@@ -27,7 +29,7 @@ class CheckoutTest extends BaseTest {
                 .proceedToCheckout()
                 .checkStructure()
                 .checkPersonalInfoStructure()
-                .fillPersonalInfo("Jane", "Doe", "jane.doe.chk01@example.com")
+                .fillPersonalInfo("Jane", "Doe", "jane.doe.chk01@example.com", null)
                 .checkAddressesStructure()
                 .fillAddress("221B Baker Street", "Paris", "75001", "France", "5551234567", null)
                 .checkShippingMethodStructure()
@@ -39,7 +41,7 @@ class CheckoutTest extends BaseTest {
         checkout.placeOrder()
                 .checkStructure()
                 .verifyOrderReferencePresent()
-                .verifyProductPresent("Hummingbird printed t-shirt")
+                .verifyProductPresent(PRODUCT_T_SHIRT)
                 .verifySubtotal(22.94)
                 .verifyShipping(8.40).verifyTotal(31.34)
                 .verifyShippingMethod("My carrier")

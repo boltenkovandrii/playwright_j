@@ -3,6 +3,7 @@ package com.prestashop.test.pages;
 import com.prestashop.test.base.AllureArtifacts;
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
+import com.prestashop.test.data.Texts;
 
 import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
 import static com.microsoft.playwright.options.AriaRole.LINK;
@@ -63,6 +64,12 @@ public class CartPage extends BaseStorefrontPage {
 
     public CartPage verifyProductCount(int count) {
         assertThat(cartItems).hasCount(count);
+        return this;
+    }
+
+    public CartPage verifyProceedToCheckoutVisible() {
+        AllureArtifacts.screenshot(page, "Verifying checkout continuation from cart");
+        assertThat(proceedToCheckoutLink).isVisible();
         return this;
     }
 

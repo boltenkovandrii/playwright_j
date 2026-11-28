@@ -72,6 +72,16 @@ public class BaseStorefrontPage extends BasePage<BaseStorefrontPage> {
         return new AccountDashboardPage(page, locale).verifyLoaded();
     }
 
+    public AccountDashboardPage asAccountDashboardPage() {
+        return new AccountDashboardPage(page, locale).verifyLoaded();
+    }
+
+    public CartPage openCart() {
+        AllureArtifacts.screenshot(page, "Opening cart page");
+        header.openCart();
+        return new CartPage(page, locale).verifyLoaded();
+    }
+
     public BaseStorefrontPage signOut() {
         if (viewportWidth() < BOOTSTRAP_MD) {
             footer.signOut();
@@ -83,6 +93,16 @@ public class BaseStorefrontPage extends BasePage<BaseStorefrontPage> {
 
     public BaseStorefrontPage navigateToAccountDashboardDirectly() {
         page.navigate(localizedUrl("my-account"));
+        return new BaseStorefrontPage(page, locale).verifyLoaded();
+    }
+
+    public BaseStorefrontPage navigateToRegistrationDirectly() {
+        page.navigate(localizedUrl("registration"));
+        return new BaseStorefrontPage(page, locale).verifyLoaded();
+    }
+
+    public BaseStorefrontPage navigateToOrderHistoryDirectly() {
+        page.navigate(localizedUrl("order-history"));
         return new BaseStorefrontPage(page, locale).verifyLoaded();
     }
 
@@ -103,6 +123,10 @@ public class BaseStorefrontPage extends BasePage<BaseStorefrontPage> {
         return new HomePage(page, locale).verifyLoaded();
     }
 
+    public OrderHistoryPage asOrderHistoryPage() {
+        return new OrderHistoryPage(page, locale).verifyLoaded();
+    }
+
     protected String localizedUrl(String path) {
         String normalized = path.replaceFirst("^/", "");
         return baseUrl() + "/" + locale + "/" + normalized;
@@ -115,6 +139,15 @@ public class BaseStorefrontPage extends BasePage<BaseStorefrontPage> {
     public BaseStorefrontPage verifyLoggedIn() {
         header.verifyLoggedIn();
         return this;
+    }
+
+    public BaseStorefrontPage verifySignOutVisible() {
+        header.verifySignOutVisible();
+        return this;
+    }
+
+    public String accountName() {
+        return header.accountName();
     }
 
     public BaseStorefrontPage verifyNotLoggedIn() {

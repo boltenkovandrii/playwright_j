@@ -8,20 +8,20 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
+import static com.prestashop.test.data.TestData.PRODUCT_T_SHIRT;
+
 @Tag("regression")
 @DisplayName("PrestaShop storefront - Search")
 class SearchTest extends BaseTest {
-
-    private static final String PRODUCT_NAME = "Hummingbird printed t-shirt";
 
     @Test
     @DisplayName("SRCH-01 - Search by full product name.")
     void searchByFullProductName(Page page) {
         new HomePage(page, "en")
                 .open()
-                .search(PRODUCT_NAME)
+                .search(PRODUCT_T_SHIRT)
                 .checkStructure()
-                .verifyProductsMatch(PRODUCT_NAME)
+                .verifyProductsMatch(PRODUCT_T_SHIRT)
                 .checkResultCount(1);
     }
 

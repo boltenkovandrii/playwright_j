@@ -2,7 +2,7 @@
 
 ## Project purpose
 
-This repository contains Java Playwright UI tests for the PrestaShop demo. The suite validates core storefront behavior and emphasizes reliable local and CI execution, maintainable Page Objects, reproducible Docker-based application setup, and actionable Allure diagnostics.
+This repository contains Java Playwright UI tests for the PrestaShop demo. The suite validates core behavior and emphasizes reliable local and CI execution, maintainable Page Objects, reproducible Docker-based application setup, and actionable Allure diagnostics.
 
 Do not introduce browser-driver or remote-browser infrastructure that is not supported by this Playwright-only project.
 
@@ -12,7 +12,7 @@ Use the Gradle Wrapper and Java 25. On Windows, use `.\gradlew.bat`; on macOS an
 
 * Run the default regression suite: `.\gradlew.bat clean test`
 * Run static analysis: `.\gradlew.bat qualityCheck`
-* Run all storefront tests for one profile: `.\gradlew.bat test --tests "com.prestashop.test.tests.*" -Dprofile="iPhone 13"`
+* Run all tests for one profile: `.\gradlew.bat test --tests "com.prestashop.test.tests.*" -Dprofile="iPhone 13"`
 * Run one test class: `.\gradlew.bat test --tests "com.prestashop.test.tests.HomePageTest"`
 * Run headed tests: append `-Dheadless=false`
 * Set parallel test threads: append `-Dthreads=<count>`
@@ -70,3 +70,18 @@ Do not add handling that turns unexpected test, quality-check, or workflow failu
 * Use stable dependency versions and avoid unrelated dependency upgrades or new tools.
 * Do not expand the suite merely to increase the number of technologies or test cases.
 * Never claim a build, quality check, test run, Docker operation, or report publication passed unless it was run and verified.
+
+## Git
+- Add newly generated .java, .md, .yml, and .properties files to the repository if appropriate (don't add temporary files), but never commit or push them.
+- Never commit or push unless explicitly requested.
+- Never change Git history or force-push to a shared branch unless explicitly requested.
+
+## Permissions
+- Never try to avoid configured security or permission checks, or to bypass the configured approval process for Git commands, shell commands, or other operations.
+- If a command is blocked, ask for approval or guidance rather than trying to bypass the block.
+- If a command is blocked, show exactly what you tried to run and the error message, and ask for guidance on how to proceed.
+
+## Test execution
+- Ask for approval before executing commands.
+- Report the exact command and its result.
+- Do not claim that tests passed unless they actually ran.

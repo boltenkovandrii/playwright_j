@@ -10,10 +10,11 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
+import static com.prestashop.test.data.TestData.PRODUCT_T_SHIRT;
+
 @Tag("regression")
 @DisplayName("PrestaShop storefront - Shopping cart")
 class CartPageTest extends BaseTest {
-    private static final String T_SHIRT = "Hummingbird printed t-shirt";
 
     @Test
     @DisplayName("CART-01 - Check cart page structure.")
@@ -33,11 +34,11 @@ class CartPageTest extends BaseTest {
         new HomePage(page, "en")
                 .open()
                 .openCategory("Clothes")
-                .openProductByName(T_SHIRT)
+                .openProductByName(PRODUCT_T_SHIRT)
                 .addToCart()
                 .proceedToCart()
                 .verifyProductCount(1)
-                .verifyProductQuantity(new ProductSpec(T_SHIRT), 1);
+                .verifyProductQuantity(new ProductSpec(PRODUCT_T_SHIRT), 1);
     }
 
     @Test
@@ -46,14 +47,14 @@ class CartPageTest extends BaseTest {
         ProductPage product = new HomePage(page, "en")
                 .open()
                 .openCategory("Clothes")
-                .openProductByName(T_SHIRT);
+                .openProductByName(PRODUCT_T_SHIRT);
 
         product.verifyHeaderCartCount(0)
                 .setQuantity(3)
                 .addToCart()
                 .proceedToCart()
                 .verifyProductCount(1)
-                .verifyProductQuantity(new ProductSpec(T_SHIRT), 3);
+                .verifyProductQuantity(new ProductSpec(PRODUCT_T_SHIRT), 3);
     }
 
     @Test
@@ -61,10 +62,10 @@ class CartPageTest extends BaseTest {
     void removeProduct(Page page) {
         new HomePage(page, "en")
                 .open().openCategory("Clothes")
-                .openProductByName(T_SHIRT)
+                .openProductByName(PRODUCT_T_SHIRT)
                 .addToCart()
                 .proceedToCart()
-                .removeProduct(new ProductSpec(T_SHIRT))
+                .removeProduct(new ProductSpec(PRODUCT_T_SHIRT))
                 .checkEmptyStructure();
     }
 
@@ -72,11 +73,11 @@ class CartPageTest extends BaseTest {
     @DisplayName("CART-05 - Update product quantity in cart.")
     @SuppressWarnings("checkstyle:MagicNumber")
     void updateProductQuantity(Page page) {
-        ProductSpec product = new ProductSpec(T_SHIRT);
+        ProductSpec product = new ProductSpec(PRODUCT_T_SHIRT);
         new HomePage(page, "en")
                 .open()
                 .openCategory("Clothes")
-                .openProductByName(T_SHIRT)
+                .openProductByName(PRODUCT_T_SHIRT)
                 .addToCart()
                 .proceedToCart()
                 .verifyProductQuantity(product, 1)
@@ -94,7 +95,7 @@ class CartPageTest extends BaseTest {
         ProductPage product = new HomePage(page, "en")
                 .open()
                 .openCategory("Clothes")
-                .openProductByName(T_SHIRT);
+                .openProductByName(PRODUCT_T_SHIRT);
         HomePage home = product.addToCart()
                 .proceedToCart()
                 .continueShopping();
@@ -102,7 +103,7 @@ class CartPageTest extends BaseTest {
         home.verifyHeaderCartCount(1);
 
         home.openCategory("Clothes")
-                .openProductByName(T_SHIRT)
+                .openProductByName(PRODUCT_T_SHIRT)
                 .addToCart()
                 .proceedToCart()
                 .continueShopping()
@@ -116,7 +117,7 @@ class CartPageTest extends BaseTest {
         ProductPage product = new HomePage(page, "en")
                 .open()
                 .openCategory("Clothes")
-                .openProductByName(T_SHIRT);
+                .openProductByName(PRODUCT_T_SHIRT);
         product.selectSize("M")
                 .selectColor("Black")
                 .setQuantity(2)
@@ -126,8 +127,8 @@ class CartPageTest extends BaseTest {
                 .selectColor("White")
                 .setQuantity(3);
         CartPage cart = product.addToCart().proceedToCart();
-        ProductSpec mediumBlack = new ProductSpec(T_SHIRT, java.util.Map.of("size", "M", "color", "Black"));
-        ProductSpec extraLargeWhite = new ProductSpec(T_SHIRT, java.util.Map.of("size", "XL", "color", "White"));
+        ProductSpec mediumBlack = new ProductSpec(PRODUCT_T_SHIRT, java.util.Map.of("size", "M", "color", "Black"));
+        ProductSpec extraLargeWhite = new ProductSpec(PRODUCT_T_SHIRT, java.util.Map.of("size", "XL", "color", "White"));
         cart.verifyProductCount(2)
                 .verifyProductQuantity(mediumBlack, 2)
                 .verifyProductQuantity(extraLargeWhite, 3)

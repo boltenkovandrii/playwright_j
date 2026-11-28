@@ -15,13 +15,14 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
+import static com.prestashop.test.data.TestData.DEMO_EMAIL;
+import static com.prestashop.test.data.TestData.DEMO_PASSWORD;
+import static com.prestashop.test.data.TestData.PRODUCT_T_SHIRT;
+
+
 @Tag("regression")
 @DisplayName("PrestaShop storefront - Localization")
 class LocalizationTest extends BaseTest {
-
-    private static final String DEMO_EMAIL = "pub@prestashop.com";
-    private static final String DEMO_PASSWORD = "123456789";
-    private static final String PRODUCT_NAME = "Hummingbird printed t-shirt";
 
 
     @Test
@@ -46,7 +47,7 @@ class LocalizationTest extends BaseTest {
         CatalogPage catalog = home.openCategory("Clothes"); // Should be localized?
         catalog.verifyCurrentLanguage("nl");
 
-        ProductPage product = catalog.openProductByName(PRODUCT_NAME).checkStructure();
+        ProductPage product = catalog.openProductByName(PRODUCT_T_SHIRT).checkStructure();
         product.verifyCurrentLanguage("nl");
 
         CartPage cart = product.addToCart().proceedToCart().checkStructure();
@@ -69,7 +70,7 @@ class LocalizationTest extends BaseTest {
         CatalogPage catalog = home.openCategory("Clothes"); // Should be localized?
         catalog.verifyCurrentLanguage("nl");
 
-        ProductPage product = catalog.openProductByName(PRODUCT_NAME).checkStructure();
+        ProductPage product = catalog.openProductByName(PRODUCT_T_SHIRT).checkStructure();
         product.verifyCurrentLanguage("nl");
 
         CartPage cart = product.addToCart().proceedToCart().checkStructure();
@@ -88,7 +89,8 @@ class LocalizationTest extends BaseTest {
                 .open()
                 .switchLanguage("nl")
                 .openLoginPage()
-                .login(DEMO_EMAIL, DEMO_PASSWORD);
+                .login(DEMO_EMAIL, DEMO_PASSWORD)
+                .asHomePage();
         authenticatedHome.verifyCurrentLanguage("nl");
 
         AccountDashboardPage account = authenticatedHome.openAccountPage().checkStructure();

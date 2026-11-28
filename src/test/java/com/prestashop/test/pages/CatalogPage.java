@@ -7,6 +7,7 @@ import com.prestashop.test.components.ProductGrid;
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Mouse;
 import com.microsoft.playwright.Page;
+import com.prestashop.test.data.Texts;
 
 import java.util.regex.Pattern;
 

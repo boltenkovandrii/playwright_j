@@ -1,8 +1,8 @@
 # PrestaShop Playwright Java tests
 
-Java UI tests for the PrestaShop demo storefront, built with Playwright, JUnit Jupiter, Gradle, Docker Compose, and Allure.
+Java UI tests for the PrestaShop demo application, built with Playwright, JUnit Jupiter, Gradle, Docker Compose, and Allure.
 
-The suite exercises core storefront journeys such as navigation, catalog browsing, product details, cart, checkout, account, search, and localization. It is intended as a maintainable browser-automation project rather than a complete test strategy for PrestaShop.
+The suite exercises core application journeys such as navigation, catalog browsing, product details, cart, checkout, account, search, and localization. It is intended as a maintainable browser-automation project rather than a complete test strategy for PrestaShop.
 
 ## Technology stack
 
@@ -24,14 +24,14 @@ The suite exercises core storefront journeys such as navigation, catalog browsin
 │   └── copilot-instructions.md
 ├── docker/
 │   └── docker-compose-prestashop.yml
-├── docs/scenarios/storefront/
+├── docs/scenarios/
 ├── src/test/
 │   ├── java/com/prestashop/test/
 │   │   ├── base/          # shared configuration and parallel execution
 │   │   ├── runner/        # Playwright options, retries, and artifact diagnostics
-│   │   ├── components/    # reusable storefront UI components
+│   │   ├── components/    # reusable UI components
 │   │   ├── pages/         # Page Objects
-│   │   └── tests/         # storefront test scenarios
+│   │   └── tests/         # test scenarios
 │   └── resources/
 │       ├── config.properties
 │       ├── checkstyle.xml
@@ -117,6 +117,12 @@ The `regression` tag is included by default and the `WIP` tag is excluded. Selec
 
 Runtime defaults are in `src/test/resources/config.properties`. System properties override those defaults.
 
+## Test data
+
+Scenarios create customers, addresses and orders in the local Docker instance. Placing orders there is acceptable because the storefront runs locally: no real payment or fulfilment happens.
+
+Created records may accumulate between runs. Use unique, recognizable values, such as a `QA_SCENARIO_` prefix and randomized email addresses, so data from different runs does not interfere.
+
 ## Quality checks and reports
 
 Run the configured static analysis checks:
@@ -146,4 +152,84 @@ Manual workflow dispatch accepts comma-separated profile names, the test tag, an
 
 ## Scenario documentation
 
-Business-level descriptions of the storefront scenarios are in `docs/scenarios/storefront/`. Keep these documents aligned when adding or materially changing a test scenario.
+Business-level descriptions of the scenarios are in `docs/scenarios/`. Keep these documents aligned when adding or materially changing a test scenario.
+
+## Agentic development workflow
+
+### Tools
+- **OpenCode** – AI coding agent.
+- **IntelliJ IDEA with AI Chat** – IDE and interface for interacting with OpenCode.
+- **Playwright MCP** – Browser automation tools for AI agents (requires Node.js 20+).
+- **Ollama (optional)** – Runs local models. Quality and performance depend heavily on the model and available hardware.
+
+### Setup
+1. Install Node.js 20+ and OpenCode.
+2. Configure Playwright MCP in the global OpenCode configuration (`~/.config/opencode/opencode.jsonc`).
+   Example for Windows:
+   ```jsonc
+   "mcp": {
+     "servers": {
+       "playwright": {
+         "type": "local",
+         "command": [
+           "C:\\Windows\\System32\\cmd.exe",
+           "/c",
+           "C:\\Program Files\\nodejs\\npx.cmd",
+           "-y",
+           "@playwright/mcp@latest"
+         ],
+         "environment": {
+           "PATH": "C:\\Program Files\\nodejs;{env:PATH}"
+         },
+         "codemode": false
+       }
+     }
+   },
+   ```
+   Adjust the paths if Node.js is installed elsewhere. A global npm installation of Playwright MCP is not required. The configuration uses `npx` to download and launch it when needed.
+3. Configure IntelliJ IDEA with AI Chat. Add OpenCode to `~/.jetbrains/acp.json`.
+   Example for Windows:
+   ```jsonc
+   {
+     "default_mcp_settings": {
+       "use_idea_mcp": true,
+       "use_custom_mcp": false
+     },
+     "agent_servers": {
+       "OpenCode": {
+         "command": "C:\\opencode\\opencode.exe",
+         "args": ["acp"]
+       }
+     }
+   }
+   ```
+   Adjust the OpenCode executable path. Add `--print-logs` to the arguments when troubleshooting ACP communication.
+4. Enable the IntelliJ IDEA MCP server in **Settings | Tools | AI Assistant | MCP Server** (the exact location may depend on the IDE version).
+5. Review the project OpenCode configuration in `.opencode/opencode.jsonc`. Pay particular attention to agent permissions and MCP tool access.
+6. (Optional) Install Ollama and configure a local model in OpenCode.
+   Example configuration:
+   ```jsonc
+   "model": "ollama/qwen3.5:9b",
+   "providers": {
+     "ollama": {
+       "models": {
+         "qwen3.5:9b": {
+           "limit": {
+             "context": 32768,
+             "output": 8192
+           }
+         }
+       }
+     }
+   },
+   ```
+   This is an example, not a recommended configuration for all systems. Adjust the model name, context and output limits to match the selected model and available hardware. Large context and output limits can increase memory requirements and reduce performance.
+7. Restart OpenCode and verify the MCP connection:
+   ```bash
+   opencode mcp list
+   ```
+
+### Agents
+The project contains two specialized agents:
+- **test-designer** – Explores the running AUT and creates or updates test scenarios in `docs/scenarios/`. It can also review existing scenarios and identify differences between documented and observed application behaviour.
+- **test-implementer** – Implements and maintains Java Playwright tests based on the scenarios. It runs tests, analyses results, identifies discrepancies between scenarios, tests and actual AUT behaviour, and reports proposed corrections.

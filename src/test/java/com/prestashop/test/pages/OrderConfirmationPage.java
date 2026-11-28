@@ -3,6 +3,7 @@ package com.prestashop.test.pages;
 import com.prestashop.test.base.AllureArtifacts;
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
+import com.prestashop.test.data.Texts;
 
 import java.util.regex.Pattern;
 
@@ -59,6 +60,14 @@ public class OrderConfirmationPage extends BaseStorefrontPage {
     public OrderConfirmationPage verifyOrderReferencePresent() {
         assertThat(orderReference).containsText(new Pattern[] {Pattern.compile("Order reference: [A-Z]{9}")});
         return this;
+    }
+
+    public String getOrderReference() {
+        String text = orderReference.textContent();
+        if (text == null) {
+            throw new AssertionError("Order reference is not available");
+        }
+        return text.replaceAll(".*:\\s*", "").trim();
     }
 
     public OrderConfirmationPage verifyProductPresent(String name) {

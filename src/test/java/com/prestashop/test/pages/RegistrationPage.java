@@ -3,6 +3,7 @@ package com.prestashop.test.pages;
 import com.prestashop.test.base.AllureArtifacts;
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
+import com.prestashop.test.data.Texts;
 
 import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
 import static com.microsoft.playwright.options.AriaRole.BUTTON;
@@ -79,15 +80,34 @@ public class RegistrationPage extends BaseStorefrontPage {
     }
 
     public RegistrationPage fillWith(String firstName, String lastName, String email, String password, String birthday) {
+        return fillWith(firstName, lastName, email, password, birthday, true, true);
+    }
+
+    public RegistrationPage fillWith(String firstName, String lastName, String email, String password, String birthday,
+                                     boolean acceptPrivacy, boolean acceptTerms) {
         AllureArtifacts.screenshot(page, "Submitting registration form with partial data");
         fillIfPresent(firstNameInput, firstName);
         fillIfPresent(lastNameInput, lastName);
         fillIfPresent(emailInput, email);
         fillIfPresent(passwordInput, password);
         fillIfPresent(birthdayInput, birthday);
-        checkIfNeeded(privacyCheckbox);
-        checkIfNeeded(psgdprCheckbox);
+        if (acceptPrivacy) {
+            checkIfNeeded(privacyCheckbox);
+        } else {
+            uncheckIfNeeded(privacyCheckbox);
+        }
+        if (acceptTerms) {
+            checkIfNeeded(psgdprCheckbox);
+        } else {
+            uncheckIfNeeded(psgdprCheckbox);
+        }
         return this;
+    }
+
+    private void uncheckIfNeeded(Locator checkbox) {
+        if (checkbox.isChecked()) {
+            checkbox.uncheck();
+        }
     }
 
     public BaseStorefrontPage submit() {
@@ -118,6 +138,24 @@ public class RegistrationPage extends BaseStorefrontPage {
         Boolean validityState = (Boolean) passwordInput.evaluate("element => !element.validity.valid");
         assertNotNull(validityState, "Password input validity state should not be null");
         assertTrue(validityState, "No message about invalid password");
+        return this;
+    }
+
+    public RegistrationPage verifyFirstNameFormatError() {
+        // Server-side field-level validation message rendered under the first name field.
+        assertThat(firstNameInput.locator("xpath=..").locator("li.alert-danger")).isVisible();
+        return this;
+    }
+
+    public RegistrationPage verifyLastNameFormatError() {
+        // Server-side field-level validation message rendered under the last name field.
+        assertThat(lastNameInput.locator("xpath=..").locator("li.alert-danger")).isVisible();
+        return this;
+    }
+
+    public RegistrationPage verifyBirthdateFormatError() {
+        // Server-side field-level validation message rendered under the birthdate field.
+        assertThat(birthdayInput.locator("xpath=..").locator("li.alert-danger")).isVisible();
         return this;
     }
 

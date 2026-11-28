@@ -16,6 +16,9 @@ java {
 }
 
 repositories {
+    maven {
+        url = uri("https://maven-central-eu.storage-download.googleapis.com/maven2/")  // to avoid connection issues (429) with Maven Central
+    }
     mavenCentral()
 }
 

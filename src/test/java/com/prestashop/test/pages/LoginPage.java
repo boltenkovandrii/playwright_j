@@ -3,6 +3,7 @@ package com.prestashop.test.pages;
 import com.prestashop.test.base.AllureArtifacts;
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
+import com.prestashop.test.data.Texts;
 
 import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
 import static com.microsoft.playwright.options.AriaRole.BUTTON;
@@ -61,10 +62,10 @@ public class LoginPage extends BaseStorefrontPage {
         return new RegistrationPage(page, locale).verifyLoaded();
     }
 
-    public HomePage login(String email, String password) {
+    public BaseStorefrontPage login(String email, String password) {
         AllureArtifacts.screenshot(page, "Logging in as " + email);
         submit(email, password);
-        return new HomePage(page, locale).verifyLoaded();
+        return new BaseStorefrontPage(page, locale).verifyLoaded();
     }
 
     public LoginPage loginWithInvalid(String email, String password) {

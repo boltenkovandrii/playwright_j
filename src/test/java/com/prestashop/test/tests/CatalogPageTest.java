@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
+import static com.prestashop.test.data.TestData.PRODUCT_T_SHIRT;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @Tag("regression")
@@ -39,8 +40,8 @@ class CatalogPageTest extends BaseTest {
         new HomePage(page, "en")
                 .open()
                 .openCategory("Clothes")
-                .openProductByName("Hummingbird printed t-shirt")
-                .verifyProductName("Hummingbird printed t-shirt")
+                .openProductByName(PRODUCT_T_SHIRT)
+                .verifyProductName(PRODUCT_T_SHIRT)
                 .checkStructure();
     }
 
