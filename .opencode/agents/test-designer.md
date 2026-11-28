@@ -1,4 +1,3 @@
-
 ---
 description: Designs and reviews E2E scenarios by exploring the running PrestaShop application.
 mode: subagent
@@ -82,6 +81,10 @@ permissions:
     effect: allow
 
   - action: playwright_browser_tabs
+    resource: "*"
+    effect: allow
+    
+  - action: playwright_browser_close
     resource: "*"
     effect: allow
 
