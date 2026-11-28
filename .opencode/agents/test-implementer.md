@@ -488,6 +488,7 @@ with reproducible steps and observed results.
 Do not claim that a test passed if it was skipped, blocked, or not executed.
 Do not hide failures because a retry passed.
 Do not change assertions or weaken checks only to make tests pass.
+Make sure that the test suite passes without errors, failures, or skipped tests before reporting completion.
 
 # Framework conventions
 

@@ -29,7 +29,7 @@ class CheckoutTest extends BaseTest {
                 .proceedToCheckout()
                 .checkStructure()
                 .checkPersonalInfoStructure()
-                .fillPersonalInfo("Jane", "Doe", "jane.doe.chk01@example.com")
+                .fillPersonalInfo("Jane", "Doe", "jane.doe.chk01@example.com", null)
                 .checkAddressesStructure()
                 .fillAddress("221B Baker Street", "Paris", "75001", "France", "5551234567", null)
                 .checkShippingMethodStructure()

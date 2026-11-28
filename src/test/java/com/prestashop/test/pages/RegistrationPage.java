@@ -80,15 +80,33 @@ public class RegistrationPage extends BaseStorefrontPage {
     }
 
     public RegistrationPage fillWith(String firstName, String lastName, String email, String password, String birthday) {
+        return fillWith(firstName, lastName, email, password, birthday, true, true);
+    }
+
+    public RegistrationPage fillWith(String firstName, String lastName, String email, String password, String birthday, boolean acceptPrivacy, boolean acceptTerms) {
         AllureArtifacts.screenshot(page, "Submitting registration form with partial data");
         fillIfPresent(firstNameInput, firstName);
         fillIfPresent(lastNameInput, lastName);
         fillIfPresent(emailInput, email);
         fillIfPresent(passwordInput, password);
         fillIfPresent(birthdayInput, birthday);
-        checkIfNeeded(privacyCheckbox);
-        checkIfNeeded(psgdprCheckbox);
+        if (acceptPrivacy) {
+            checkIfNeeded(privacyCheckbox);
+        } else {
+            uncheckIfNeeded(privacyCheckbox);
+        }
+        if (acceptTerms) {
+            checkIfNeeded(psgdprCheckbox);
+        } else {
+            uncheckIfNeeded(psgdprCheckbox);
+        }
         return this;
+    }
+
+    private void uncheckIfNeeded(Locator checkbox) {
+        if (checkbox.isChecked()) {
+            checkbox.uncheck();
+        }
     }
 
     public BaseStorefrontPage submit() {

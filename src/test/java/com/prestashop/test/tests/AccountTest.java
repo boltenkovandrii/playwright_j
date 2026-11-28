@@ -7,8 +7,12 @@ import static com.prestashop.test.data.TestData.PRODUCT_T_SHIRT;
 import com.microsoft.playwright.Page;
 import com.prestashop.test.base.BaseTest;
 import com.prestashop.test.pages.AccountDashboardPage;
+import com.prestashop.test.pages.BasePage;
+import com.prestashop.test.pages.CartPage;
+import com.prestashop.test.pages.CheckoutPage;
 import com.prestashop.test.pages.HomePage;
 import com.prestashop.test.pages.LoginPage;
+import com.prestashop.test.pages.OrderConfirmationPage;
 import com.prestashop.test.pages.ProductPage;
 import com.prestashop.test.pages.RegistrationPage;
 import org.junit.jupiter.api.DisplayName;
@@ -140,7 +144,8 @@ class AccountTest extends BaseTest {
         ProductPage product = new HomePage(page, "en")
                 .open()
                 .openCategory("Clothes")
-                .openProductByName(PRODUCT_T_SHIRT);
+                .openProductByName(PRODUCT_T_SHIRT)
+                .selectSize("M");
 
         product.addToCart()
                 .proceedToCart()
@@ -163,6 +168,92 @@ class AccountTest extends BaseTest {
                 .verifyProductCount(1)
                 .verifyProductWithNamePresent(PRODUCT_T_SHIRT, 1)
                 .verifyProceedToCheckoutVisible();
+    }
+
+    @Test
+    @DisplayName("ACCT-07 - Account creation during checkout.")
+    @SuppressWarnings("checkstyle:MagicNumber")
+    void accountCreationDuringCheckout(Page page) {
+        String uniqueEmail = "qa_scenario_acct07_" + UUID.randomUUID().toString().substring(0, 8) + "@example.com";
+        String password = "ValidPass123!";
+
+        CartPage cart = new HomePage(page, "en")
+                .open()
+                .openCategory("Clothes")
+                .openProductByName(PRODUCT_T_SHIRT)
+                .selectSize("M")
+                .addToCart()
+                .proceedToCart();
+
+        CheckoutPage checkout = cart
+                .proceedToCheckout()
+                .checkStructure()
+                .checkPersonalInfoStructure()
+                .fillPersonalInfo("Jane", "Doe", uniqueEmail, password)
+                .checkAddressesStructure()
+                .fillAddress("221B Baker Street", "Paris", "75001", "France", "5551234567", null)
+                .checkShippingMethodStructure()
+                .selectShippingMethod("My carrier")
+                .checkPaymentStructure()
+                .selectPaymentMethod("Pay by Cash on Delivery")
+                .acceptTerms();
+
+        OrderConfirmationPage confirmation = checkout.placeOrder()
+                .checkStructure()
+                .verifyOrderReferencePresent();
+        String orderReference = confirmation.getOrderReference();
+
+        page.navigate(BasePage.baseUrl() + "/en/?mylogout=");
+        new HomePage(page, "en").verifyLoaded();
+
+        LoginPage login = new HomePage(page, "en").open().openLoginPage();
+        AccountDashboardPage account = login.login(uniqueEmail, password).openAccountPage();
+        account.verifyLoggedIn();
+
+        account.navigateToOrderHistoryDirectly()
+                .asOrderHistoryPage()
+                .verifyOrderReferencePresent(orderReference);
+    }
+
+    @Test
+    @DisplayName("ACCT-08 - Registration requires both consent checkboxes.")
+    @SuppressWarnings("checkstyle:MagicNumber")
+    void registrationRequiresBothConsentCheckboxes(Page page) {
+        String uniqueEmail = "qa_scenario_acct08_" + UUID.randomUUID().toString().substring(0, 8) + "@example.com";
+
+        RegistrationPage registration = new HomePage(page, "en")
+                .open()
+                .openLoginPage()
+                .openRegistrationPage();
+
+        // No consent checkbox selected: form is not submitted.
+        registration = registration.fillWith("Jane", "Doe", uniqueEmail, "ValidPass123!", "01/01/1990", false, false)
+                .submit()
+                .asRegistrationPage();
+
+        // Only terms and conditions checkbox selected: form is still not submitted.
+        registration = registration.fillWith("Jane", "Doe", uniqueEmail, "ValidPass123!", "01/01/1990", false, true)
+                .submit()
+                .asRegistrationPage();
+
+        // Both checkboxes selected: account is created and user is signed in.
+        registration.fillWith("Jane", "Doe", uniqueEmail, "ValidPass123!", "01/01/1990", true, true)
+                .submit()
+                .asHomePage()
+                .verifyLoggedIn();
+    }
+
+    @Test
+    @DisplayName("ACCT-09 - Registration is unavailable to a signed-in customer.")
+    void registrationUnavailableToSignedInCustomer(Page page) {
+        LoginPage login = new HomePage(page, "en").open().openLoginPage();
+        login.login(DEMO_EMAIL, DEMO_PASSWORD).openAccountPage().verifyLoggedIn();
+
+        new HomePage(page, "en").navigateToRegistrationDirectly();
+
+        new AccountDashboardPage(page, "en")
+                .verifyLoaded()
+                .verifyLoggedIn();
     }
 
 }

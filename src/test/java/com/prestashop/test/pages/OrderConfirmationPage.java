@@ -62,6 +62,14 @@ public class OrderConfirmationPage extends BaseStorefrontPage {
         return this;
     }
 
+    public String getOrderReference() {
+        String text = orderReference.textContent();
+        if (text == null) {
+            throw new AssertionError("Order reference is not available");
+        }
+        return text.replaceAll(".*:\\s*", "").trim();
+    }
+
     public OrderConfirmationPage verifyProductPresent(String name) {
         assertThat(orderItems).containsText(name);
         return this;

@@ -33,6 +33,7 @@ public class CheckoutPage extends BaseStorefrontPage {
     private final Locator emailInput;
     private final Locator customerPrivacyCheckbox;
     private final Locator psgdprCheckbox;
+    private final Locator passwordInput;
     private final Locator personalInfoContinueButton;
     private final Locator addressInput;
     private final Locator cityInput;
@@ -69,6 +70,7 @@ public class CheckoutPage extends BaseStorefrontPage {
         emailInput = personalInfoForm.getByTestId("field-email");
         customerPrivacyCheckbox = personalInfoForm.locator("input[name='customer_privacy']");
         psgdprCheckbox = personalInfoForm.locator("input[name='psgdpr']");
+        passwordInput = personalInfoForm.locator("input[name='password']");
         personalInfoContinueButton = personalInfoForm.getByRole(BUTTON,
                 new Locator.GetByRoleOptions().setName(Texts.get(locale, "continueCheckout")));
         addressInput = addressesStep.getByTestId("field-address1");
@@ -121,15 +123,19 @@ public class CheckoutPage extends BaseStorefrontPage {
         assertThat(firstNameInput).isVisible();
         assertThat(lastNameInput).isVisible();
         assertThat(emailInput).isVisible();
+        assertThat(passwordInput).isVisible();
         assertThat(personalInfoContinueButton).isVisible();
         return this;
     }
 
-    public CheckoutPage fillPersonalInfo(String firstName, String lastName, String email) {
+    public CheckoutPage fillPersonalInfo(String firstName, String lastName, String email, String password) {
         AllureArtifacts.screenshot(page, "Filling personal information");
         firstNameInput.fill(firstName);
         lastNameInput.fill(lastName);
         emailInput.fill(email);
+        if (password != null && !password.isEmpty()) {
+            passwordInput.fill(password);
+        }
         checkIfNeeded(customerPrivacyCheckbox);
         checkIfNeeded(psgdprCheckbox);
         personalInfoContinueButton.click();

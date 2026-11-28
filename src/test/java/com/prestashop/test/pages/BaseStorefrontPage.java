@@ -72,6 +72,10 @@ public class BaseStorefrontPage extends BasePage<BaseStorefrontPage> {
         return new AccountDashboardPage(page, locale).verifyLoaded();
     }
 
+    public AccountDashboardPage asAccountDashboardPage() {
+        return new AccountDashboardPage(page, locale).verifyLoaded();
+    }
+
     public CartPage openCart() {
         AllureArtifacts.screenshot(page, "Opening cart page");
         header.openCart();
@@ -92,6 +96,16 @@ public class BaseStorefrontPage extends BasePage<BaseStorefrontPage> {
         return new BaseStorefrontPage(page, locale).verifyLoaded();
     }
 
+    public BaseStorefrontPage navigateToRegistrationDirectly() {
+        page.navigate(localizedUrl("registration"));
+        return new BaseStorefrontPage(page, locale).verifyLoaded();
+    }
+
+    public BaseStorefrontPage navigateToOrderHistoryDirectly() {
+        page.navigate(localizedUrl("order-history"));
+        return new BaseStorefrontPage(page, locale).verifyLoaded();
+    }
+
     public SearchResultsPage search(String query) {
         header.search(query);
         return new SearchResultsPage(page, locale).verifyLoaded();
@@ -107,6 +121,10 @@ public class BaseStorefrontPage extends BasePage<BaseStorefrontPage> {
 
     public HomePage asHomePage() {
         return new HomePage(page, locale).verifyLoaded();
+    }
+
+    public OrderHistoryPage asOrderHistoryPage() {
+        return new OrderHistoryPage(page, locale).verifyLoaded();
     }
 
     protected String localizedUrl(String path) {
