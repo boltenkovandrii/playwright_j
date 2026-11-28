@@ -4,10 +4,7 @@ mode: primary
 
 permissions:
   # File permissions.
-  # Deny edits everywhere, then allow test code and scenario documentation.
-  - action: read
-    resource: "*"
-    effect: deny
+  # Inherit project read permissions and sensitive-file exclusions.
 
   - action: edit
     resource: "*"

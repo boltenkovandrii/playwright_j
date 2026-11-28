@@ -19,7 +19,7 @@
     {
       "action": "grep",
       "resource": "*",
-      "effect": "allow"
+      "effect": "deny"
     },
 
     // Protect sensitive files
