@@ -1,3 +1,19 @@
+# ------------------------------------------------------------
+# Ollama configuration.
+#
+# Context length is configured in Ollama settings.
+# This script also sets OLLAMA_CONTEXT_LENGTH for a new server
+# started by this script.
+#
+# If Ollama is already running, its existing server
+# configuration applies. This script cannot change that
+# configuration by setting environment variables here.
+#
+# Keep $contextSize consistent with the Ollama Context length
+# setting and the context limit configured for Copilot.
+# ------------------------------------------------------------
+
+
 $model = "qwen3.5:9b"
 
 #$contextSize = 16384

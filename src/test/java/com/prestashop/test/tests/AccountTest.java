@@ -209,12 +209,6 @@ class AccountTest extends BaseTest {
                 .asLoginPage()
                 .login(uniqueEmail, password)
                 .openAccountPage();
-//        page.navigate(BasePage.baseUrl() + "/en/?mylogout=");
-//        new HomePage(page, "en").verifyLoaded();
-
-//        LoginPage login = new HomePage(page, "en").open().openLoginPage();
-//        AccountDashboardPage account = login.login(uniqueEmail, password).openAccountPage();
-//        account.verifyLoggedIn();
 
         account.navigateToOrderHistoryDirectly()
                 .asOrderHistoryPage()
@@ -241,6 +235,12 @@ class AccountTest extends BaseTest {
         registration = registration.fillWith("Jane", "Doe", uniqueEmail, "ValidPass123!", "01/01/1990", false, true)
                 .submit()
                 .asRegistrationPage();
+
+        // Only customer data privacy selected: form is still not submitted.
+        registration = registration.fillWith("Jane", "Doe", uniqueEmail, "ValidPass123!", "01/01/1990", true, false)
+                .submit()
+                .asRegistrationPage();
+
 
         // Both checkboxes selected: account is created and user is signed in.
         registration.fillWith("Jane", "Doe", uniqueEmail, "ValidPass123!", "01/01/1990", true, true)

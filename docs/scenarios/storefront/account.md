@@ -269,8 +269,10 @@ Verify that the registration form is not submitted unless both consent checkboxe
 4. Observe the page state.
 5. Check only "I agree to the terms and conditions and the privacy policy" and submit.
 6. Observe the page state.
-7. Check "Customer data privacy" as well and submit.
-8. Observe the resulting page.
+7. Check only "Customer data privacy" and submit.
+8. Observe the page state.
+9. Check both consent checkboxes and submit.
+10. Observe the resulting page.
 
 **Expected result**
 
